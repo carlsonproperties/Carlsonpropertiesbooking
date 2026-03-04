@@ -18,7 +18,9 @@ export default defineConfig({
       '@emotion/is-prop-valid': '@emotion/is-prop-valid/dist/emotion-is-prop-valid.esm.js',
     },
   },
-
+optimizeDeps: {
+  include: ['@emotion/is-prop-valid']
+},
   // Explicitly set the public directory
   publicDir: 'public',
 
