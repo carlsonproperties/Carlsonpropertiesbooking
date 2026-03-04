@@ -1,3 +1,11 @@
+import React, { useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { Menu, Quote, Heart, Target, Instagram, Facebook } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { MobileMenu } from "../components/MobileMenu";
+import { Footer } from "../components/Footer";
+import { CarlsonLogo } from "../components/CarlsonLogo";
+import { SEO } from "../components/SEO";
 import { FAMILY_IMAGES } from "../lib/images";
 
 // Using your Supabase-hosted property images for family section
