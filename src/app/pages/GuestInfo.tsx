@@ -242,7 +242,7 @@ const SECTIONS = [
     icon: <ShieldAlert size={20} />,
     content: {
       header: "House Rules",
-      image: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/jC_111JardenMile_02.jpg",
+      image: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/looking%20into%20kitchen.png",
       text: "Welcome to our first Airbnb build. Your respect and care for our home play a vital role in its success; by fostering a positive experience together, we can keep this journey going for many guests to enjoy.",
       rules: [
         { title: "Respect the Property", desc: "Treat the home and its furnishings with care." },
