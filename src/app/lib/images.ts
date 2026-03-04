@@ -57,17 +57,17 @@ export const GALLERY_IMAGES = {
 // 🛏️ BEDROOM & BATHROOM IMAGES
 // ============================================
 export const BEDROOM_IMAGES = {
-  bedroom1: getImageUrl("Bedroom 1.avif"), // Master bedroom
-  ensuite1: getImageUrl("bed1ensuite.png"), // Master ensuite
-  bedroom2: getImageUrl("Bedroom 2.jpg"), // Second bedroom
-  ensuite2: getImageUrl("Bedroom 2 Ensuite.avif"), // Second ensuite
-  bedroom3: getImageUrl("Bedroom 3.png"), // Third bedroom
-  ensuite3: getImageUrl("bedroom 3 ensuite1.1.avif"), // Third ensuite
-  bedroom4: getImageUrl("Bedroom 4.jpg"), // Fourth bedroom
-  ensuite4: getImageUrl("mainbathroom.avif"), // Fourth bedroom ensuite
-  bedroom5: getImageUrl("Bedroom5.1.jpg"), // Fifth bedroom (twin room)
-  ensuite5: getImageUrl("Main Bathroom.avif"), // Fifth bedroom ensuite
-  mainBathroom: getImageUrl("Main Bathroom.avif"), // Main bathroom
+  bedroom1: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Bedroom%201.avif", // Master bedroom
+  ensuite1: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/bed1ensuite.png", // Master ensuite
+  bedroom2: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Bedroom%202.jpg", // Second bedroom
+  ensuite2: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Bedroom%202%20Ensuite.avif", // Second ensuite
+  bedroom3: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Bedroom%203.png", // Third bedroom
+  ensuite3: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/bedroom%203%20ensuite1.1.avif", // Third ensuite
+  bedroom4: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Bedroom%204.jpg", // Fourth bedroom
+  ensuite4: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/mainbathroom.avif", // Fourth bedroom ensuite
+  bedroom5: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Bedroom5.1.jpg", // Fifth bedroom (twin room)
+  ensuite5: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Main%20Bathroom.avif", // Fifth bedroom ensuite
+  mainBathroom: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Main%20Bathroom.avif", // Main bathroom
 };
 
 // ============================================
