@@ -18,9 +18,9 @@ import { ImageMapper } from "./pages/ImageMapper";
 import { SimpleImageTest } from "./pages/SimpleImageTest";
 import { Maintenance } from "./pages/Maintenance";
 
-// ⚠️ MAINTENANCE MODE ENABLED
+// MAINTENANCE MODE
 // Set to true to show maintenance page for all routes
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 export const router = createBrowserRouter([
   {
