@@ -57,17 +57,17 @@ export const GALLERY_IMAGES = {
 // 🛏️ BEDROOM & BATHROOM IMAGES
 // ============================================
 export const BEDROOM_IMAGES = {
-  bedroom1: getImageUrl("042_Open2view_ID584542-111_Jarden_Mile.jpg"), // Master bedroom
-  ensuite1: getImageUrl("2fe3f719-ec39-4375-bac8-1d4a9fc86ef5 (1).avif"), // Master ensuite
-  bedroom2: getImageUrl("053_Open2view_ID584542-111_Jarden_Mile.jpg"), // Second bedroom
-  ensuite2: getImageUrl("b43eb65c-673f-4aee-bc95-1aca682c878b (2).avif"), // Second ensuite
-  bedroom3: getImageUrl("367692e4-c62e-40da-bfc1-aa8c187b8637 (1).avif"), // Third bedroom
-  ensuite3: getImageUrl("652445b7-4f14-4258-ab83-70799c8b9db8 (2).avif"), // Third ensuite
-  bedroom4: getImageUrl("e45edcb9-9f7f-4c17-90da-49333758f5da (1).avif"), // Fourth bedroom
-  ensuite4: getImageUrl("1ed13a04-082e-4f5b-b545-23802b10eb1d (1).avif"), // Fourth bedroom ensuite
-  bedroom5: getImageUrl("058_Open2view_ID584542-111_Jarden_Mile.jpg"), // Fifth bedroom (twin room)
-  ensuite5: getImageUrl("2dff177f-06c9-4be8-a2a5-f343298fa1b0 (1).avif"), // Fifth bedroom ensuite
-  mainBathroom: getImageUrl("048_Open2view_ID584542-111_Jarden_Mile.jpg"), // Main bathroom
+  bedroom1: getImageUrl("Bedroom 1.avif"), // Master bedroom
+  ensuite1: getImageUrl("bed1ensuite.png"), // Master ensuite
+  bedroom2: getImageUrl("Bedroom 2.jpg"), // Second bedroom
+  ensuite2: getImageUrl("Bedroom 2 Ensuite.avif"), // Second ensuite
+  bedroom3: getImageUrl("Bedroom 3.png"), // Third bedroom
+  ensuite3: getImageUrl("bedroom 3 ensuite1.1.avif"), // Third ensuite
+  bedroom4: getImageUrl("Bedroom 4.jpg"), // Fourth bedroom
+  ensuite4: getImageUrl("mainbathroom.avif"), // Fourth bedroom ensuite
+  bedroom5: getImageUrl("Bedroom5.1.jpg"), // Fifth bedroom (twin room)
+  ensuite5: getImageUrl("Main Bathroom.avif"), // Fifth bedroom ensuite
+  mainBathroom: getImageUrl("Main Bathroom.avif"), // Main bathroom
 };
 
 // ============================================

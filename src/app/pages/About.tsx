@@ -236,13 +236,13 @@ export function About() {
               >
                 <Masonry gutter="40px">
                   {[
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/033_Open2view_ID584542-111_Jarden_Mile.jpg", title: "modern architecture", speed: 0.1 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/036_Open2view_ID584542-111_Jarden_Mile.jpg", title: "Double sided gas fireplace", speed: -0.1 },
-                    { img: gallery2, title: "Open Plan Living", speed: 0.2 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/063_Open2view_ID584542-111_Jarden_Mile.jpg", title: "heated pool", speed: -0.05 },
-                    { img: galleryLivingRoom, title: "panoramic lake views", speed: 0.15 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/066_Open2view_ID584542-111_Jarden_Mile.jpg", title: "Outdoor Sauna & Spa Pool", speed: -0.12 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/jC_111JardenMile_11_388e4822-6a58-445a-b245-28d0a252acd2.jpg", title: "Al Fresco Dining & BBQ", speed: 0.08 }
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/view%20from%20dining%20table.jpg", title: "modern architecture", speed: 0.1 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/gas%20fire.jpg", title: "Double sided gas fireplace", speed: -0.1 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Open%20plan%20living.jpg", title: "Open Plan Living", speed: 0.2 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/pool%20featurephoto.png", title: "heated pool", speed: -0.05 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg", title: "panoramic lake views", speed: 0.15 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/sauanaspa.jpg", title: "Outdoor Sauna & Spa Pool", speed: -0.12 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/outdoor%20lounge.png", title: "Al Fresco Dining & BBQ", speed: 0.08 }
                   ].map((item, i) => (
                     <GalleryItem key={i} item={item} index={i} />
                   ))}
