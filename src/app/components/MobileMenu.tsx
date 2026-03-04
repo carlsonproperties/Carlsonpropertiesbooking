@@ -1,5 +1,5 @@
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { X, Instagram, Facebook, Home, Info, Users, Calendar, Shield, Lock } from "lucide-react";
 import { Link } from "react-router";
 import { CarlsonLogo } from "./CarlsonLogo";

@@ -1,8 +1,8 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { BookingEngine } from "../components/BookingEngine";
 import { Link, useNavigate } from "react-router";
 import { ChevronLeft, Info, Shield, Star, MapPin, Menu } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
 import { MobileMenu } from "../components/MobileMenu";
 import { Footer } from "../components/Footer";
@@ -10,11 +10,11 @@ import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
 
 export function Book() {
-  const [property, setProperty] = React.useState<any>(null);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [property, setProperty] = useState<any>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       try {
         console.log("Fetching property data...");

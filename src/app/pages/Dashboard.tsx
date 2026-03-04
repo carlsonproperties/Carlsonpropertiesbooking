@@ -5,13 +5,15 @@ import {
 } from 'recharts';
 import { 
   DollarSign, Users, Calendar, TrendingUp, ChevronRight, Star,
-  Download, Filter, ArrowUpRight, LayoutGrid, List, Bell,
+  Download,
+  RefreshCw,
+  Filter, ArrowUpRight, LayoutGrid, List, Bell,
   Search, Settings, LogOut, MoreVertical, CreditCard, ExternalLink, MessageSquare,
   Phone, Mail, ArrowDownRight, PieChart as PieIcon, Wallet, ShieldAlert, Loader2,
   ClipboardCheck, Copy, FileText, Check, Info, Menu, X
 } from "lucide-react";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { useNavigate, Link } from "react-router";
 import { supabase } from "../lib/supabase";

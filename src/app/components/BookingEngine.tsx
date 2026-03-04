@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format, differenceInDays, isSameDay, startOfDay } from "date-fns";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Calendar as CalendarIcon, Users, ArrowRight, CheckCircle, Info } from "lucide-react";
 import { useNavigate } from "react-router";
 import { projectId, publicAnonKey } from "/utils/supabase/info";

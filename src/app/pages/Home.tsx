@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Star, MapPin, Shield, Coffee, Menu, Instagram, Facebook, Waves, Dumbbell, Zap, Thermometer, Clock, Volume2, VolumeX } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useNavigate, Link } from "react-router";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
 import { Testimonials } from "../components/Testimonials";

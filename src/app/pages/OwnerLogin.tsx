@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
 import { supabase } from "../lib/supabase";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Mail, Lock, LogIn, ShieldCheck, ArrowLeft, Loader2, User } from "lucide-react";
 import { toast } from "sonner";
 

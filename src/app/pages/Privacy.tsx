@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, Menu, Instagram, Facebook, ShieldCheck, Mail, Phone, MapPin, Lock, Eye, Database, FileText } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { MobileMenu } from "../components/MobileMenu";
 import { Footer } from "../components/Footer";
 import { CarlsonLogo } from "../components/CarlsonLogo";

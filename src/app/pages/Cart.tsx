@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ChevronLeft, ShoppingBag, Trash2, ArrowRight, Calendar, Users, Info } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
 import { toast } from "sonner";

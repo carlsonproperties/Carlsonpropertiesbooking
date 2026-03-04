@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { CheckCircle, Calendar, ArrowRight, Home, Share2, Download, Loader2, Info } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
 import { SEO } from "../components/SEO";
 import { trackBookingConversion } from "../lib/analytics";
