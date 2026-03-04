@@ -88,7 +88,7 @@ export function Home() {
   };
 
   return (
-    <div ref={containerRef} className="relative bg-[#fdfcf8] selection:bg-[#9DA07E] selection:text-white overflow-x-hidden min-h-screen">
+    <div ref={containerRef} className="relative bg-[#fdfcf8] selection:bg-[#9DA07E] selection:text-white overflow-x-hidden min-h-screen" style={{ position: 'relative' }}>
       <SEO 
         url="/"
         type="website"
