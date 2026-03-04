@@ -4,26 +4,23 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-
+  plugins: [
+    // The React and Tailwind plugins are both required for Make, even if
+    // Tailwind is not being actively used – do not remove them
+    react(),
+    tailwindcss(),
+    // REMOVED figmaAssetPlugin - no longer needed, was causing green placeholder boxes
+  ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@emotion/is-prop-valid": "@emotion/is-prop-valid/dist/emotion-is-prop-valid.esm.js",
+      // Alias @ to the src directory
+      '@': path.resolve(__dirname, './src'),
     },
   },
 
-  optimizeDeps: {
-    include: ["@emotion/is-prop-valid"],
-  },
+  // Explicitly set the public directory
+  publicDir: 'public',
 
-  build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
-      include: [/node_modules/, /@emotion\/is-prop-valid/],
-    },
-  },
-
-  publicDir: "public",
-  assetsInclude: ["**/*.svg", "**/*.csv"],
-});
+  // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
+  assetsInclude: ['**/*.svg', '**/*.csv'],
+})
