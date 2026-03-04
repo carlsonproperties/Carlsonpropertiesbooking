@@ -1,0 +1,842 @@
+import { Hono } from 'npm:hono@4.0.0'
+import { cors } from 'npm:hono/cors'
+import { createClient } from 'npm:@supabase/supabase-js@2.39.7'
+import * as kv from './kv_store.tsx'
+import ical from 'npm:node-ical@0.18.0'
+import Stripe from 'npm:stripe@14.16.0'
+import { Resend } from 'npm:resend@3.1.0'
+
+const app = new Hono()
+
+// Simple logger
+app.use('*', async (c, next) => {
+  const start = Date.now()
+  await next()
+  const ms = Date.now() - start
+  console.log(`${c.req.method} ${c.req.path} - ${ms}ms`)
+})
+
+app.use('*', cors({
+  origin: '*',
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization', 'x-user-token'],
+  exposeHeaders: ['Content-Length'],
+  maxAge: 600,
+}))
+
+const AIRTABLE_PAT = Deno.env.get('AIRTABLE_PAT')
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+const ICAL_FEED_URL = Deno.env.get('ICAL_FEED_URL') || "https://calendar.google.com/calendar/ical/guest%40carlsonproperties.co.nz/public/basic.ics"
+const AIRTABLE_BASE_ID = 'appdLyi60QUkPJdEP'
+const AIRTABLE_TABLE_NAME = 'Bookings' 
+
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+
+// Helper to send emails to guests
+async function sendAutomationEmails(booking: any) {
+  if (!resend) {
+    console.error('Resend API key missing, skipping emails');
+    return;
+  }
+
+  const guestEmail = booking.email;
+  const guestName = booking.guest.split(' ')[0];
+  const bookingRef = booking.id.slice(0, 8).toUpperCase();
+  
+  const styles = `
+    font-family: 'Times New Roman', serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    background-color: #FDFCF8;
+    color: #2D2D2D;
+    text-align: center;
+  `;
+
+  const cardStyles = `
+    background: white;
+    padding: 60px 40px;
+    border-radius: 40px;
+    border: 1px solid #F1F1F1;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.02);
+  `;
+
+  const accentText = `
+    color: #9DA07E;
+    font-family: sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: block;
+  `;
+
+  const h1Styles = `
+    font-size: 42px;
+    color: #1A1A1A;
+    margin: 0 0 30px 0;
+    line-height: 1.1;
+    font-weight: normal;
+  `;
+
+  const pStyles = `
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 40px;
+    font-weight: 300;
+  `;
+
+  const refBoxStyles = `
+    background: #F8F8F6;
+    border-radius: 24px;
+    padding: 24px;
+    margin: 40px 0;
+    border: 1px solid #F1F1EE;
+  `;
+
+  const buttonStyles = `
+    display: inline-block;
+    background: #1A1A1A;
+    color: white;
+    padding: 20px 40px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-family: sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  `;
+
+  try {
+    // 1. Send IMMEDIATE Confirmation Email
+    console.log(`Sending immediate confirmation email to ${guestEmail}...`);
+    await resend.emails.send({
+      from: 'One Eleven | On the Mile <bookings@resend.dev>',
+      to: [guestEmail],
+      subject: `Reservation Confirmed: See you at One Eleven 🌿`,
+      html: `
+        <div style="${styles}">
+          <div style="${cardStyles}">
+            <div style="width: 1px; height: 60px; background: #9DA07E; margin: 0 auto 40px; opacity: 0.3;"></div>
+            
+            <div style="width: 64px; height: 64px; background: #9DA07E10; border-radius: 50%; margin: 0 auto 30px; display: table;">
+              <div style="display: table-cell; vertical-align: middle; color: #9DA07E; font-size: 32px;">✓</div>
+            </div>
+
+            <span style="${accentText}">Reservation Confirmed</span>
+            
+            <h1 style="${h1Styles}">
+              See you at<br/>
+              <span style="font-style: italic;">One Eleven.</span>
+            </h1>
+
+            <p style="${pStyles}">
+              Thank you, ${guestName}. Your sanctuary in Taupō is secured for <strong>${booking.checkIn}</strong>. We're thrilled to host you.
+            </p>
+
+            <div style="${refBoxStyles}">
+              <span style="display: block; font-family: sans-serif; font-size: 9px; font-weight: 900; letter-spacing: 0.2em; color: #AFAFAF; text-transform: uppercase; margin-bottom: 8px;">Booking Reference</span>
+              <span style="font-size: 20px; letter-spacing: 0.05em; color: #1A1A1A; font-weight: bold;">#${bookingRef}</span>
+            </div>
+
+            <a href="https://oneeleven.nz/guest-info" style="${buttonStyles}">Access Digital Guidebook</a>
+            
+            <div style="margin-top: 60px; border-top: 1px solid #F1F1EE; pt-40px;">
+              <p style="font-family: sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.2em; color: #AFAFAF; text-transform: uppercase; margin-top: 30px;">
+                111 Jarden Mile, Taupō, NZ
+              </p>
+            </div>
+          </div>
+        </div>
+      `
+    });
+
+    // 2. Schedule "4 Days Before" Check-in Email
+    const checkInDate = new Date(booking.checkIn);
+    const scheduledDate = new Date(checkInDate);
+    scheduledDate.setDate(scheduledDate.getDate() - 4);
+    scheduledDate.setHours(10, 0, 0, 0);
+
+    if (scheduledDate > new Date()) {
+      console.log(`Scheduling door code email for ${scheduledDate.toISOString()}...`);
+      const doorCode = Math.floor(1000 + Math.random() * 9000); 
+      
+      await resend.emails.send({
+        from: 'One Eleven | On the Mile <bookings@resend.dev>',
+        to: [guestEmail],
+        subject: `Your Check-in Details for One Eleven 🔑`,
+        scheduled_at: scheduledDate.toISOString(),
+        html: `
+          <div style="${styles}">
+            <div style="${cardStyles}">
+              <div style="width: 1px; height: 60px; background: #9DA07E; margin: 0 auto 40px; opacity: 0.3;"></div>
+              
+              <span style="${accentText}">Ready for your arrival?</span>
+              
+              <h1 style="${h1Styles}">
+                Your stay begins<br/>
+                <span style="font-style: italic;">in 4 days.</span>
+              </h1>
+
+              <p style="${pStyles}">
+                Hi ${guestName}, we're looking forward to your arrival at One Eleven. Here are your essential check-in details.
+              </p>
+
+              <div style="background: #1A1A1A; color: white; padding: 40px; border-radius: 32px; margin: 40px 0; text-align: center;">
+                <span style="display: block; font-family: sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.3em; opacity: 0.6; text-transform: uppercase; margin-bottom: 15px;">Your Smart Lock Code</span>
+                <span style="font-size: 48px; letter-spacing: 0.2em; font-weight: normal; font-family: sans-serif;">${doorCode}</span>
+                <p style="margin-top: 15px; font-family: sans-serif; font-size: 11px; opacity: 0.5;">Valid from 3:00 PM on ${booking.checkIn}</p>
+              </div>
+
+              <div style="text-align: left; background: #F8F8F6; padding: 25px; border-radius: 20px; margin-bottom: 40px;">
+                <p style="margin: 0; font-family: sans-serif; font-size: 13px; line-height: 1.6;">
+                  <strong>Address:</strong> 111 Jarden Mile, Taupō, New Zealand<br/>
+                  <strong>Check-in:</strong> After 3:00 PM<br/>
+                  <strong>Checkout:</strong> Before 10:00 AM
+                </p>
+              </div>
+
+              <a href="https://oneeleven.nz/guest-info" style="${buttonStyles}">View Arrival Guide</a>
+            </div>
+          </div>
+        `
+      });
+    }
+  } catch (err) {
+    console.error('Email Automation Error:', err);
+  }
+}
+
+// Helper to push to Airtable
+async function syncToAirtable(booking: any) {
+  if (!AIRTABLE_PAT) {
+    console.error('Airtable PAT missing, skipping sync');
+    return;
+  }
+  try {
+    const checkInDate = new Date(booking.checkIn)
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    const monthDisplay = `${monthNames[checkInDate.getMonth()]} ${checkInDate.getFullYear()}`
+
+    console.log(`Syncing booking for ${booking.guest} to Airtable...`);
+    const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${AIRTABLE_PAT}`, 
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({
+        records: [{
+          fields: {
+            'Customer Name': booking.guest,
+            'Email': booking.email || '',
+            'Cellphone': booking.phone || '',
+            'Check-In': booking.checkIn,
+            'Check-Out': booking.checkOut,
+            'Revenue': booking.total,
+            'Booking Channel': 'Direct Booking (Website)',
+            'Month Display': monthDisplay,
+            'Property': '111 jarden mile',
+            'Notes': booking.notes ? `${booking.notes}\n\nWebsite Booking ID: ${booking.id}` : `Website Booking ID: ${booking.id}`
+          }
+        }]
+      })
+    })
+
+    if (!response.ok) {
+      const errBody = await response.text();
+      console.error(`Airtable Sync failed: ${response.status} ${errBody}`);
+    } else {
+      console.log('Airtable Sync successful');
+    }
+  } catch (err) { 
+    console.error('Airtable Sync Exception:', err) 
+  }
+}
+
+// Helper to fetch with timeout
+async function fetchWithTimeout(url: string, options: any = {}, timeout = 8000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+    clearTimeout(id);
+    return response;
+  } catch (err) {
+    clearTimeout(id);
+    throw err;
+  }
+}
+
+async function getFromAirtable() {
+  if (!AIRTABLE_PAT) return [];
+  const baseId = 'appdLyi60QUkPJdEP';
+  const tableNames = ['Bookings', 'Booking', 'Reservations', 'Stay', 'Stays', 'Property Bookings', 'Direct Bookings'];
+  let allRecords: any[] = [];
+  
+  for (const tableName of tableNames) {
+    try {
+      let offset = '';
+      let tableFound = false;
+      while (true) {
+        const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}${offset ? `?offset=${offset}` : ''}`;
+        const response = await fetchWithTimeout(url, {
+          headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}`, 'Accept': 'application/json' }
+        }, 10000);
+        if (!response.ok) {
+          if (response.status === 404) break; 
+          break;
+        }
+        tableFound = true;
+        const data = await response.json();
+        allRecords = [...allRecords, ...(data.records || [])];
+        offset = data.offset;
+        if (!offset) break;
+      }
+      if (tableFound && allRecords.length > 0) return processAirtableRecords(allRecords);
+    } catch (err) { console.error(`Airtable fetch error:`, err); }
+  }
+  return [];
+}
+
+function processAirtableRecords(records: any[]) {
+  const getVal = (fields: any, possibleKeys: string[]) => {
+    for (const key of possibleKeys) {
+      if (fields[key] !== undefined && fields[key] !== null) {
+        const val = fields[key];
+        return Array.isArray(val) ? val[0] : val;
+      }
+    }
+    return undefined;
+  };
+
+  return records.map((r: any) => {
+    const f = r.fields;
+    let monthIndex = -1;
+    const monthSortVal = getVal(f, ['Month Sort', 'month sort', 'MonthIndex']);
+    if (monthSortVal) {
+      const match = String(monthSortVal).match(/^(\d+)/);
+      if (match) monthIndex = parseInt(match[1], 10) - 1;
+    }
+
+    const checkIn = getVal(f, ['Check-In', 'Check In', 'Arrival', 'Start Date', 'check-in']);
+    const checkOut = getVal(f, ['Check-Out', 'Check Out', 'Departure', 'End Date', 'check-out']);
+    let status = checkIn && new Date(checkIn) > new Date() ? 'upcoming' : 'completed';
+
+    return {
+      id: r.id,
+      guest: getVal(f, ['Customer Name', 'Guest Name', 'Name', 'Guest', 'customer']) || 'Guest',
+      email: getVal(f, ['Email', 'Guest Email', 'email', 'Contact Email']) || '',
+      phone: String(getVal(f, ['Cellphone', 'Cell', 'Phone', 'Mobile', 'phone', 'Telephone']) || ''),
+      doorCode: String(getVal(f, ['Door Code', 'Code', 'Doorcode', 'Key Code']) || ''),
+      checkIn,
+      checkOut,
+      total: parseFloat(String(getVal(f, ['Revenue', 'Total Gross Revenue', 'Amount', 'Total', 'Price', 'gross revenue']) || '0')),
+      expenses: parseFloat(String(getVal(f, ['Expenses', 'Cost', 'Commission', 'fees', 'expense']) || '0')),
+      property: getVal(f, ['Property', 'House', 'Listing', 'Unit']) || '',
+      nightsStayed: parseFloat(String(getVal(f, ['Nights Stayed', 'nights stayed', 'Nights', 'Duration', 'Nights Stayed Formula']) || '0')),
+      channel: getVal(f, ['Booking Channel', 'Source', 'Platform', 'Channel']) || 'Direct',
+      notes: getVal(f, ['Notes', 'Comment', 'Special Request']) || '',
+      status,
+      monthIndex
+    };
+  });
+}
+
+// Handlers
+const handleHealth = async (c: any) => {
+  const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+  
+  return new Response(JSON.stringify({ 
+    status: 'ok', 
+    stripeConfigured: !!stripeKey,
+    mode: 'live',
+    time: new Date().toISOString() 
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+  });
+}
+
+const handleProperties = async (c: any) => {
+  const props = await kv.get('properties') || []
+  return new Response(JSON.stringify(props), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+  });
+}
+
+const handleCalendarEvents = async (c: any) => {
+  try {
+    const response = await fetchWithTimeout(ICAL_FEED_URL, {}, 10000);
+    if (!response.ok) throw new Error(`Failed to fetch iCal: ${response.status}`);
+    const icalData = await response.text();
+    const events = ical.sync.parseICS(icalData);
+    const occupiedDates: string[] = [];
+    
+    for (const k in events) {
+      if (events.hasOwnProperty(k)) {
+        const ev = events[k];
+        if (ev.type === 'VEVENT') {
+          const start = new Date(ev.start);
+          const end = new Date(ev.end);
+          let current = new Date(start);
+          while (current < end) {
+            occupiedDates.push(current.toISOString().split('T')[0]);
+            current.setDate(current.getDate() + 1);
+          }
+        }
+      }
+    }
+    
+    const localBookings = (await kv.get('bookings') || []).filter((b: any) => !(b.checkIn === '2026-03-16' && b.checkOut === '2026-03-18'));
+    localBookings.forEach((b: any) => {
+      let current = new Date(b.checkIn);
+      const end = new Date(b.checkOut);
+      while (current < end) {
+        const dateStr = current.toISOString().split('T')[0];
+        if (!occupiedDates.includes(dateStr)) occupiedDates.push(dateStr);
+        current.setDate(current.getDate() + 1);
+      }
+    });
+
+    return new Response(JSON.stringify({ 
+      occupiedDates: [...new Set(occupiedDates)], 
+      lastUpdated: new Date().toISOString() 
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message, occupiedDates: [] }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+const handleCreateCheckout = async (c: any) => {
+  const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+
+  console.log(`Checkout Request: Mode=LIVE.`);
+
+  try {
+    const body = await c.req.json();
+    if (!body || !body.bookingData) {
+      return new Response(JSON.stringify({ error: 'Invalid request: Missing booking data' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    const { bookingData } = body;
+
+    if (!stripeKey) {
+      return new Response(JSON.stringify({ error: 'Stripe API key is missing. Please set STRIPE_SECRET_KEY in Supabase secrets.' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    const stripe = new Stripe(stripeKey.trim(), { apiVersion: '2023-10-16', httpClient: Stripe.createFetchHttpClient() });
+    const bookingId = crypto.randomUUID();
+    const origin = c.req.header('origin') || c.req.header('referer') || 'https://oneeleven.nz';
+    const baseUrl = origin.split('?')[0].replace(/\/$/, '');
+    const amountInCents = Math.round(parseFloat(String(bookingData.amount)) * 100);
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      customer_email: bookingData.guestEmail,
+      line_items: [{
+        price_data: {
+          currency: 'nzd',
+          product_data: {
+            name: `Stay at One Eleven | On the Mile`,
+            description: `${bookingData.checkIn} to ${bookingData.checkOut} (${bookingData.guests} guests)`,
+            images: ['https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/032_Open2view_ID584542-111_Jarden_Mile.jpg'],
+          },
+          unit_amount: amountInCents,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: `${baseUrl}/booking-success?session_id={CHECKOUT_SESSION_ID}&booking_id=${bookingId}`,
+      cancel_url: `${baseUrl}/checkout`,
+      metadata: { ...bookingData, bookingId, guests: String(bookingData.guests), amount: String(bookingData.amount) },
+    });
+
+    return new Response(JSON.stringify({ url: session.url }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+const handleVerifyCheckout = async (c: any) => {
+  const sessionId = c.req.query('session_id')
+  const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+
+  if (!sessionId || !stripeKey) {
+    return new Response(JSON.stringify({ error: 'Invalid verification request' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  try {
+    const stripe = new Stripe(stripeKey.trim(), { apiVersion: '2023-10-16', httpClient: Stripe.createFetchHttpClient() })
+    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    if (session.payment_status === 'paid') {
+      const bookings = await kv.get('bookings') || []
+      if (!bookings.find((b: any) => b.stripeSessionId === sessionId)) {
+        const newBooking = {
+          id: session.metadata?.bookingId || crypto.randomUUID(),
+          guest: session.metadata?.guestName || session.customer_details?.name || 'Guest',
+          email: session.metadata?.guestEmail || session.customer_details?.email || '',
+          phone: session.metadata?.guestPhone || '',
+          notes: session.metadata?.guestNotes || '',
+          checkIn: session.metadata?.checkIn,
+          checkOut: session.metadata?.checkOut,
+          total: parseFloat(session.metadata?.amount || '0'),
+          guests: parseInt(session.metadata?.guests || '1'),
+          status: 'upcoming',
+          stripeSessionId: sessionId,
+          createdAt: new Date().toISOString()
+        }
+        await kv.set('bookings', [...bookings, newBooking])
+        await syncToAirtable(newBooking)
+        await sendAutomationEmails(newBooking)
+        return new Response(JSON.stringify({ success: true, booking: newBooking }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+      }
+      return new Response(JSON.stringify({ success: true, booking: bookings.find((b: any) => b.stripeSessionId === sessionId) }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    return new Response(JSON.stringify({ error: 'Payment not completed' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+const handleSignup = async (c: any) => {
+  try {
+    const { email, password, name } = await c.req.json();
+    const cleanEmail = email.toLowerCase().trim();
+    const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const { data, error } = await supabase.auth.admin.createUser({ email: cleanEmail, password, user_metadata: { name }, email_confirm: true });
+    if (error) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    return new Response(JSON.stringify({ success: true, user: data.user }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+const handleDashboardStats = async (c: any) => {
+  try {
+    const bookings = await kv.get('bookings') || [];
+    const airtableBookings = await getFromAirtable();
+    
+    // Merge bookings, avoiding duplicates if they exist in both (unlikely but safe)
+    const allBookings = [...bookings, ...airtableBookings];
+    
+    // Improved sorting: Upcoming bookings first (closest arrival first), 
+    // followed by past bookings (most recent completion first).
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    allBookings.sort((a: any, b: any) => {
+      const dateA = new Date(a.checkIn);
+      const dateB = new Date(b.checkIn);
+      
+      const isAUpcoming = dateA >= today;
+      const isBUpcoming = dateB >= today;
+
+      // If one is upcoming and the other isn't, upcoming comes first
+      if (isAUpcoming && !isBUpcoming) return -1;
+      if (!isAUpcoming && isBUpcoming) return 1;
+      
+      if (isAUpcoming && isBUpcoming) {
+        // Both upcoming: soonest arrival first
+        return dateA.getTime() - dateB.getTime();
+      }
+      
+      // Both past: most recent check-in first
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    // Calculate aggregated stats
+    let totalRevenue = 0;
+    let totalExpenses = 0;
+    const yearlyEarnings: any = {};
+    const yearlyStats: any = {};
+    const yearlyOccupancy: any = {};
+    
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const currentYear = new Date().getFullYear();
+
+    allBookings.forEach((b: any) => {
+      const revenue = parseFloat(String(b.total || 0));
+      const expense = parseFloat(String(b.expenses || 0));
+      const date = new Date(b.checkIn);
+      const year = date.getFullYear();
+      const month = date.getMonth();
+
+      totalRevenue += revenue;
+      totalExpenses += expense;
+
+      // Initialize year data if not exists
+      if (!yearlyEarnings[year]) {
+        yearlyEarnings[year] = monthNames.map(name => ({ name, earnings: 0, expenses: 0 }));
+      }
+      if (!yearlyStats[year]) {
+        yearlyStats[year] = { totalBookings: 0, totalNights: 0, totalRevenue: 0 };
+      }
+
+      // Add to monthly data
+      yearlyEarnings[year][month].earnings += revenue;
+      yearlyEarnings[year][month].expenses += expense;
+
+      // Add to yearly stats
+      yearlyStats[year].totalBookings += 1;
+      yearlyStats[year].totalRevenue += revenue;
+      
+      const stayNights = b.nightsStayed || (b.checkOut && b.checkIn ? Math.ceil((new Date(b.checkOut).getTime() - new Date(b.checkIn).getTime()) / (1000 * 60 * 60 * 24)) : 0);
+      yearlyStats[year].totalNights += stayNights;
+    });
+
+    // Calculate occupancy rates
+    Object.keys(yearlyStats).forEach(yearStr => {
+      const year = parseInt(yearStr);
+      const stats = yearlyStats[year];
+      const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+      const daysInYear = isLeap ? 366 : 365;
+      const rate = Math.min(100, Math.round((stats.totalNights / daysInYear) * 100));
+      yearlyOccupancy[year] = `${rate}%`;
+    });
+
+    const occupancyRate = yearlyOccupancy[currentYear] || "0%";
+    const totalFees = totalRevenue * 0.15; // Standard 15% platform fee estimation
+
+    return new Response(JSON.stringify({ 
+      allGuests: allBookings, 
+      recentGuests: allBookings.slice(0, 10),
+      totalBookings: allBookings.length,
+      totalRevenue,
+      totalExpenses,
+      totalFees,
+      yearlyEarnings,
+      yearlyStats,
+      yearlyOccupancy,
+      occupancyRate
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+const handleManualBooking = async (c: any) => {
+  try {
+    const { bookingData } = await c.req.json();
+    const newBooking = { id: crypto.randomUUID(), ...bookingData, total: parseFloat(bookingData.amount), status: 'pending_payment', createdAt: new Date().toISOString() };
+    const bookings = await kv.get('bookings') || [];
+    await kv.set('bookings', [...bookings, newBooking]);
+    await syncToAirtable(newBooking);
+    return new Response(JSON.stringify({ success: true, booking: newBooking }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+const handleUpdateBooking = async (c: any) => {
+  try {
+    const { bookingId, updates } = await c.req.json();
+    const bookings = await kv.get('bookings') || [];
+    const idx = bookings.findIndex((b: any) => b.id === bookingId);
+    if (idx === -1) {
+      return new Response(JSON.stringify({ error: 'Not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    bookings[idx] = { ...bookings[idx], ...updates };
+    await kv.set('bookings', bookings);
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+const handleDeleteBooking = async (c: any) => {
+  try {
+    const { bookingId } = await c.req.json();
+    const bookings = await kv.get('bookings') || [];
+    await kv.set('bookings', bookings.filter((b: any) => b.id !== bookingId));
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+// Robust Routing: Handle routes both with and without the function name prefix
+const registerRoute = (method: 'get' | 'post', path: string, handler: any) => {
+  const functionPrefix = '/make-server-edef7798';
+  if (method === 'get') {
+    app.get(path, handler);
+    app.get(`${functionPrefix}${path}`, handler);
+  } else {
+    app.post(path, handler);
+    app.post(`${functionPrefix}${path}`, handler);
+  }
+};
+
+registerRoute('get', '/health', handleHealth);
+registerRoute('get', '/properties', handleProperties);
+registerRoute('get', '/calendar-events', handleCalendarEvents);
+registerRoute('get', '/verify-checkout', handleVerifyCheckout);
+registerRoute('get', '/dashboard-stats', handleDashboardStats);
+registerRoute('post', '/signup', handleSignup);
+registerRoute('post', '/manual-booking', handleManualBooking);
+registerRoute('post', '/create-checkout-session', handleCreateCheckout);
+registerRoute('post', '/update-booking', handleUpdateBooking);
+registerRoute('post', '/delete-booking', handleDeleteBooking);
+
+// Helper route to list all files in property-images bucket
+app.get('/make-server-edef7798/list-storage-images', async (c) => {
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    const { data: files, error } = await supabase.storage
+      .from('Website Media')
+      .list('', {
+        limit: 100,
+        offset: 0,
+        sortBy: { column: 'name', order: 'asc' }
+      });
+
+    if (error) {
+      console.error('Storage list error:', error);
+      return c.json({ error: error.message, files: [] }, 500);
+    }
+
+    const projectId = Deno.env.get('SUPABASE_URL')?.match(/https:\/\/(.+)\.supabase\.co/)?.[1] || '';
+    
+    const fileUrls = files?.map(file => ({
+      name: file.name,
+      url: `https://${projectId}.supabase.co/storage/v1/object/public/Website%20Media/${encodeURIComponent(file.name)}`,
+      size: file.metadata?.size,
+      created: file.created_at
+    })) || [];
+
+    return c.json({ files: fileUrls, count: fileUrls.length });
+  } catch (err) {
+    console.error('Error listing storage:', err);
+    return c.json({ error: String(err), files: [] }, 500);
+  }
+});
+
+// NEW: List all available buckets to find the correct name
+app.get('/make-server-edef7798/list-buckets', async (c) => {
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    const { data: buckets, error } = await supabase.storage.listBuckets();
+
+    if (error) {
+      console.error('Bucket list error:', error);
+      return c.json({ error: error.message, buckets: [] }, 500);
+    }
+
+    return c.json({ 
+      buckets: buckets?.map(b => ({ 
+        id: b.id, 
+        name: b.name, 
+        public: b.public,
+        created_at: b.created_at 
+      })) || [],
+      count: buckets?.length || 0
+    });
+  } catch (err) {
+    console.error('Error listing buckets:', err);
+    return c.json({ error: String(err), buckets: [] }, 500);
+  }
+});
+
+// Fallback for debugging
+app.notFound((c) => {
+  console.log(`404: ${c.req.method} ${c.req.path}`)
+  return new Response(JSON.stringify({
+    error: 'Route not found',
+    message: `The endpoint ${c.req.method} ${c.req.path} does not exist on this server.`,
+    debug: {
+      path: c.req.path,
+      method: c.req.method,
+      suggestion: 'Ensure the URL follows the pattern: /functions/v1/make-server-edef7798/[route]'
+    }
+  }), {
+    status: 404,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+  });
+})
+
+Deno.serve(app.fetch)

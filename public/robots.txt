@@ -1,0 +1,13 @@
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow owner dashboard and checkout pages
+Disallow: /dashboard
+Disallow: /owner-login
+Disallow: /checkout
+Disallow: /cart
+Disallow: /booking-success
+
+# Sitemap location
+Sitemap: https://carlsonproperties.co.nz/sitemap.xml
