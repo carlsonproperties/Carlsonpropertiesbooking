@@ -74,13 +74,12 @@ export const BEDROOM_IMAGES = {
 // 👨‍👩‍👧‍👦 FAMILY / MEET HOSTS IMAGES
 // ============================================
 export const FAMILY_IMAGES = {
-  // Using your professional property shots as placeholders
-  // Replace with actual family photos when available
-  group: getImageUrl("029_Open2view_ID584542-111_Jarden_Mile.jpg"),
-  outdoor: getImageUrl("031_Open2view_ID584542-111_Jarden_Mile.jpg"),
-  kids: getImageUrl("032_Open2view_ID584542-111_Jarden_Mile.jpg"),
-  highFive: getImageUrl("033_Open2view_ID584542-111_Jarden_Mile.jpg"),
-  playing: getImageUrl("034_Open2view_ID584542-111_Jarden_Mile.jpg"),
+  banner: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/family%20cover%20photo.jpg", // Hero banner
+  group: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/family1.jpg", // The Carlson Group
+  highFive: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/family2high5s.jpg", // Quote banner
+  playing: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/familyswing.jpg", // Family playing
+  outdoor: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/barstools.png", // Excellence background
+  kids: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/rubyleolyingdown.jpg", // Our little explorers
 };
 
 // ============================================

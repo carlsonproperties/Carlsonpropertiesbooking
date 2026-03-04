@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
-import { Menu, Quote, Heart, Target, Instagram, Facebook } from "lucide-react";
-import { Link, useNavigate } from "react-router";
-import { MobileMenu } from "../components/MobileMenu";
-import { Footer } from "../components/Footer";
-import { CarlsonLogo } from "../components/CarlsonLogo";
-import { SEO } from "../components/SEO";
 import { FAMILY_IMAGES } from "../lib/images";
 
 // Using your Supabase-hosted property images for family section
+const familyBanner = FAMILY_IMAGES.banner;
 const familyGroup = FAMILY_IMAGES.group;
 const familyFieldWalk = FAMILY_IMAGES.outdoor;
 const kidsLyingDown = FAMILY_IMAGES.kids;
@@ -72,7 +65,7 @@ export function MeetHosts() {
       {/* Hero Section */}
       <section className="relative h-[110vh] flex items-center justify-center overflow-hidden bg-slate-950">
         <motion.div style={{ scale: heroScale, opacity: heroOpacity }} className="absolute inset-0">
-          <img src="https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/IMG_6633_1.jpg" className="w-full h-full object-cover opacity-60 brightness-75 scale-105" alt="The Carlson Family" />
+          <img src={familyBanner} className="w-full h-full object-cover opacity-60 brightness-75 scale-105" alt="The Carlson Family" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#1a1c16]" />
         </motion.div>
         
@@ -129,7 +122,7 @@ export function MeetHosts() {
             
             <div className="relative group">
               <div className="absolute -inset-4 bg-[#9DA07E]/20 rounded-[50px] blur-2xl group-hover:bg-[#9DA07E]/30 transition-all" />
-              <img src="https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/IMG_6457_2.jpg" className="relative rounded-[40px] shadow-2xl w-full grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Family High Five" />
+              <img src={familyHighFive} className="relative rounded-[40px] shadow-2xl w-full grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Family High Five" />
             </div>
           </motion.div>
         </div>
@@ -180,7 +173,7 @@ export function MeetHosts() {
                 viewport={{ once: true }}
                 className="rounded-[40px] overflow-hidden shadow-xl aspect-[3/4]"
               >
-                <img src="https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/IMG_6316_1.jpg" className="w-full h-full object-cover" alt="The Carlson Group" />
+                <img src={familyGroup} className="w-full h-full object-cover" alt="The Carlson Group" />
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 100 }}
@@ -189,7 +182,7 @@ export function MeetHosts() {
                 transition={{ delay: 0.2 }}
                 className="rounded-[40px] overflow-hidden shadow-xl aspect-[3/4] mt-12"
               >
-                <img src="https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/IMG_6261_2.jpg" className="w-full h-full object-cover" alt="Family Playing" />
+                <img src={familyPlaying} className="w-full h-full object-cover" alt="Family Playing" />
               </motion.div>
             </div>
           </div>
@@ -243,7 +236,7 @@ export function MeetHosts() {
               viewport={{ once: true }}
               className="relative aspect-[16/10] rounded-[60px] overflow-hidden shadow-2xl"
             >
-              <img src="https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/IMG_6591_1.jpg" className="w-full h-full object-cover" alt="Kids lying in grass" />
+              <img src={kidsLyingDown} className="w-full h-full object-cover" alt="Kids lying in grass" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
               <div className="absolute bottom-10 left-10 text-white">
                 <p className="font-serif text-2xl italic">"Our Little Explorers"</p>
