@@ -15,6 +15,7 @@ export default defineConfig({
     alias: {
       // Alias @ to the src directory
       '@': path.resolve(__dirname, './src'),
+      '@emotion/is-prop-valid': '@emotion/is-prop-valid/dist/emotion-is-prop-valid.esm.js',
     },
   },
 
