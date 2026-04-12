@@ -17,6 +17,12 @@ import { RefundPolicy } from "./pages/Refund";
 import { ImageMapper } from "./pages/ImageMapper";
 import { SimpleImageTest } from "./pages/SimpleImageTest";
 import { Maintenance } from "./pages/Maintenance";
+import { CreateBookingsUser } from "./pages/CreateBookingsUser";
+import { ResetBookingsPassword } from "./pages/ResetBookingsPassword";
+import { ResetPassword } from "./pages/ResetPassword";
+import { ViewLatestBooking } from "./pages/ViewLatestBooking";
+import { HealthCheck } from "./pages/HealthCheck";
+import { TestEmails } from "./pages/TestEmails";
 
 // MAINTENANCE MODE
 // Set to true to show maintenance page for all routes
@@ -37,11 +43,17 @@ export const router = createBrowserRouter([
       { path: "booking-success", Component: BookingConfirmation },
       { path: "dashboard", Component: Dashboard },
       { path: "owner-login", Component: OwnerLogin },
+      { path: "reset-password", Component: ResetPassword },
       { path: "terms", Component: Terms },
       { path: "privacy", Component: PrivacyPolicy },
       { path: "refund", Component: RefundPolicy },
       { path: "image-mapper", Component: ImageMapper },
       { path: "image-test", Component: SimpleImageTest },
+      { path: "create-bookings-user", Component: CreateBookingsUser },
+      { path: "reset-bookings-password", Component: ResetBookingsPassword },
+      { path: "view-latest-booking", Component: ViewLatestBooking },
+      { path: "health-check", Component: HealthCheck },
+      { path: "test-emails", Component: TestEmails },
     ],
   },
   // Catch-all route for maintenance mode

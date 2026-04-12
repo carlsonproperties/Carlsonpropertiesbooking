@@ -13,9 +13,10 @@ const STORAGE_BUCKET = "Website Media"; // Bucket name (will be encoded in URL)
 
 // Helper function to build Supabase Storage URL
 const getImageUrl = (filename: string) => {
-  // Supabase expects the bucket name in the URL path (not encoded in path, but spaces work)
-  // Only encode the filename, not the bucket name in the path
-  const url = `https://${SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/${STORAGE_BUCKET}/${filename}`;
+  // Encode both bucket name and filename for proper URL handling
+  const encodedBucket = encodeURIComponent(STORAGE_BUCKET);
+  const encodedFilename = encodeURIComponent(filename);
+  const url = `https://${SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/${encodedBucket}/${encodedFilename}`;
   // Log URLs for debugging mobile image loading issues
   console.log(`📸 Image URL for "${filename}":`, url);
   return url;

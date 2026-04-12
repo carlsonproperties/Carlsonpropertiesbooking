@@ -164,6 +164,8 @@ export function Home() {
                         console.error('Hero image failed to load');
                         console.error('Hero image URL:', e.currentTarget.src);
                         console.error('Check if Supabase Storage bucket "Website Media" is set to PUBLIC');
+                        // Set fallback image
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&h=900&fit=crop';
                       }}
                       onLoad={() => console.log('Hero image loaded successfully:', heroImg)}
                     />

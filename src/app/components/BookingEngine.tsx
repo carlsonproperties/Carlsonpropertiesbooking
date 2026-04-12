@@ -95,6 +95,9 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
       const current = startOfDay(occupied);
       const from = startOfDay(range.from!);
       const to = startOfDay(range.to!);
+      // CHANGED: Only block if the occupied date is within the stay period
+      // Checkout dates are NOT blocked (same-day turnover allowed)
+      // Check if occupied date falls between check-in (inclusive) and check-out (exclusive)
       return current >= from && current < to;
     });
 

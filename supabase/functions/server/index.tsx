@@ -5,6 +5,15 @@ import * as kv from './kv_store.tsx'
 import ical from 'npm:node-ical@0.18.0'
 import Stripe from 'npm:stripe@14.16.0'
 import { Resend } from 'npm:resend@3.1.0'
+import { 
+  sendBookingConfirmation, 
+  sendPreArrivalEmail, 
+  sendCheckInDayEmail, 
+  sendCheckOutDayEmail, 
+  sendReviewRequestEmail,
+  sendOwnerNotification,
+  sendTestEmails 
+} from './email_templates.tsx'
 
 const app = new Hono()
 
@@ -32,182 +41,102 @@ const AIRTABLE_TABLE_NAME = 'Bookings'
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
-// Helper to send emails to guests
+// Initialize Supabase admin client for storage management
+const supabaseAdmin = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+);
+
+// Auto-fix storage bucket permissions on server startup
+async function ensureStorageBucketIsPublic() {
+  const bucketName = 'Website Media';
+  
+  try {
+    console.log(`🔍 Checking storage bucket "${bucketName}" permissions...`);
+    
+    // Get bucket info
+    const { data: buckets, error: listError } = await supabaseAdmin.storage.listBuckets();
+    
+    if (listError) {
+      console.error('❌ Error listing buckets:', listError);
+      return;
+    }
+    
+    const bucket = buckets?.find(b => b.name === bucketName);
+    
+    if (!bucket) {
+      console.log(`📦 Bucket "${bucketName}" not found. Creating it...`);
+      const { error: createError } = await supabaseAdmin.storage.createBucket(bucketName, {
+        public: true,
+        fileSizeLimit: 52428800 // 50MB
+      });
+      
+      if (createError) {
+        console.error('❌ Error creating bucket:', createError);
+      } else {
+        console.log(`✅ Bucket "${bucketName}" created as PUBLIC`);
+      }
+      return;
+    }
+    
+    // Check if bucket is already public
+    if (bucket.public) {
+      console.log(`✅ Bucket "${bucketName}" is already PUBLIC - images will load correctly`);
+      return;
+    }
+    
+    // Make bucket public
+    console.log(`🔧 Making bucket "${bucketName}" PUBLIC...`);
+    const { error: updateError } = await supabaseAdmin.storage.updateBucket(bucketName, {
+      public: true
+    });
+    
+    if (updateError) {
+      console.error('❌ Error updating bucket permissions:', updateError);
+      console.error('⚠️  You may need to manually set the bucket to PUBLIC in Supabase Dashboard');
+    } else {
+      console.log(`✅ SUCCESS! Bucket "${bucketName}" is now PUBLIC - hero image will load!`);
+    }
+    
+  } catch (err) {
+    console.error('❌ Error in storage bucket setup:', err);
+  }
+}
+
+// Run storage setup on server start
+ensureStorageBucketIsPublic().catch(console.error);
+
+// Helper to send emails to guests (updated to use new email templates)
 async function sendAutomationEmails(booking: any) {
   if (!resend) {
     console.error('Resend API key missing, skipping emails');
     return;
   }
 
-  const guestEmail = booking.email;
-  const guestName = booking.guest.split(' ')[0];
-  const bookingRef = booking.id.slice(0, 8).toUpperCase();
-  
-  const styles = `
-    font-family: 'Times New Roman', serif;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 60px 40px;
-    background-color: #FDFCF8;
-    color: #2D2D2D;
-    text-align: center;
-  `;
-
-  const cardStyles = `
-    background: white;
-    padding: 60px 40px;
-    border-radius: 40px;
-    border: 1px solid #F1F1F1;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.02);
-  `;
-
-  const accentText = `
-    color: #9DA07E;
-    font-family: sans-serif;
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: block;
-  `;
-
-  const h1Styles = `
-    font-size: 42px;
-    color: #1A1A1A;
-    margin: 0 0 30px 0;
-    line-height: 1.1;
-    font-weight: normal;
-  `;
-
-  const pStyles = `
-    font-family: sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #666;
-    margin-bottom: 40px;
-    font-weight: 300;
-  `;
-
-  const refBoxStyles = `
-    background: #F8F8F6;
-    border-radius: 24px;
-    padding: 24px;
-    margin: 40px 0;
-    border: 1px solid #F1F1EE;
-  `;
-
-  const buttonStyles = `
-    display: inline-block;
-    background: #1A1A1A;
-    color: white;
-    padding: 20px 40px;
-    border-radius: 16px;
-    text-decoration: none;
-    font-family: sans-serif;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  `;
-
   try {
-    // 1. Send IMMEDIATE Confirmation Email
-    console.log(`Sending immediate confirmation email to ${guestEmail}...`);
-    await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@resend.dev>',
-      to: [guestEmail],
-      subject: `Reservation Confirmed: See you at One Eleven 🌿`,
-      html: `
-        <div style="${styles}">
-          <div style="${cardStyles}">
-            <div style="width: 1px; height: 60px; background: #9DA07E; margin: 0 auto 40px; opacity: 0.3;"></div>
-            
-            <div style="width: 64px; height: 64px; background: #9DA07E10; border-radius: 50%; margin: 0 auto 30px; display: table;">
-              <div style="display: table-cell; vertical-align: middle; color: #9DA07E; font-size: 32px;">✓</div>
-            </div>
-
-            <span style="${accentText}">Reservation Confirmed</span>
-            
-            <h1 style="${h1Styles}">
-              See you at<br/>
-              <span style="font-style: italic;">One Eleven.</span>
-            </h1>
-
-            <p style="${pStyles}">
-              Thank you, ${guestName}. Your sanctuary in Taupō is secured for <strong>${booking.checkIn}</strong>. We're thrilled to host you.
-            </p>
-
-            <div style="${refBoxStyles}">
-              <span style="display: block; font-family: sans-serif; font-size: 9px; font-weight: 900; letter-spacing: 0.2em; color: #AFAFAF; text-transform: uppercase; margin-bottom: 8px;">Booking Reference</span>
-              <span style="font-size: 20px; letter-spacing: 0.05em; color: #1A1A1A; font-weight: bold;">#${bookingRef}</span>
-            </div>
-
-            <a href="https://oneeleven.nz/guest-info" style="${buttonStyles}">Access Digital Guidebook</a>
-            
-            <div style="margin-top: 60px; border-top: 1px solid #F1F1EE; pt-40px;">
-              <p style="font-family: sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.2em; color: #AFAFAF; text-transform: uppercase; margin-top: 30px;">
-                111 Jarden Mile, Taupō, NZ
-              </p>
-            </div>
-          </div>
-        </div>
-      `
-    });
-
-    // 2. Schedule "4 Days Before" Check-in Email
+    // 1. Send immediate booking confirmation
+    console.log(`📧 Sending booking confirmation to ${booking.email}...`);
+    await sendBookingConfirmation(booking);
+    
+    // 2. Send owner notification
+    console.log(`📧 Sending owner notification...`);
+    await sendOwnerNotification(booking);
+    
+    // 3. Schedule pre-arrival email (4 days before check-in)
     const checkInDate = new Date(booking.checkIn);
-    const scheduledDate = new Date(checkInDate);
-    scheduledDate.setDate(scheduledDate.getDate() - 4);
-    scheduledDate.setHours(10, 0, 0, 0);
-
-    if (scheduledDate > new Date()) {
-      console.log(`Scheduling door code email for ${scheduledDate.toISOString()}...`);
-      const doorCode = Math.floor(1000 + Math.random() * 9000); 
-      
-      await resend.emails.send({
-        from: 'One Eleven | On the Mile <bookings@resend.dev>',
-        to: [guestEmail],
-        subject: `Your Check-in Details for One Eleven 🔑`,
-        scheduled_at: scheduledDate.toISOString(),
-        html: `
-          <div style="${styles}">
-            <div style="${cardStyles}">
-              <div style="width: 1px; height: 60px; background: #9DA07E; margin: 0 auto 40px; opacity: 0.3;"></div>
-              
-              <span style="${accentText}">Ready for your arrival?</span>
-              
-              <h1 style="${h1Styles}">
-                Your stay begins<br/>
-                <span style="font-style: italic;">in 4 days.</span>
-              </h1>
-
-              <p style="${pStyles}">
-                Hi ${guestName}, we're looking forward to your arrival at One Eleven. Here are your essential check-in details.
-              </p>
-
-              <div style="background: #1A1A1A; color: white; padding: 40px; border-radius: 32px; margin: 40px 0; text-align: center;">
-                <span style="display: block; font-family: sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.3em; opacity: 0.6; text-transform: uppercase; margin-bottom: 15px;">Your Smart Lock Code</span>
-                <span style="font-size: 48px; letter-spacing: 0.2em; font-weight: normal; font-family: sans-serif;">${doorCode}</span>
-                <p style="margin-top: 15px; font-family: sans-serif; font-size: 11px; opacity: 0.5;">Valid from 3:00 PM on ${booking.checkIn}</p>
-              </div>
-
-              <div style="text-align: left; background: #F8F8F6; padding: 25px; border-radius: 20px; margin-bottom: 40px;">
-                <p style="margin: 0; font-family: sans-serif; font-size: 13px; line-height: 1.6;">
-                  <strong>Address:</strong> 111 Jarden Mile, Taupō, New Zealand<br/>
-                  <strong>Check-in:</strong> After 3:00 PM<br/>
-                  <strong>Checkout:</strong> Before 10:00 AM
-                </p>
-              </div>
-
-              <a href="https://oneeleven.nz/guest-info" style="${buttonStyles}">View Arrival Guide</a>
-            </div>
-          </div>
-        `
-      });
+    const fourDaysBefore = new Date(checkInDate);
+    fourDaysBefore.setDate(fourDaysBefore.getDate() - 4);
+    fourDaysBefore.setHours(10, 0, 0, 0);
+    
+    if (fourDaysBefore > new Date()) {
+      console.log(`⏰ Pre-arrival email will be sent on ${fourDaysBefore.toISOString()}`);
+      // Note: This will need to be triggered by a cron job or scheduled task
+      // For now, we'll just log it. The email template is ready in email_templates.tsx
     }
+    
+    console.log(`✅ Booking emails sent successfully for ${booking.guest}`);
   } catch (err) {
-    console.error('Email Automation Error:', err);
+    console.error('❌ Email automation error:', err);
   }
 }
 
@@ -388,6 +317,8 @@ const handleCalendarEvents = async (c: any) => {
           const start = new Date(ev.start);
           const end = new Date(ev.end);
           let current = new Date(start);
+          // CHANGED: Only block dates UP TO (but not including) the checkout date
+          // This allows same-day turnovers - checkout date is available for new check-ins
           while (current < end) {
             occupiedDates.push(current.toISOString().split('T')[0]);
             current.setDate(current.getDate() + 1);
@@ -400,6 +331,7 @@ const handleCalendarEvents = async (c: any) => {
     localBookings.forEach((b: any) => {
       let current = new Date(b.checkIn);
       const end = new Date(b.checkOut);
+      // CHANGED: Only block dates UP TO (but not including) the checkout date
       while (current < end) {
         const dateStr = current.toISOString().split('T')[0];
         if (!occupiedDates.includes(dateStr)) occupiedDates.push(dateStr);
@@ -562,13 +494,62 @@ const handleSignup = async (c: any) => {
   }
 }
 
+const handleResetPassword = async (c: any) => {
+  try {
+    const { email, newPassword } = await c.req.json();
+    const cleanEmail = email.toLowerCase().trim();
+    const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    
+    // Get the user by email first
+    const { data: users, error: getUserError } = await supabase.auth.admin.listUsers();
+    if (getUserError) {
+      return new Response(JSON.stringify({ error: getUserError.message }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    
+    const user = users.users.find(u => u.email?.toLowerCase() === cleanEmail);
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'User not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    
+    // Update the password
+    const { data, error } = await supabase.auth.admin.updateUserById(user.id, { password: newPassword });
+    if (error) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    
+    return new Response(JSON.stringify({ success: true, message: 'Password updated successfully' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) { 
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
 const handleDashboardStats = async (c: any) => {
   try {
+    console.log('Dashboard stats requested');
     const bookings = await kv.get('bookings') || [];
+    console.log('Local bookings:', bookings.length);
+    
     const airtableBookings = await getFromAirtable();
+    console.log('Airtable bookings:', airtableBookings.length);
     
     // Merge bookings, avoiding duplicates if they exist in both (unlikely but safe)
     const allBookings = [...bookings, ...airtableBookings];
+    console.log('Total bookings:', allBookings.length);
     
     // Improved sorting: Upcoming bookings first (closest arrival first), 
     // followed by past bookings (most recent completion first).
@@ -609,6 +590,13 @@ const handleDashboardStats = async (c: any) => {
       const revenue = parseFloat(String(b.total || 0));
       const expense = parseFloat(String(b.expenses || 0));
       const date = new Date(b.checkIn);
+      
+      // Skip invalid dates
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date in booking:', b.checkIn);
+        return;
+      }
+      
       const year = date.getFullYear();
       const month = date.getMonth();
 
@@ -623,9 +611,11 @@ const handleDashboardStats = async (c: any) => {
         yearlyStats[year] = { totalBookings: 0, totalNights: 0, totalRevenue: 0 };
       }
 
-      // Add to monthly data
-      yearlyEarnings[year][month].earnings += revenue;
-      yearlyEarnings[year][month].expenses += expense;
+      // Add to monthly data - ensure the month index is valid
+      if (yearlyEarnings[year] && yearlyEarnings[year][month]) {
+        yearlyEarnings[year][month].earnings += revenue;
+        yearlyEarnings[year][month].expenses += expense;
+      }
 
       // Add to yearly stats
       yearlyStats[year].totalBookings += 1;
@@ -642,29 +632,44 @@ const handleDashboardStats = async (c: any) => {
       const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
       const daysInYear = isLeap ? 366 : 365;
       const rate = Math.min(100, Math.round((stats.totalNights / daysInYear) * 100));
-      yearlyOccupancy[year] = `${rate}%`;
+      yearlyOccupancy[year] = rate; // Return as number instead of string
     });
 
-    const occupancyRate = yearlyOccupancy[currentYear] || "0%";
+    // Calculate additional stats
+    const occupancyRate = yearlyOccupancy[currentYear] || 0;
     const totalFees = totalRevenue * 0.15; // Standard 15% platform fee estimation
+    const avgBookingValue = allBookings.length > 0 ? totalRevenue / allBookings.length : 0;
+    const upcomingBookings = allBookings.filter((b: any) => new Date(b.checkIn) >= today).length;
 
-    return new Response(JSON.stringify({ 
+    const response = { 
       allGuests: allBookings, 
       recentGuests: allBookings.slice(0, 10),
       totalBookings: allBookings.length,
       totalRevenue,
       totalExpenses,
       totalFees,
+      avgBookingValue,
+      upcomingBookings,
+      occupancyRate,
       yearlyEarnings,
       yearlyStats,
-      yearlyOccupancy,
-      occupancyRate
-    }), {
+      yearlyOccupancy
+    };
+
+    console.log('Dashboard stats calculated successfully:', {
+      totalBookings: response.totalBookings,
+      totalRevenue: response.totalRevenue,
+      occupancyRate: response.occupancyRate,
+      avgBookingValue: response.avgBookingValue
+    });
+
+    return new Response(JSON.stringify(response), {
       status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
-  } catch (err: any) { 
-    return new Response(JSON.stringify({ error: err.message }), {
+  } catch (err: any) {
+    console.error('Dashboard stats error:', err);
+    return new Response(JSON.stringify({ error: err.message, stack: err.stack }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
@@ -750,10 +755,214 @@ registerRoute('get', '/calendar-events', handleCalendarEvents);
 registerRoute('get', '/verify-checkout', handleVerifyCheckout);
 registerRoute('get', '/dashboard-stats', handleDashboardStats);
 registerRoute('post', '/signup', handleSignup);
+registerRoute('post', '/reset-password', handleResetPassword);
 registerRoute('post', '/manual-booking', handleManualBooking);
 registerRoute('post', '/create-checkout-session', handleCreateCheckout);
 registerRoute('post', '/update-booking', handleUpdateBooking);
 registerRoute('post', '/delete-booking', handleDeleteBooking);
+
+// NEW: Test all email templates endpoint
+registerRoute('get', '/test-emails', async (c: any) => {
+  const testEmail = c.req.query('email') || 'grantashl1@gmail.com';
+  
+  try {
+    console.log(`🧪 Testing all email templates, sending to: ${testEmail}`);
+    
+    // Send all test emails
+    const testBooking = {
+      id: 'test-' + crypto.randomUUID(),
+      guest: 'Grant Ashleigh',
+      email: testEmail,
+      phone: '0276977961',
+      checkIn: '2026-03-20',
+      checkOut: '2026-03-25',
+      guests: 4,
+      total: 6375,
+      notes: 'Test booking for email verification'
+    };
+    
+    await sendBookingConfirmation(testBooking);
+    await sendOwnerNotification(testBooking);
+    await sendPreArrivalEmail(testBooking);
+    await sendCheckInDayEmail(testBooking);
+    await sendCheckOutDayEmail(testBooking);
+    await sendReviewRequestEmail(testBooking);
+    
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: `All 6 test emails sent to ${testEmail}. Check your inbox!`,
+      emails: [
+        '1. Booking Confirmation ✅',
+        '2. Owner Notification ✅',
+        '3. Pre-Arrival Email ✅',
+        '4. Check-In Day Welcome ✅',
+        '5. Check-Out Day Instructions ✅',
+        '6. Review Request ✅'
+      ]
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) {
+    console.error('❌ Test email error:', err);
+    return new Response(JSON.stringify({ 
+      error: err.message,
+      stack: err.stack 
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+});
+
+// NEW: Process scheduled emails (for cron job)
+registerRoute('get', '/process-scheduled-emails', async (c: any) => {
+  try {
+    console.log('⏰ Processing scheduled emails...');
+    
+    const bookings = await kv.get('bookings') || [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let emailsSent = 0;
+    const results: any[] = [];
+    
+    for (const booking of bookings) {
+      const checkInDate = new Date(booking.checkIn);
+      const checkOutDate = new Date(booking.checkOut);
+      
+      // Calculate days until/since check-in
+      const daysUntilCheckIn = Math.floor((checkInDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      const daysSinceCheckOut = Math.floor((today.getTime() - checkOutDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Email 3: Pre-Arrival (4 days before check-in)
+      if (daysUntilCheckIn === 4 && !booking.preArrivalSent) {
+        console.log(`📧 Sending pre-arrival email to ${booking.email}...`);
+        await sendPreArrivalEmail(booking);
+        booking.preArrivalSent = true;
+        emailsSent++;
+        results.push({ type: 'Pre-Arrival', guest: booking.guest, email: booking.email });
+      }
+      
+      // Email 4: Check-In Day (on check-in date at 9am)
+      if (daysUntilCheckIn === 0 && !booking.checkInDaySent) {
+        console.log(`📧 Sending check-in day email to ${booking.email}...`);
+        await sendCheckInDayEmail(booking);
+        booking.checkInDaySent = true;
+        emailsSent++;
+        results.push({ type: 'Check-In Day', guest: booking.guest, email: booking.email });
+      }
+      
+      // Email 5: Check-Out Day (on check-out date at 9am)
+      if (checkOutDate.toDateString() === today.toDateString() && !booking.checkOutDaySent) {
+        console.log(`📧 Sending check-out day email to ${booking.email}...`);
+        await sendCheckOutDayEmail(booking);
+        booking.checkOutDaySent = true;
+        emailsSent++;
+        results.push({ type: 'Check-Out Day', guest: booking.guest, email: booking.email });
+      }
+      
+      // Email 6: Review Request (2 days after check-out)
+      if (daysSinceCheckOut === 2 && !booking.reviewRequestSent) {
+        console.log(`📧 Sending review request to ${booking.email}...`);
+        await sendReviewRequestEmail(booking);
+        booking.reviewRequestSent = true;
+        emailsSent++;
+        results.push({ type: 'Review Request', guest: booking.guest, email: booking.email });
+      }
+    }
+    
+    // Save updated bookings with email tracking flags
+    if (emailsSent > 0) {
+      await kv.set('bookings', bookings);
+    }
+    
+    console.log(`✅ Scheduled email processing complete. Sent ${emailsSent} emails.`);
+    
+    return new Response(JSON.stringify({ 
+      success: true,
+      emailsSent,
+      results,
+      message: `Processed ${bookings.length} bookings, sent ${emailsSent} scheduled emails`
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) {
+    console.error('❌ Scheduled email processing error:', err);
+    return new Response(JSON.stringify({ 
+      error: err.message,
+      stack: err.stack 
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+});
+
+// NEW: Test individual email types
+registerRoute('get', '/test-single-email', async (c: any) => {
+  const emailType = c.req.query('type') || 'booking-confirmation';
+  const testEmail = c.req.query('email') || 'grantashl1@gmail.com';
+  
+  const testBooking = {
+    id: 'test-' + crypto.randomUUID(),
+    guest: 'Grant Ashleigh',
+    email: testEmail,
+    phone: '0276977961',
+    checkIn: '2026-03-20',
+    checkOut: '2026-03-25',
+    guests: 4,
+    total: 6375,
+    notes: 'Test booking for email verification'
+  };
+  
+  try {
+    console.log(`🧪 Testing ${emailType} email to ${testEmail}...`);
+    
+    switch (emailType) {
+      case 'booking-confirmation':
+        await sendBookingConfirmation(testBooking);
+        break;
+      case 'owner-notification':
+        await sendOwnerNotification(testBooking);
+        break;
+      case 'pre-arrival':
+        await sendPreArrivalEmail(testBooking);
+        break;
+      case 'check-in':
+        await sendCheckInDayEmail(testBooking);
+        break;
+      case 'check-out':
+        await sendCheckOutDayEmail(testBooking);
+        break;
+      case 'review':
+        await sendReviewRequestEmail(testBooking);
+        break;
+      default:
+        throw new Error(`Unknown email type: ${emailType}`);
+    }
+    
+    return new Response(JSON.stringify({ 
+      success: true,
+      message: `${emailType} email sent to ${testEmail}`,
+      emailType,
+      recipient: testEmail
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) {
+    console.error('❌ Single email test error:', err);
+    return new Response(JSON.stringify({ 
+      error: err.message,
+      stack: err.stack 
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+});
 
 // Helper route to list all files in property-images bucket
 app.get('/make-server-edef7798/list-storage-images', async (c) => {
@@ -819,6 +1028,35 @@ app.get('/make-server-edef7798/list-buckets', async (c) => {
   } catch (err) {
     console.error('Error listing buckets:', err);
     return c.json({ error: String(err), buckets: [] }, 500);
+  }
+});
+
+// NEW: Manual fix for storage bucket permissions
+app.get('/make-server-edef7798/fix-storage-bucket', async (c) => {
+  try {
+    console.log('🔧 Manual storage bucket fix triggered...');
+    await ensureStorageBucketIsPublic();
+    
+    // Verify the fix worked
+    const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+    const websiteMediaBucket = buckets?.find(b => b.name === 'Website Media');
+    
+    return c.json({ 
+      success: true,
+      message: 'Storage bucket permissions updated',
+      bucketStatus: {
+        name: 'Website Media',
+        isPublic: websiteMediaBucket?.public || false,
+        exists: !!websiteMediaBucket
+      },
+      testUrl: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/029_Open2view_ID584542-111_Jarden_Mile.jpg'
+    });
+  } catch (err: any) {
+    console.error('Error fixing storage bucket:', err);
+    return c.json({ 
+      error: err.message,
+      stack: err.stack 
+    }, 500);
   }
 });
 

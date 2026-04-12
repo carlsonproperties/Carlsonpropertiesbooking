@@ -3,10 +3,10 @@ import { useNavigate, Link } from "react-router";
 import { supabase } from "../lib/supabase";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
 import { motion } from "motion/react";
-import { Mail, Lock, LogIn, ShieldCheck, ArrowLeft, Loader2, User } from "lucide-react";
+import { Mail, Lock, LogIn, ShieldCheck, ArrowLeft, Loader2, User, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 
-const AUTHORIZED_EMAILS = ["grantashl1@gmail.com", "donki.bmbr@gmail.com"];
+const AUTHORIZED_EMAILS = ["grantashl1@gmail.com", "donki.bmbr@gmail.com", "bookings@carlsonproperties.co.nz"];
 
 export function OwnerLogin() {
   const [email, setEmail] = useState("");
@@ -19,6 +19,17 @@ export function OwnerLogin() {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      
+      // If session exists but email is not authorized, sign them out
+      if (session?.user?.email && !AUTHORIZED_EMAILS.includes(session.user.email.toLowerCase())) {
+        await supabase.auth.signOut();
+        toast.error("Unauthorized Access", { 
+          description: "Your email is not on the authorized list." 
+        });
+        return;
+      }
+      
+      // If session exists and IS authorized, redirect to dashboard
       if (session?.user?.email && AUTHORIZED_EMAILS.includes(session.user.email.toLowerCase())) {
         navigate("/dashboard");
       }
@@ -60,6 +71,10 @@ export function OwnerLogin() {
         const data = await res.json();
         
         if (!res.ok) {
+          // Check if user already exists
+          if (data.error && data.error.includes("already been registered")) {
+            throw new Error("This email is already registered. Please sign in instead using the link below.");
+          }
           throw new Error(data.error || 'Failed to create account');
         }
         
@@ -107,108 +122,181 @@ export function OwnerLogin() {
     }
   };
 
+  const handleForgotPassword = async () => {
+    const cleanEmail = email.toLowerCase().trim();
+    
+    if (!cleanEmail) {
+      toast.error("Email Required", { 
+        description: "Please enter your email address first." 
+      });
+      return;
+    }
+
+    if (!AUTHORIZED_EMAILS.includes(cleanEmail)) {
+      toast.error("Access Denied", { 
+        description: "This email address is not authorized to access the Owner Portal." 
+      });
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+
+      toast.success("Password Reset Email Sent", { 
+        description: "Check your inbox for the password reset link." 
+      });
+    } catch (error: any) {
+      console.error("Password reset error:", error);
+      toast.error("Error", { 
+        description: error.message || "Failed to send password reset email." 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-6 selection:bg-[#9DA07E] selection:text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(157,160,126,0.05),transparent_50%)]" />
-      
-      <motion.div 
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
+      <Link 
+        to="/"
+        className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-white transition-colors group"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm">Back to Home</span>
+      </Link>
+
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md relative z-10"
+        className="w-full max-w-md"
       >
-        <div className="text-center mb-12">
-          <Link to="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-[#9DA07E] transition-colors mb-8 group">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Back to Site</span>
-          </Link>
-          
-          <div className="w-16 h-16 bg-[#9DA07E]/10 rounded-2xl flex items-center justify-center text-[#9DA07E] mx-auto mb-6">
-            <ShieldCheck size={32} />
+        <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-10 shadow-2xl">
+          {/* Logo/Header */}
+          <div className="text-center mb-10">
+            <div className="w-20 h-20 bg-gradient-to-br from-[#9DA07E] to-[#7A7E5F] rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-[#9DA07E]/20">
+              <ShieldCheck className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">Owner Portal</h1>
+            <p className="text-slate-400 text-sm">Secure access for property managers</p>
           </div>
-          <h1 className="text-4xl font-serif text-white mb-3">Owner Portal</h1>
-          <p className="text-slate-500 text-sm tracking-widest uppercase">Secure Management Access</p>
-        </div>
 
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[40px] p-10 shadow-2xl">
+          {/* Form */}
           <form onSubmit={handleAuth} className="space-y-6">
+            {/* Name (only for signup) */}
             {isSignUp && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="space-y-2"
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
               >
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Full Name
+                </label>
                 <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={18} />
-                  <input 
-                    type="text" 
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                  <input
+                    type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Ashleigh Carlson"
-                    required={isSignUp}
-                    className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-slate-700 focus:border-[#9DA07E]/50 outline-none transition-all"
+                    className="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#9DA07E] transition-colors"
+                    placeholder="Your name"
                   />
                 </div>
               </motion.div>
             )}
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email Address</label>
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Email Address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={18} />
-                <input 
-                  type="email" 
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <input
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@gmail.com"
                   required
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-slate-700 focus:border-[#9DA07E]/50 outline-none transition-all"
+                  className="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#9DA07E] transition-colors"
+                  placeholder="owner@carlsonproperties.co.nz"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Password</label>
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={18} />
-                <input 
-                  type="password" 
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <input
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Your secure password"
                   required
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-slate-700 focus:border-[#9DA07E]/50 outline-none transition-all"
+                  className="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#9DA07E] transition-colors"
+                  placeholder="Enter your password"
                 />
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            {/* Submit Button */}
+            <button
+              type="submit"
               disabled={loading}
-              className="w-full bg-[#9DA07E] text-black font-black py-5 rounded-2xl text-[11px] tracking-widest uppercase hover:bg-white hover:shadow-xl hover:shadow-[#9DA07E]/20 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 disabled:scale-100"
+              className="w-full bg-gradient-to-r from-[#9DA07E] to-[#7A7E5F] text-white py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#9DA07E]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
-              {isSignUp ? "Create Secure Account" : "Access Portfolio"}
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>{isSignUp ? "Creating Account..." : "Signing In..."}</span>
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-5 h-5" />
+                  <span>{isSignUp ? "Create Account" : "Sign In"}</span>
+                </>
+              )}
             </button>
           </form>
 
-          <div className="mt-8 pt-8 border-t border-white/5 text-center">
+          {/* Footer Links */}
+          <div className="mt-8 pt-8 border-t border-white/5 text-center space-y-3">
+            {!isSignUp && (
+              <button 
+                onClick={handleForgotPassword}
+                disabled={loading}
+                className="text-xs text-slate-500 hover:text-[#9DA07E] transition-colors flex items-center justify-center gap-2 mx-auto"
+              >
+                <KeyRound size={14} />
+                Forgot Password?
+              </button>
+            )}
             <button 
               onClick={() => {
                 setIsSignUp(!isSignUp);
                 toast.dismiss();
               }}
-              className="text-xs text-slate-500 hover:text-white transition-colors"
+              className="text-xs text-slate-500 hover:text-white transition-colors block w-full"
             >
               {isSignUp ? "Already have access? Sign In" : "Need to set up access? Create Account"}
             </button>
           </div>
-        </div>
 
-        <p className="mt-12 text-center text-slate-600 text-[10px] uppercase tracking-[0.3em] leading-relaxed">
-          Authorized personnel only.<br />
-          Access restricted to Carlson Properties Administrators.
-        </p>
+          {/* Security Notice */}
+          <div className="mt-6 bg-slate-900/50 border border-slate-700/30 rounded-xl p-4">
+            <p className="text-xs text-slate-500 text-center leading-relaxed">
+              🔒 Access is restricted to authorized email addresses only. Contact the administrator if you need access.
+            </p>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
