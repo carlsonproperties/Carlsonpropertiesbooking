@@ -111,7 +111,7 @@ export async function sendBookingConfirmation(booking: any) {
   
   try {
     await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@resend.dev>',
+      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
       to: [booking.email],
       subject: `Booking Confirmed - ONE ELEVEN ON THE MILE`,
       html: `
@@ -204,7 +204,7 @@ export async function sendPreArrivalEmail(booking: any) {
 
   try {
     await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@resend.dev>',
+      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
       to: [booking.email],
       subject: `Your Stay is Almost Here - Guest Information`,
       html: `
@@ -279,7 +279,7 @@ export async function sendCheckInDayEmail(booking: any) {
 
   try {
     await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@resend.dev>',
+      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
       to: [booking.email],
       subject: `Welcome to ONE ELEVEN ON THE MILE!`,
       html: `
@@ -342,7 +342,7 @@ export async function sendCheckOutDayEmail(booking: any) {
 
   try {
     await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@resend.dev>',
+      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
       to: [booking.email],
       subject: `Check-Out Instructions - Thank You for Staying`,
       html: `
@@ -402,7 +402,7 @@ export async function sendReviewRequestEmail(booking: any) {
 
   try {
     await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@resend.dev>',
+      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
       to: [booking.email],
       subject: `How Was Your Stay? We'd Love Your Feedback`,
       html: `
@@ -465,7 +465,7 @@ export async function sendOwnerNotification(booking: any) {
 
   try {
     await resend.emails.send({
-      from: 'One Eleven | Booking Alert <bookings@resend.dev>',
+      from: 'One Eleven | Booking Alert <bookings@carlsonproperties.co.nz>',
       to: ['bookings@carlsonproperties.co.nz'],
       subject: `🎉 New Booking - ${booking.guest} - ${formatDate(checkInDate)}`,
       html: `

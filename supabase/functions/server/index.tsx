@@ -209,7 +209,7 @@ async function getFromAirtable() {
   const baseId = 'appdLyi60QUkPJdEP';
   const tableNames = ['Bookings', 'Booking', 'Reservations', 'Stay', 'Stays', 'Property Bookings', 'Direct Bookings'];
   let allRecords: any[] = [];
-  
+
   for (const tableName of tableNames) {
     try {
       let offset = '';
@@ -220,7 +220,7 @@ async function getFromAirtable() {
           headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}`, 'Accept': 'application/json' }
         }, 10000);
         if (!response.ok) {
-          if (response.status === 404) break; 
+          if (response.status === 404) break;
           break;
         }
         tableFound = true;
@@ -233,6 +233,129 @@ async function getFromAirtable() {
     } catch (err) { console.error(`Airtable fetch error:`, err); }
   }
   return [];
+}
+
+// NEW: Fetch expenses from Airtable with full pagination
+async function getExpensesFromAirtable() {
+  if (!AIRTABLE_PAT) return [];
+  const baseId = 'appdLyi60QUkPJdEP';
+  const tableNames = ['Expenses', 'Expense', 'Costs', 'Outgoings'];
+  let allRecords: any[] = [];
+
+  for (const tableName of tableNames) {
+    try {
+      let offset = '';
+      let recordCount = 0;
+
+      while (true) {
+        const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}${offset ? `?offset=${offset}` : ''}`;
+        const response = await fetchWithTimeout(url, {
+          headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}`, 'Accept': 'application/json' }
+        }, 10000);
+
+        if (!response.ok) {
+          if (response.status === 404) break;
+          break;
+        }
+
+        const data = await response.json();
+        const records = data.records || [];
+        allRecords = [...allRecords, ...records];
+        recordCount += records.length;
+
+        offset = data.offset;
+        if (!offset) break;
+      }
+
+      if (allRecords.length > 0) {
+        console.log(`✅ Fetched ${recordCount} expense records from ${tableName}`);
+        return processAirtableExpenses(allRecords);
+      }
+    } catch (err) {
+      console.error(`Airtable expenses fetch error:`, err);
+    }
+  }
+
+  console.log('⚠️ No expense records found');
+  return [];
+}
+
+function processAirtableExpenses(records: any[]) {
+  const expenses: any[] = [];
+  let totalExpenses = 0;
+
+  records.forEach((r: any) => {
+    const f = r.fields;
+
+    // Extract amount - try multiple column names
+    let amount = 0;
+    const amountVal = f['Amount'] || f['Price'] || f['Value'] || f['Cost'] || f['Expense'] || f['Total'];
+    if (amountVal) {
+      // Handle currency formatting
+      const cleanAmount = String(amountVal).replace(/[$,]/g, '');
+      amount = parseFloat(cleanAmount) || 0;
+    }
+
+    // Skip if no amount
+    if (amount === 0) return;
+
+    // Aggressive date detection - check multiple fields
+    let year: number | null = null;
+    let month: number | null = null;
+
+    // Try Month Display field (e.g., "January 2024")
+    const monthDisplay = f['Month Display'] || f['Month'] || f['Period'];
+    if (monthDisplay) {
+      const monthMatch = String(monthDisplay).match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/i);
+      if (monthMatch) {
+        const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        month = monthNames.indexOf(monthMatch[1].toLowerCase());
+        year = parseInt(monthMatch[2]);
+      }
+    }
+
+    // Try Month Sort field (e.g., "202401", "01-2024")
+    if (!year || month === null) {
+      const monthSort = f['Month Sort'] || f['month sort'] || f['MonthIndex'];
+      if (monthSort) {
+        const sortStr = String(monthSort);
+        const match = sortStr.match(/^(\d{4})(\d{2})$/) || sortStr.match(/^(\d{2})-(\d{4})$/);
+        if (match) {
+          year = parseInt(match[1].length === 4 ? match[1] : match[2]);
+          month = parseInt(match[1].length === 4 ? match[2] : match[1]) - 1;
+        }
+      }
+    }
+
+    // Try date fields
+    if (!year || month === null) {
+      const dateField = f['Date'] || f['Payment Date'] || f['Transaction Date'] || f['Created'];
+      if (dateField) {
+        const date = new Date(dateField);
+        if (!isNaN(date.getTime())) {
+          year = date.getFullYear();
+          month = date.getMonth();
+        }
+      }
+    }
+
+    // If we found a valid date, add the expense
+    if (year && month !== null) {
+      totalExpenses += amount;
+      expenses.push({
+        id: r.id,
+        amount,
+        year,
+        month,
+        description: f['Description'] || f['Name'] || f['Category'] || 'Expense',
+        category: f['Category'] || f['Type'] || 'Other',
+        date: f['Date'] || f['Payment Date']
+      });
+    }
+  });
+
+  console.log(`💰 Processed ${expenses.length} expenses totaling $${totalExpenses.toFixed(2)}`);
+  return expenses;
 }
 
 function processAirtableRecords(records: any[]) {
@@ -543,13 +666,20 @@ const handleDashboardStats = async (c: any) => {
     console.log('Dashboard stats requested');
     const bookings = await kv.get('bookings') || [];
     console.log('Local bookings:', bookings.length);
-    
+
     const airtableBookings = await getFromAirtable();
     console.log('Airtable bookings:', airtableBookings.length);
+
+    // Fetch expenses from Airtable
+    const expenses = await getExpensesFromAirtable();
+    console.log('Airtable expenses:', expenses.length);
     
-    // Merge bookings, avoiding duplicates if they exist in both (unlikely but safe)
-    const allBookings = [...bookings, ...airtableBookings];
-    console.log('Total bookings:', allBookings.length);
+    // Merge bookings, avoiding duplicates - filter for 111 Jarden Mile property
+    const allBookings = [...bookings, ...airtableBookings].filter((b: any) => {
+      const property = (b.property || '').toLowerCase();
+      return !property || property.includes('111') || property.includes('jarden') || property.includes('mile');
+    });
+    console.log('Total bookings (111 Jarden Mile):', allBookings.length);
     
     // Improved sorting: Upcoming bookings first (closest arrival first), 
     // followed by past bookings (most recent completion first).
@@ -582,26 +712,42 @@ const handleDashboardStats = async (c: any) => {
     const yearlyEarnings: any = {};
     const yearlyStats: any = {};
     const yearlyOccupancy: any = {};
-    
+    const yearlyExpenses: any = {};
+    const channelBreakdown: any = {};
+
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const currentYear = new Date().getFullYear();
 
     allBookings.forEach((b: any) => {
       const revenue = parseFloat(String(b.total || 0));
       const expense = parseFloat(String(b.expenses || 0));
-      const date = new Date(b.checkIn);
-      
+      const checkInDate = new Date(b.checkIn);
+      const checkOutDate = new Date(b.checkOut);
+
       // Skip invalid dates
-      if (isNaN(date.getTime())) {
+      if (isNaN(checkInDate.getTime())) {
         console.warn('Invalid date in booking:', b.checkIn);
         return;
       }
-      
-      const year = date.getFullYear();
-      const month = date.getMonth();
+
+      // Fix status based on actual dates
+      if (checkOutDate < today) {
+        b.status = 'completed';
+      } else if (checkInDate >= today) {
+        b.status = 'upcoming';
+      } else if (checkInDate < today && checkOutDate >= today) {
+        b.status = 'current';
+      }
+
+      const year = checkInDate.getFullYear();
+      const month = checkInDate.getMonth();
 
       totalRevenue += revenue;
       totalExpenses += expense;
+
+      // Track booking channels
+      const channel = b.channel || 'Direct Booking (Website)';
+      channelBreakdown[channel] = (channelBreakdown[channel] || 0) + 1;
 
       // Initialize year data if not exists
       if (!yearlyEarnings[year]) {
@@ -609,6 +755,9 @@ const handleDashboardStats = async (c: any) => {
       }
       if (!yearlyStats[year]) {
         yearlyStats[year] = { totalBookings: 0, totalNights: 0, totalRevenue: 0 };
+      }
+      if (!yearlyExpenses[year]) {
+        yearlyExpenses[year] = monthNames.map(name => ({ name, amount: 0 }));
       }
 
       // Add to monthly data - ensure the month index is valid
@@ -620,9 +769,31 @@ const handleDashboardStats = async (c: any) => {
       // Add to yearly stats
       yearlyStats[year].totalBookings += 1;
       yearlyStats[year].totalRevenue += revenue;
-      
-      const stayNights = b.nightsStayed || (b.checkOut && b.checkIn ? Math.ceil((new Date(b.checkOut).getTime() - new Date(b.checkIn).getTime()) / (1000 * 60 * 60 * 24)) : 0);
+
+      const stayNights = b.nightsStayed || (b.checkOut && b.checkIn ? Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24)) : 0);
       yearlyStats[year].totalNights += stayNights;
+    });
+
+    // Process Airtable expenses into monthly buckets
+    expenses.forEach((exp: any) => {
+      const { year, month, amount } = exp;
+
+      if (!yearlyExpenses[year]) {
+        yearlyExpenses[year] = monthNames.map(name => ({ name, amount: 0 }));
+      }
+
+      if (yearlyExpenses[year][month]) {
+        yearlyExpenses[year][month].amount += amount;
+      }
+
+      // Also add to yearlyEarnings for combined chart
+      if (!yearlyEarnings[year]) {
+        yearlyEarnings[year] = monthNames.map(name => ({ name, earnings: 0, expenses: 0 }));
+      }
+
+      if (yearlyEarnings[year][month]) {
+        yearlyEarnings[year][month].expenses += amount;
+      }
     });
 
     // Calculate occupancy rates
@@ -641,8 +812,8 @@ const handleDashboardStats = async (c: any) => {
     const avgBookingValue = allBookings.length > 0 ? totalRevenue / allBookings.length : 0;
     const upcomingBookings = allBookings.filter((b: any) => new Date(b.checkIn) >= today).length;
 
-    const response = { 
-      allGuests: allBookings, 
+    const response = {
+      allGuests: allBookings,
       recentGuests: allBookings.slice(0, 10),
       totalBookings: allBookings.length,
       totalRevenue,
@@ -653,7 +824,10 @@ const handleDashboardStats = async (c: any) => {
       occupancyRate,
       yearlyEarnings,
       yearlyStats,
-      yearlyOccupancy
+      yearlyOccupancy,
+      yearlyExpenses,
+      channelBreakdown,
+      totalAirtableExpenses: expenses.reduce((sum: number, e: any) => sum + e.amount, 0)
     };
 
     console.log('Dashboard stats calculated successfully:', {
@@ -900,6 +1074,111 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
   }
 });
 
+// NEW: Fix booking statuses based on dates
+registerRoute('post', '/fix-booking-statuses', async (c: any) => {
+  try {
+    const bookings = await kv.get('bookings') || [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let updatedCount = 0;
+
+    bookings.forEach((booking: any) => {
+      const checkOutDate = new Date(booking.checkOut);
+      const checkInDate = new Date(booking.checkIn);
+
+      let newStatus = booking.status;
+
+      if (checkOutDate < today) {
+        newStatus = 'completed';
+      } else if (checkInDate >= today) {
+        newStatus = 'upcoming';
+      } else if (checkInDate < today && checkOutDate >= today) {
+        newStatus = 'current';
+      }
+
+      if (newStatus !== booking.status) {
+        console.log(`Updating ${booking.guest}: ${booking.status} → ${newStatus}`);
+        booking.status = newStatus;
+        updatedCount++;
+      }
+    });
+
+    if (updatedCount > 0) {
+      await kv.set('bookings', bookings);
+    }
+
+    return new Response(JSON.stringify({
+      success: true,
+      message: `Updated ${updatedCount} booking statuses`,
+      totalBookings: bookings.length,
+      updatedCount
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) {
+    console.error('❌ Fix booking statuses error:', err);
+    return new Response(JSON.stringify({
+      error: err.message,
+      stack: err.stack
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+});
+
+// NEW: Manually resend booking confirmation to a specific customer
+registerRoute('post', '/resend-confirmation', async (c: any) => {
+  try {
+    const { bookingId } = await c.req.json();
+
+    if (!bookingId) {
+      return new Response(JSON.stringify({ error: 'Booking ID required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    const bookings = await kv.get('bookings') || [];
+    const booking = bookings.find((b: any) => b.id === bookingId);
+
+    if (!booking) {
+      return new Response(JSON.stringify({ error: 'Booking not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    console.log(`📧 Manually resending confirmation to ${booking.email}...`);
+    await sendBookingConfirmation(booking);
+    await sendOwnerNotification(booking);
+
+    return new Response(JSON.stringify({
+      success: true,
+      message: `Confirmation emails sent to ${booking.email} and bookings@carlsonproperties.co.nz`,
+      booking: {
+        guest: booking.guest,
+        email: booking.email,
+        total: booking.total
+      }
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) {
+    console.error('❌ Resend confirmation error:', err);
+    return new Response(JSON.stringify({
+      error: err.message,
+      stack: err.stack
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+});
+
 // NEW: Test individual email types
 registerRoute('get', '/test-single-email', async (c: any) => {
   const emailType = c.req.query('type') || 'booking-confirmation';
@@ -1036,12 +1315,12 @@ app.get('/make-server-edef7798/fix-storage-bucket', async (c) => {
   try {
     console.log('🔧 Manual storage bucket fix triggered...');
     await ensureStorageBucketIsPublic();
-    
+
     // Verify the fix worked
     const { data: buckets } = await supabaseAdmin.storage.listBuckets();
     const websiteMediaBucket = buckets?.find(b => b.name === 'Website Media');
-    
-    return c.json({ 
+
+    return c.json({
       success: true,
       message: 'Storage bucket permissions updated',
       bucketStatus: {
@@ -1053,9 +1332,50 @@ app.get('/make-server-edef7798/fix-storage-bucket', async (c) => {
     });
   } catch (err: any) {
     console.error('Error fixing storage bucket:', err);
-    return c.json({ 
+    return c.json({
       error: err.message,
-      stack: err.stack 
+      stack: err.stack
+    }, 500);
+  }
+});
+
+// NEW: Check Stripe account details
+app.get('/make-server-edef7798/stripe-account-info', async (c) => {
+  try {
+    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+
+    if (!stripeKey) {
+      return c.json({
+        error: 'Stripe API key not configured',
+        configured: false
+      }, 500);
+    }
+
+    const stripe = new Stripe(stripeKey.trim(), {
+      apiVersion: '2023-10-16',
+      httpClient: Stripe.createFetchHttpClient()
+    });
+
+    // Retrieve account information
+    const account = await stripe.accounts.retrieve();
+
+    return c.json({
+      configured: true,
+      accountId: account.id,
+      email: account.email || 'Not set',
+      businessName: account.business_profile?.name || account.settings?.dashboard?.display_name || 'Not set',
+      country: account.country,
+      currency: account.default_currency,
+      chargesEnabled: account.charges_enabled,
+      payoutsEnabled: account.payouts_enabled,
+      type: account.type,
+      keyPrefix: stripeKey.substring(0, 7) + '...' // Show only prefix for security
+    });
+  } catch (err: any) {
+    console.error('Error retrieving Stripe account:', err);
+    return c.json({
+      error: err.message,
+      stack: err.stack
     }, 500);
   }
 });

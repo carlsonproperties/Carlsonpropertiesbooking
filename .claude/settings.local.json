@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(dir)",
-      "Bash(powershell -Command \"Get-ChildItem -Path . -Name '.env*' -Force -Recurse 2>&1 | head -30\")"
-    ]
-  }
-}

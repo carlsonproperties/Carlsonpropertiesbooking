@@ -217,6 +217,36 @@ export function ViewLatestBooking() {
                 </span>
               </div>
             )}
+            {latestBooking.stripeSessionId && (
+              <div className="mt-6 bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
+                <p className="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">Stripe Payment Details</p>
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between text-sm">
+                    <span className="text-slate-400">Session ID:</span>
+                    <span className="font-mono text-purple-300 text-xs break-all max-w-[70%] text-right">
+                      {latestBooking.stripeSessionId}
+                    </span>
+                  </div>
+                  <div className="mt-3 p-3 bg-slate-900/50 rounded-lg">
+                    <p className="text-xs text-slate-400 mb-1">🔍 Find this transaction in Stripe:</p>
+                    <p className="text-xs text-white">
+                      1. Log into your <strong>Stripe Dashboard</strong><br/>
+                      2. Go to <strong>Payments</strong> → <strong>All Payments</strong><br/>
+                      3. Search for: <span className="font-mono text-purple-300">{latestBooking.stripeSessionId}</span><br/>
+                      4. Or search by amount: <strong>${latestBooking.total?.toFixed(2)}</strong><br/>
+                      5. Or search by customer email: <strong>{latestBooking.email}</strong>
+                    </p>
+                  </div>
+                  <div className="mt-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                    <p className="text-xs text-amber-400">
+                      <strong>⚠️ Can't find this transaction?</strong><br/>
+                      The transaction might be in a different Stripe account than the ones you checked.
+                      The booking system is connected to whichever Stripe account has the API key configured in Supabase secrets.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Confirmation */}

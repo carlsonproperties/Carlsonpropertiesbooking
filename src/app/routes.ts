@@ -6,7 +6,7 @@ import { Home } from "./pages/Home";
 import { About } from "./pages/About";
 import { MeetHosts } from "./pages/MeetHosts";
 import { GuestInformation } from "./pages/GuestInfo";
-import { Dashboard } from "./pages/Dashboard";
+import { DashboardComplete as Dashboard } from "./pages/DashboardComplete";
 import { OwnerLogin } from "./pages/OwnerLogin";
 import { BookingConfirmation } from "./pages/BookingConfirmation";
 import { CheckoutPage } from "./pages/Checkout";
@@ -23,6 +23,10 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { ViewLatestBooking } from "./pages/ViewLatestBooking";
 import { HealthCheck } from "./pages/HealthCheck";
 import { TestEmails } from "./pages/TestEmails";
+import { StripeAccountCheck } from "./pages/StripeAccountCheck";
+import { ResendConfirmation } from "./pages/ResendConfirmation";
+import { BookingPaymentLookup } from "./pages/BookingPaymentLookup";
+import { StripeInfo } from "./pages/StripeInfo";
 
 // MAINTENANCE MODE
 // Set to true to show maintenance page for all routes
@@ -54,6 +58,10 @@ export const router = createBrowserRouter([
       { path: "view-latest-booking", Component: ViewLatestBooking },
       { path: "health-check", Component: HealthCheck },
       { path: "test-emails", Component: TestEmails },
+      { path: "stripe-account-check", Component: StripeAccountCheck },
+      { path: "resend-confirmation", Component: ResendConfirmation },
+      { path: "payment-lookup", Component: BookingPaymentLookup },
+      { path: "stripe-info", Component: StripeInfo },
     ],
   },
   // Catch-all route for maintenance mode
