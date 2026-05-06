@@ -3,172 +3,248 @@ import { Resend } from 'npm:resend@3.1.0';
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
-// Email Styles - Matching website brand guidelines
-const emailStyles = {
-  container: `
-    font-family: 'Times New Roman', serif;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 60px 40px;
-    background-color: #FDFCF8;
-    color: #2D2D2D;
-  `,
-  card: `
-    background: white;
-    padding: 60px 40px;
-    border-radius: 40px;
-    border: 1px solid #F1F1F1;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.02);
-  `,
-  accent: `
-    color: #9DA07E;
-    font-family: sans-serif;
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: block;
-    text-align: center;
-  `,
-  h1: `
-    font-size: 42px;
-    color: #1A1A1A;
-    margin: 0 0 30px 0;
-    line-height: 1.1;
-    font-weight: normal;
-    text-align: center;
-  `,
-  paragraph: `
-    font-family: sans-serif;
-    font-size: 16px;
-    line-height: 1.8;
-    color: #666;
-    margin-bottom: 20px;
-    font-weight: 300;
-    text-align: left;
-  `,
-  noteBox: `
-    background: #F8F8F6;
-    border-left: 4px solid #9DA07E;
-    border-radius: 12px;
-    padding: 24px;
-    margin: 30px 0;
-    text-align: left;
-  `,
-  infoBox: `
-    background: #F8F8F6;
-    border-radius: 20px;
-    padding: 30px;
-    margin: 30px 0;
-    text-align: left;
-  `,
-  list: `
-    font-family: sans-serif;
-    font-size: 16px;
-    line-height: 2;
-    color: #666;
-    text-align: left;
-    padding-left: 20px;
-    margin: 20px 0;
-  `,
-  button: `
-    display: inline-block;
-    background: #9DA07E;
-    color: white;
-    padding: 20px 40px;
-    border-radius: 16px;
-    text-decoration: none;
-    font-family: sans-serif;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  `,
-  footer: `
-    margin-top: 60px;
-    padding-top: 40px;
-    border-top: 1px solid #F1F1EE;
-    text-align: center;
-  `,
-  divider: `
-    width: 1px;
-    height: 60px;
-    background: #9DA07E;
-    margin: 0 auto 40px;
-    opacity: 0.3;
-  `
+// Brand colors
+const SAGE = '#9DA07E';
+const CREAM = '#FDFCF8';
+const WHITE = '#FFFFFF';
+const INK = '#1A1A1A';
+const BODY_GREY = '#666666';
+const MUTED = '#AFAFAF';
+const HAIRLINE = '#F1F1EE';
+
+// Images
+const LOGO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Black%20White%20Minimalist%20Calligraphy%20Signature%20Logo.png';
+const HERO_URL = 'https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/032_Open2view_ID584542-111_Jarden_Mile.jpg';
+
+// Email wrapper with consistent structure
+const createEmailWrapper = (content: string, preheader: string) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>One Eleven on the Mile</title>
+  <!--[if mso]>
+  <style type="text/css">
+    table {border-collapse: collapse;}
+  </style>
+  <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; background-color: ${CREAM}; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;">
+  <!-- Preheader text -->
+  <div style="display: none; max-height: 0px; overflow: hidden; font-size: 1px; line-height: 1px; color: ${CREAM}; opacity: 0;">
+    ${preheader}
+  </div>
+
+  <!-- Email container -->
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM};">
+    <tr>
+      <td style="padding: 40px 20px;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto; max-width: 600px; background-color: ${WHITE};">
+          ${content}
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
+// Eyebrow label component
+const eyebrow = (text: string) => `
+<tr>
+  <td style="padding: 0 40px;">
+    <p style="margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.4em; text-transform: uppercase; color: ${SAGE}; text-align: center;">
+      ${text}
+    </p>
+  </td>
+</tr>
+`;
+
+// Headline component
+const headline = (text: string) => `
+<tr>
+  <td style="padding: 16px 40px 0;">
+    <h1 style="margin: 0; font-family: 'Cormorant Garamond', Garamond, 'Times New Roman', Times, serif; font-size: 42px; font-weight: 400; line-height: 1.2; color: ${INK}; text-align: center;">
+      ${text}
+    </h1>
+  </td>
+</tr>
+`;
+
+// Body text component
+const bodyText = (text: string, centered: boolean = false) => `
+<tr>
+  <td style="padding: 24px 40px 0;">
+    <p style="margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: ${BODY_GREY}; text-align: ${centered ? 'center' : 'left'};">
+      ${text}
+    </p>
+  </td>
+</tr>
+`;
+
+// Sage CTA button (bullet-proof)
+const ctaButton = (text: string, url: string) => `
+<tr>
+  <td style="padding: 32px 40px 0;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+      <tr>
+        <td style="background-color: ${SAGE}; border-radius: 16px;">
+          <a href="${url}" style="display: inline-block; padding: 16px 32px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 11px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; color: ${WHITE}; text-decoration: none;">
+            ${text}
+          </a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+`;
+
+// Footer component
+const footer = () => `
+<tr>
+  <td style="padding: 60px 40px 40px; border-top: 1px solid ${HAIRLINE};">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+      <tr>
+        <td align="center">
+          <img src="${LOGO_URL}" alt="One Eleven on the Mile" width="120" style="display: block; max-width: 100%; height: auto; margin: 0 auto 20px;" />
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <p style="margin: 0 0 8px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.5; color: ${BODY_GREY}; text-align: center;">
+            <strong>Matt &amp; Ashleigh Carlson</strong><br/>
+            One Eleven on the Mile
+          </p>
+          <p style="margin: 0 0 16px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 12px; line-height: 1.5; color: ${MUTED}; text-align: center;">
+            111 Jarden Mile, Taupō, NZ
+          </p>
+          <p style="margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 11px; line-height: 1.4; color: ${MUTED}; text-align: center;">
+            You're receiving this because you booked a stay with us.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+`;
+
+// Format date helper
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-NZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 };
 
-// 1. Booking Confirmation (sent immediately after payment)
+// Format date short helper (e.g., "Apr 1")
+const formatDateShort = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-NZ', { month: 'short', day: 'numeric' });
+};
+
+// Calculate nights
+const calculateNights = (checkIn: string, checkOut: string) => {
+  const start = new Date(checkIn);
+  const end = new Date(checkOut);
+  const nights = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  return nights;
+};
+
+// 1. Booking Confirmation Email
 export async function sendBookingConfirmation(booking: any) {
   if (!resend) {
     console.error('Resend not initialized - missing API key');
     return;
   }
 
-  const guestName = booking.guest.split(' ')[0];
-  
+  const firstName = booking.guest.split(' ')[0];
+  const nights = calculateNights(booking.checkIn, booking.checkOut);
+
   try {
     await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
+      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
+      replyTo: 'matt@carlsonproperties.co.nz',
       to: [booking.email],
-      subject: `Booking Confirmed - ONE ELEVEN ON THE MILE`,
-      html: `
-        <div style="${emailStyles.container}">
-          <div style="${emailStyles.card}">
-            <div style="${emailStyles.divider}"></div>
-            <span style="${emailStyles.accent}">Booking Confirmed</span>
-            <h1 style="${emailStyles.h1}">
-              Thank You<br/>
-              <span style="font-style: italic; color: #9DA07E;">for Choosing Us</span>
-            </h1>
+      subject: 'Your stay at One Eleven is confirmed',
+      html: createEmailWrapper(`
+        <!-- Hero Image -->
+        <tr>
+          <td style="padding: 0;">
+            <img src="${HERO_URL}" alt="One Eleven on the Mile" width="600" style="display: block; width: 100%; max-width: 600px; height: auto;" />
+          </td>
+        </tr>
 
-            <p style="${emailStyles.paragraph}">
-              Hi ${guestName},
-            </p>
+        <!-- Spacer -->
+        <tr><td style="height: 40px;"></td></tr>
 
-            <p style="${emailStyles.paragraph}">
-              Thank you for choosing <strong>ONE ELEVEN ON THE MILE</strong> for your upcoming stay in Taupō! We're excited to host you.
-            </p>
+        ${eyebrow('RESERVATION CONFIRMED')}
+        ${headline(`Thank you, ${firstName}.`)}
+        ${bodyText('Your reservation is confirmed. We look forward to hosting you in Taupō.')}
 
-            <div style="${emailStyles.noteBox}">
-              <p style="font-family: sans-serif; font-size: 12px; font-weight: 900; letter-spacing: 0.2em; color: #9DA07E; text-transform: uppercase; margin-bottom: 15px;">NOTE</p>
-              <p style="font-family: sans-serif; font-size: 14px; line-height: 1.8; color: #666; margin-bottom: 10px;">
-                The current bedding configuration is:
-              </p>
-              <ul style="${emailStyles.list}">
-                <li>2x Super king beds</li>
-                <li>2x King beds</li>
-                <li>2x Single beds</li>
-              </ul>
-              <p style="font-family: sans-serif; font-size: 14px; line-height: 1.8; color: #666; margin-top: 15px;">
-                Please message me if you need any of the beds split. The 2x Super king beds split into singles giving you 4x singles.
-              </p>
-            </div>
+        <!-- Booking Summary Card -->
+        <tr>
+          <td style="padding: 32px 40px 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM}; border-radius: 12px;">
+              <tr>
+                <td style="padding: 24px;">
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="color: ${INK};">Check-in</strong><br/>
+                        ${formatDate(booking.checkIn)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="color: ${INK};">Check-out</strong><br/>
+                        ${formatDate(booking.checkOut)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="color: ${INK};">${nights} ${nights === 1 ? 'night' : 'nights'}</strong> · ${booking.guests} ${booking.guests === 1 ? 'guest' : 'guests'}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 16px 0 0; border-top: 1px solid ${HAIRLINE}; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 700; color: ${INK};">
+                        $${booking.total.toLocaleString()} NZD
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-            <p style="${emailStyles.paragraph}">
-              Three days before your check-in, you'll receive our digital guidebook with:
-            </p>
-            <ul style="${emailStyles.list}">
-              <li>Your Access Code</li>
-              <li>House Instructions (pool, sauna, gym, etc.)</li>
-              <li>Recommendations for the Best Local Dining and Activities</li>
-            </ul>
+        <!-- Bedding Configuration Note -->
+        <tr>
+          <td style="padding: 16px 40px 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM}; border-radius: 8px; border-left: 3px solid ${SAGE};">
+              <tr>
+                <td style="padding: 20px;">
+                  <p style="margin: 0 0 12px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; color: ${SAGE};">
+                    Bedding Configuration
+                  </p>
+                  <p style="margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.6; color: ${BODY_GREY};">
+                    2× Super king beds · 2× King beds · 2× Single beds
+                  </p>
+                  <p style="margin: 12px 0 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.6; color: ${BODY_GREY};">
+                    The super king beds can be split into singles if needed. Just let us know.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-            <div style="${emailStyles.footer}">
-              <p style="font-family: sans-serif; font-size: 14px; line-height: 1.8; color: #666; margin-bottom: 10px;">
-                Warm regards,<br/>
-                <strong>Matt and Ashleigh Carlson</strong><br/>
-                ONE ELEVEN | ON THE MILE
-              </p>
-              <p style="font-family: sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.2em; color: #AFAFAF; text-transform: uppercase; margin-top: 30px;">
-                111 Jarden Mile, Taupō, NZ
-              </p>
-            </div>
-          </div>
-        </div>
-      `
+        ${bodyText('Three days before your check-in, you'll receive our digital guidebook with your door code, Wi-Fi details, and house instructions.', true)}
+
+        <!-- Spacer -->
+        <tr><td style="height: 20px;"></td></tr>
+
+        ${footer()}
+      `, 'We can\'t wait to host you in Taupō.')
     });
 
     console.log(`✅ Booking confirmation sent to ${booking.email}`);
@@ -177,327 +253,112 @@ export async function sendBookingConfirmation(booking: any) {
   }
 }
 
-// 2. Guest Information (sent 4 days before check-in)
-export async function sendPreArrivalEmail(booking: any) {
-  if (!resend) return;
-
-  const guestName = booking.guest.split(' ')[0];
-  const guestPhone = booking.phone || '';
-  const checkInDate = new Date(booking.checkIn);
-  const checkOutDate = new Date(booking.checkOut);
-  
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-NZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  };
-  
-  const checkInFormatted = formatDate(checkInDate);
-  const checkOutFormatted = formatDate(checkOutDate);
-  
-  // Extract last 4 digits of phone for door code
-  let doorCodeHint = 'the last 4 digits of your cellphone number';
-  if (guestPhone) {
-    const digits = guestPhone.replace(/\D/g, '');
-    if (digits.length >= 4) {
-      doorCodeHint = `${digits.slice(-4)}`;
-    }
-  }
-
-  try {
-    await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
-      to: [booking.email],
-      subject: `Your Stay is Almost Here - Guest Information`,
-      html: `
-        <div style="${emailStyles.container}">
-          <div style="${emailStyles.card}">
-            <div style="${emailStyles.divider}"></div>
-            <span style="${emailStyles.accent}">Almost Time</span>
-            <h1 style="${emailStyles.h1}">
-              Almost Time!<br/>
-              <span style="font-style: italic; color: #9DA07E;">See You Soon</span>
-            </h1>
-
-            <p style="${emailStyles.paragraph}">
-              Hi ${guestName},
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              Your stay at <strong>ONE ELEVEN ON THE MILE</strong> is just around the corner. Here's everything you need to know:
-            </p>
-
-            <div style="${emailStyles.infoBox}">
-              <p style="margin: 0 0 15px 0; font-family: sans-serif; font-size: 14px; line-height: 2.2;">
-                <strong style="color: #9DA07E; display: inline-block; width: 160px;">Door Code:</strong> ${doorCodeHint} followed by the # key<br/>
-                <span style="font-size: 12px; color: #999; margin-left: 160px; display: block;">Activates at 3pm on ${checkInFormatted}</span>
-                <span style="font-size: 12px; color: #999; margin-left: 160px; display: block;">Expires at 10am on ${checkOutFormatted}</span>
-              </p>
-              <p style="margin: 20px 0 15px 0; font-family: sans-serif; font-size: 14px; line-height: 2.2;">
-                <strong style="color: #9DA07E; display: inline-block; width: 160px;">Address:</strong> 111 Jarden Mile, Taupō, Waikato 3330, New Zealand
-              </p>
-              <p style="margin: 20px 0 15px 0; font-family: sans-serif; font-size: 14px; line-height: 2.2;">
-                <strong style="color: #9DA07E; display: inline-block; width: 160px;">Wi-Fi Network:</strong> Carlson & Co. Guest<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 160px;">Wi-Fi Password:</strong> Gue$t111. <span style="font-size: 12px; color: #999;">(Don't forget the full stop!)</span>
-              </p>
-            </div>
-
-            <p style="${emailStyles.paragraph}">
-              Here is our Digital House Manual which can be found through this link:
-            </p>
-            <p style="text-align: center; margin: 30px 0;">
-              <a href="https://www.carlsonproperties.co.nz/guest-info" style="${emailStyles.button}">
-                VIEW DIGITAL HOUSE MANUAL
-              </a>
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              It is a Self Check-In so we will not be there to meet you, however we also live in the neighbourhood so if you need anything we are around to help out.
-            </p>
-
-            <div style="${emailStyles.footer}">
-              <p style="font-family: sans-serif; font-size: 14px; line-height: 1.8; color: #666;">
-                See you soon,<br/>
-                <strong>Matt and Ashleigh Carlson</strong><br/>
-                ONE ELEVEN | ON THE MILE
-              </p>
-            </div>
-          </div>
-        </div>
-      `
-    });
-
-    console.log(`✅ Pre-arrival email sent to ${booking.email}`);
-  } catch (err) {
-    console.error('❌ Error sending pre-arrival email:', err);
-  }
-}
-
-// 3. Check-In Day Welcome (sent 9am on check-in day)
-export async function sendCheckInDayEmail(booking: any) {
-  if (!resend) return;
-
-  const guestName = booking.guest.split(' ')[0];
-
-  try {
-    await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
-      to: [booking.email],
-      subject: `Welcome to ONE ELEVEN ON THE MILE!`,
-      html: `
-        <div style="${emailStyles.container}">
-          <div style="${emailStyles.card}">
-            <div style="${emailStyles.divider}"></div>
-            <span style="${emailStyles.accent}">Welcome</span>
-            <h1 style="${emailStyles.h1}">
-              Welcome!<br/>
-              <span style="font-style: italic; color: #9DA07E;">Enjoy Your Stay</span>
-            </h1>
-
-            <p style="${emailStyles.paragraph}">
-              Hi ${guestName},
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              Welcome to <strong>ONE ELEVEN ON THE MILE!</strong>
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              Please swing by a supermarket and pick up your milk. With the number of milk alternatives out there, it's too hard for us to know what you like and do not supply milk. We do however have a barista coffee machine and provide a bag of beans for you.
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              Don't wait until the end of your trip when you are writing your review to tell us about your stay. If anything is missing or you need anything, or something is broken then please please reach out to us. We would rather fix it than have you be uncomfortable during your stay.
-            </p>
-
-            <div style="background: #F8F8F6; border-radius: 20px; padding: 30px; margin: 30px 0; text-align: center;">
-              <p style="font-family: sans-serif; font-size: 18px; color: #9DA07E; font-weight: bold; margin-bottom: 10px;">
-                Have an amazing time!
-              </p>
-              <p style="font-family: sans-serif; font-size: 14px; color: #666; margin: 0;">
-                Matt & Ash<br/>
-                <a href="tel:0276977961" style="color: #9DA07E; text-decoration: none;">027 697 7961</a>
-              </p>
-            </div>
-
-            <div style="${emailStyles.footer}">
-              <p style="font-family: sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.2em; color: #AFAFAF; text-transform: uppercase;">
-                ONE ELEVEN | ON THE MILE
-              </p>
-            </div>
-          </div>
-        </div>
-      `
-    });
-
-    console.log(`✅ Check-in day email sent to ${booking.email}`);
-  } catch (err) {
-    console.error('❌ Error sending check-in day email:', err);
-  }
-}
-
-// 4. Check-Out Day Instructions (sent 9am on check-out day)
-export async function sendCheckOutDayEmail(booking: any) {
-  if (!resend) return;
-
-  const guestName = booking.guest.split(' ')[0];
-
-  try {
-    await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
-      to: [booking.email],
-      subject: `Check-Out Instructions - Thank You for Staying`,
-      html: `
-        <div style="${emailStyles.container}">
-          <div style="${emailStyles.card}">
-            <div style="${emailStyles.divider}"></div>
-            <span style="${emailStyles.accent}">Check-Out</span>
-            <h1 style="${emailStyles.h1}">
-              Good Morning<br/>
-              <span style="font-style: italic; color: #9DA07E;">Safe Travels</span>
-            </h1>
-
-            <p style="${emailStyles.paragraph}">
-              Good morning ${guestName},
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              We hope you've had a wonderful stay.
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              We do the cleaning ourselves to save you on a cleaning fee, so as your visit comes to an end, please help us with a quicker turnover by:
-            </p>
-
-            <ul style="${emailStyles.list}">
-              <li>Loading and starting the dishwasher</li>
-              <li>Taking your rubbish out to the wheelie bin down the side of the house</li>
-            </ul>
-
-            <p style="${emailStyles.paragraph}">
-              It is not expected that you strip the beds but it is really helpful when you do. However, please, please, leave the mattress protectors on and the duvet inner protectors on. All bedding and towels get taken to the commercial laundry so don't worry about washing/drying them.
-            </p>
-
-            <div style="${emailStyles.footer}">
-              <p style="font-family: sans-serif; font-size: 14px; line-height: 1.8; color: #666;">
-                Warm regards,<br/>
-                <strong>Matt & Ash</strong><br/>
-                ONE ELEVEN | ON THE MILE
-              </p>
-            </div>
-          </div>
-        </div>
-      `
-    });
-
-    console.log(`✅ Check-out day email sent to ${booking.email}`);
-  } catch (err) {
-    console.error('❌ Error sending check-out day email:', err);
-  }
-}
-
-// 5. Review Request (sent 2 days after check-out at 11am)
-export async function sendReviewRequestEmail(booking: any) {
-  if (!resend) return;
-
-  const guestName = booking.guest.split(' ')[0];
-
-  try {
-    await resend.emails.send({
-      from: 'One Eleven | On the Mile <bookings@carlsonproperties.co.nz>',
-      to: [booking.email],
-      subject: `How Was Your Stay? We'd Love Your Feedback`,
-      html: `
-        <div style="${emailStyles.container}">
-          <div style="${emailStyles.card}">
-            <div style="${emailStyles.divider}"></div>
-            <span style="${emailStyles.accent}">Thank You</span>
-            <h1 style="${emailStyles.h1}">
-              Thank You<br/>
-              <span style="font-style: italic; color: #9DA07E;">for Staying With Us</span>
-            </h1>
-
-            <p style="${emailStyles.paragraph}">
-              Hi ${guestName},
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              Thanks for being such a respectful guest and looking after our property. If you would like to book again in the future then please reach out to us again via our website.
-            </p>
-
-            <p style="${emailStyles.paragraph}">
-              In the meantime please review your stay:
-            </p>
-
-            <p style="text-align: center; margin: 30px 0;">
-              <a href="https://share.google/EU7JN7Rw5jJDsS5Ci" style="${emailStyles.button}">
-                LEAVE A REVIEW
-              </a>
-            </p>
-
-            <div style="${emailStyles.footer}">
-              <p style="font-family: sans-serif; font-size: 14px; line-height: 1.8; color: #666;">
-                See you again soon,<br/>
-                <strong>Matt & Ash</strong><br/>
-                ONE ELEVEN | ON THE MILE
-              </p>
-            </div>
-          </div>
-        </div>
-      `
-    });
-
-    console.log(`✅ Review request email sent to ${booking.email}`);
-  } catch (err) {
-    console.error('❌ Error sending review request email:', err);
-  }
-}
-
-// Owner notification email
+// 2. Owner Notification Email
 export async function sendOwnerNotification(booking: any) {
   if (!resend) return;
 
-  const bookingRef = booking.id.slice(0, 8).toUpperCase();
-  const checkInDate = new Date(booking.checkIn);
-  const checkOutDate = new Date(booking.checkOut);
-  
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-NZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  };
+  const checkInShort = formatDateShort(booking.checkIn);
+  const bookingRef = booking.id.substring(0, 8).toUpperCase();
 
   try {
     await resend.emails.send({
-      from: 'One Eleven | Booking Alert <bookings@carlsonproperties.co.nz>',
+      from: 'One Eleven Bookings <bookings@carlsonproperties.co.nz>',
+      replyTo: 'matt@carlsonproperties.co.nz',
       to: ['bookings@carlsonproperties.co.nz'],
-      subject: `🎉 New Booking - ${booking.guest} - ${formatDate(checkInDate)}`,
-      html: `
-        <div style="${emailStyles.container}">
-          <div style="${emailStyles.card}">
-            <span style="${emailStyles.accent}">New Booking Received</span>
-            <h1 style="${emailStyles.h1}">
-              Booking Confirmed<br/>
-              <span style="font-style: italic; color: #9DA07E;">${booking.guest}</span>
-            </h1>
+      subject: `New booking · ${booking.guest} · ${checkInShort}`,
+      html: createEmailWrapper(`
+        <!-- Spacer -->
+        <tr><td style="height: 40px;"></td></tr>
 
-            <div style="background: #F8F8F6; padding: 30px; border-radius: 20px; margin: 30px 0;">
-              <p style="margin: 0 0 15px 0; font-family: sans-serif; font-size: 14px; line-height: 2;">
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Guest Name:</strong> ${booking.guest}<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Email:</strong> ${booking.email}<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Phone:</strong> ${booking.phone || 'Not provided'}<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Check-In:</strong> ${formatDate(checkInDate)}<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Check-Out:</strong> ${formatDate(checkOutDate)}<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Guests:</strong> ${booking.guests || 1}<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Total:</strong> $${booking.total}<br/>
-                <strong style="color: #9DA07E; display: inline-block; width: 140px;">Booking ID:</strong> ${bookingRef}
-              </p>
-            </div>
+        ${eyebrow('NEW BOOKING')}
+        ${headline(bookingRef)}
+        ${bodyText(`${booking.guest} just booked a stay.`, true)}
 
-            <p style="text-align: center; margin: 30px 0;">
-              <a href="https://carlsonproperties.co.nz/dashboard" style="${emailStyles.button}">
-                VIEW IN DASHBOARD
-              </a>
-            </p>
-          </div>
-        </div>
-      `
+        <!-- Booking Details Table -->
+        <tr>
+          <td style="padding: 32px 40px 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM}; border-radius: 12px;">
+              <tr>
+                <td style="padding: 24px;">
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Guest
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        ${booking.guest}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Email
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        ${booking.email}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Phone
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        ${booking.phone || 'Not provided'}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Check-in
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        ${formatDate(booking.checkIn)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Check-out
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        ${formatDate(booking.checkOut)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Guests
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        ${booking.guests || 1}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Revenue
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        $${booking.total} NZD
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 140px; padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: ${SAGE};">
+                        Channel
+                      </td>
+                      <td style="padding: 8px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${INK};">
+                        Direct Website
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        ${ctaButton('OPEN IN DASHBOARD', 'https://carlsonproperties.co.nz/dashboard')}
+
+        <!-- Spacer -->
+        <tr><td style="height: 20px;"></td></tr>
+
+        ${footer()}
+      `, `${booking.guest} booked ${formatDateShort(booking.checkIn)} – ${formatDateShort(booking.checkOut)}`)
     });
 
     console.log(`✅ Owner notification sent`);
@@ -506,10 +367,251 @@ export async function sendOwnerNotification(booking: any) {
   }
 }
 
+// 3. Pre-Arrival Email
+export async function sendPreArrivalEmail(booking: any) {
+  if (!resend) return;
+
+  const firstName = booking.guest.split(' ')[0];
+  const phone = booking.phone || '';
+  const digits = phone.replace(/\D/g, '');
+  const doorCode = digits.length >= 4 ? digits.slice(-4) : 'last 4 digits of your phone';
+
+  try {
+    await resend.emails.send({
+      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
+      replyTo: 'matt@carlsonproperties.co.nz',
+      to: [booking.email],
+      subject: 'Your arrival details for One Eleven',
+      html: createEmailWrapper(`
+        <!-- Hero Image -->
+        <tr>
+          <td style="padding: 0;">
+            <img src="${HERO_URL}" alt="One Eleven on the Mile" width="600" style="display: block; width: 100%; max-width: 600px; height: auto;" />
+          </td>
+        </tr>
+
+        <!-- Spacer -->
+        <tr><td style="height: 40px;"></td></tr>
+
+        ${eyebrow('ALMOST TIME')}
+        ${headline(`We're ready for you.`)}
+        ${bodyText(`Your stay begins soon. Here's everything you need to know, ${firstName}.`)}
+
+        <!-- Info Card -->
+        <tr>
+          <td style="padding: 32px 40px 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM}; border-radius: 12px;">
+              <tr>
+                <td style="padding: 24px;">
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                      <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Door Code</strong>
+                        ${doorCode} followed by #<br/>
+                        <span style="font-size: 12px; color: ${MUTED};">Active from 3pm on ${formatDateShort(booking.checkIn)}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Address</strong>
+                        111 Jarden Mile, Taupō, Waikato 3330, New Zealand
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Wi-Fi</strong>
+                        Network: Carlson &amp; Co. Guest<br/>
+                        Password: Gue$t111. <span style="font-size: 12px; color: ${MUTED};">(note the full stop)</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Hours</strong>
+                        Check-in 3pm · Check-out 10am
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        ${bodyText('It's a self check-in. We live nearby if you need anything.')}
+        ${ctaButton('VIEW DIGITAL HOUSE MANUAL', 'https://www.carlsonproperties.co.nz/guest-info')}
+
+        <!-- Spacer -->
+        <tr><td style="height: 20px;"></td></tr>
+
+        ${footer()}
+      `, 'Door code, Wi-Fi, and everything you need.')
+    });
+
+    console.log(`✅ Pre-arrival email sent to ${booking.email}`);
+  } catch (err) {
+    console.error('❌ Error sending pre-arrival email:', err);
+  }
+}
+
+// 4. Check-In Day Email
+export async function sendCheckInDayEmail(booking: any) {
+  if (!resend) return;
+
+  const firstName = booking.guest.split(' ')[0];
+
+  try {
+    await resend.emails.send({
+      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
+      replyTo: 'matt@carlsonproperties.co.nz',
+      to: [booking.email],
+      subject: 'Welcome to One Eleven',
+      html: createEmailWrapper(`
+        <!-- Spacer -->
+        <tr><td style="height: 40px;"></td></tr>
+
+        ${eyebrow('WELCOME')}
+        ${headline(`Welcome, ${firstName}.`)}
+        ${bodyText('A few things to know as you settle in.')}
+
+        ${bodyText('Please grab milk on your way — with so many alternatives these days, we can't guess what you'll want. We do have a barista coffee machine and beans ready for you.')}
+        ${bodyText('If anything's off or missing, tell us now rather than waiting until your review. We'd rather fix it while you're here.')}
+
+        <!-- Contact Card -->
+        <tr>
+          <td style="padding: 32px 40px 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM}; border-radius: 12px;">
+              <tr>
+                <td style="padding: 24px; text-align: center;">
+                  <p style="margin: 0 0 12px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 700; color: ${INK};">
+                    Need something?
+                  </p>
+                  <p style="margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                    Matt &amp; Ash<br/>
+                    <a href="tel:0276977961" style="color: ${SAGE}; text-decoration: none; font-weight: 700;">027 697 7961</a>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Spacer -->
+        <tr><td style="height: 20px;"></td></tr>
+
+        ${footer()}
+      `, 'A few things to know on your first day.')
+    });
+
+    console.log(`✅ Check-in day email sent to ${booking.email}`);
+  } catch (err) {
+    console.error('❌ Error sending check-in day email:', err);
+  }
+}
+
+// 5. Check-Out Day Email
+export async function sendCheckOutDayEmail(booking: any) {
+  if (!resend) return;
+
+  const firstName = booking.guest.split(' ')[0];
+
+  try {
+    await resend.emails.send({
+      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
+      replyTo: 'matt@carlsonproperties.co.nz',
+      to: [booking.email],
+      subject: 'See you again — check-out today',
+      html: createEmailWrapper(`
+        <!-- Spacer -->
+        <tr><td style="height: 40px;"></td></tr>
+
+        ${eyebrow('SAFE TRAVELS')}
+        ${headline(`Thank you, ${firstName}.`)}
+        ${bodyText('We hope you've had a good stay.')}
+
+        ${bodyText('We clean the house ourselves to keep costs down. A quick hand before you go helps us turn it around faster.')}
+
+        <!-- Checklist -->
+        <tr>
+          <td style="padding: 24px 40px 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM}; border-radius: 12px;">
+              <tr>
+                <td style="padding: 24px;">
+                  <ul style="margin: 0; padding-left: 20px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.8; color: ${BODY_GREY};">
+                    <li>Load and start the dishwasher</li>
+                    <li>Take rubbish to the wheelie bin down the side</li>
+                    <li>Strip the beds if you're able (not required)</li>
+                  </ul>
+                  <p style="margin: 16px 0 0; padding-top: 16px; border-top: 1px solid ${HAIRLINE}; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; line-height: 1.6; color: ${MUTED};">
+                    If you do strip the beds, please leave the mattress protectors and duvet inners on. Everything goes to the commercial laundry.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Spacer -->
+        <tr><td style="height: 20px;"></td></tr>
+
+        ${footer()}
+      `, 'A few things before you head off.')
+    });
+
+    console.log(`✅ Check-out day email sent to ${booking.email}`);
+  } catch (err) {
+    console.error('❌ Error sending check-out day email:', err);
+  }
+}
+
+// 6. Review Request Email
+export async function sendReviewRequestEmail(booking: any) {
+  if (!resend) return;
+
+  const firstName = booking.guest.split(' ')[0];
+
+  try {
+    await resend.emails.send({
+      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
+      replyTo: 'matt@carlsonproperties.co.nz',
+      to: [booking.email],
+      subject: 'How was your stay at One Eleven?',
+      html: createEmailWrapper(`
+        <!-- Small Hero -->
+        <tr>
+          <td style="padding: 0 40px;">
+            <img src="${HERO_URL}" alt="One Eleven on the Mile" width="520" style="display: block; width: 100%; max-width: 520px; height: auto; border-radius: 8px; margin: 0 auto;" />
+          </td>
+        </tr>
+
+        <!-- Spacer -->
+        <tr><td style="height: 40px;"></td></tr>
+
+        ${eyebrow('THANK YOU')}
+        ${headline(`How was your stay?`)}
+        ${bodyText(`Thanks for being a respectful guest, ${firstName}. If you'd like to book again, reach out through our website.`, true)}
+
+        ${bodyText('A review helps us as a small local business. Two minutes that mean the world to us.', true)}
+        ${ctaButton('SHARE A REVIEW', 'https://share.google/EU7JN7Rw5jJDsS5Ci')}
+
+        ${bodyText('If something went wrong, please email us privately instead of posting it publicly. We'd rather learn from you than from a review.', true)}
+
+        <!-- Spacer -->
+        <tr><td style="height: 20px;"></td></tr>
+
+        ${footer()}
+      `, 'Two minutes that mean the world to us.')
+    });
+
+    console.log(`✅ Review request email sent to ${booking.email}`);
+  } catch (err) {
+    console.error('❌ Error sending review request email:', err);
+  }
+}
+
 // Test all email templates
 export async function sendTestEmails(testEmail: string) {
   const testBooking = {
-    id: 'test-booking-123456',
+    id: 'test-booking-' + crypto.randomUUID(),
     guest: 'Grant Ashleigh',
     email: testEmail,
     phone: '0276977961',
@@ -517,7 +619,7 @@ export async function sendTestEmails(testEmail: string) {
     checkOut: '2026-03-25',
     guests: 4,
     total: 6375,
-    notes: 'This is a test booking'
+    notes: 'Test booking for email verification'
   };
 
   console.log(`🧪 Sending test emails to ${testEmail}...`);
