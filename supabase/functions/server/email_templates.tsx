@@ -14,7 +14,7 @@ const HAIRLINE = '#F1F1EE';
 
 // Images
 const LOGO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Black%20White%20Minimalist%20Calligraphy%20Signature%20Logo.png';
-const HERO_URL = 'https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/032_Open2view_ID584542-111_Jarden_Mile.jpg';
+const HERO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/032_Open2view_ID584542-111_Jarden_Mile.jpg';
 
 // Email wrapper with consistent structure
 const createEmailWrapper = (content: string, preheader: string) => `
@@ -238,7 +238,7 @@ export async function sendBookingConfirmation(booking: any) {
           </td>
         </tr>
 
-        ${bodyText('Three days before your check-in, you'll receive our digital guidebook with your door code, Wi-Fi details, and house instructions.', true)}
+        ${bodyText(`Three days before your check-in, you'll receive our digital guidebook with your door code, Wi-Fi details, and house instructions.`, true)}
 
         <!-- Spacer -->
         <tr><td style="height: 20px;"></td></tr>
@@ -437,7 +437,7 @@ export async function sendPreArrivalEmail(booking: any) {
           </td>
         </tr>
 
-        ${bodyText('It's a self check-in. We live nearby if you need anything.')}
+        ${bodyText(`It's a self check-in. We live nearby if you need anything.`)}
         ${ctaButton('VIEW DIGITAL HOUSE MANUAL', 'https://www.carlsonproperties.co.nz/guest-info')}
 
         <!-- Spacer -->
@@ -473,8 +473,8 @@ export async function sendCheckInDayEmail(booking: any) {
         ${headline(`Welcome, ${firstName}.`)}
         ${bodyText('A few things to know as you settle in.')}
 
-        ${bodyText('Please grab milk on your way — with so many alternatives these days, we can't guess what you'll want. We do have a barista coffee machine and beans ready for you.')}
-        ${bodyText('If anything's off or missing, tell us now rather than waiting until your review. We'd rather fix it while you're here.')}
+        ${bodyText(`Please grab milk on your way — with so many alternatives these days, we can't guess what you'll want. We do have a barista coffee machine and beans ready for you.`)}
+        ${bodyText(`If anything's off or missing, tell us now rather than waiting until your review. We'd rather fix it while you're here.`)}
 
         <!-- Contact Card -->
         <tr>
@@ -526,7 +526,7 @@ export async function sendCheckOutDayEmail(booking: any) {
 
         ${eyebrow('SAFE TRAVELS')}
         ${headline(`Thank you, ${firstName}.`)}
-        ${bodyText('We hope you've had a good stay.')}
+        ${bodyText(`We hope you've had a good stay.`)}
 
         ${bodyText('We clean the house ourselves to keep costs down. A quick hand before you go helps us turn it around faster.')}
 
@@ -593,7 +593,7 @@ export async function sendReviewRequestEmail(booking: any) {
         ${bodyText('A review helps us as a small local business. Two minutes that mean the world to us.', true)}
         ${ctaButton('SHARE A REVIEW', 'https://share.google/EU7JN7Rw5jJDsS5Ci')}
 
-        ${bodyText('If something went wrong, please email us privately instead of posting it publicly. We'd rather learn from you than from a review.', true)}
+        ${bodyText(`If something went wrong, please email us privately instead of posting it publicly. We'd rather learn from you than from a review.`, true)}
 
         <!-- Spacer -->
         <tr><td style="height: 20px;"></td></tr>

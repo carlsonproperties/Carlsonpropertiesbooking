@@ -514,7 +514,7 @@ const handleCreateCheckout = async (c: any) => {
           product_data: {
             name: `Stay at One Eleven | On the Mile`,
             description: `${bookingData.checkIn} to ${bookingData.checkOut} (${bookingData.guests} guests)`,
-            images: ['https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/032_Open2view_ID584542-111_Jarden_Mile.jpg'],
+            images: ['https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/032_Open2view_ID584542-111_Jarden_Mile.jpg'],
           },
           unit_amount: amountInCents,
         },
