@@ -121,7 +121,7 @@ const footer = () => `
             111 Jarden Mile, Taupō, NZ
           </p>
           <p style="margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 11px; line-height: 1.4; color: ${MUTED}; text-align: center;">
-            You're receiving this because you booked a stay with us.
+            You are receiving this because you booked a stay with us.
           </p>
         </td>
       </tr>
@@ -163,7 +163,7 @@ export async function sendBookingConfirmation(booking: any) {
   try {
     await resend.emails.send({
       from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'matt@carlsonproperties.co.nz',
+      replyTo: 'bookings@carlsonproperties.co.nz',
       to: [booking.email],
       subject: 'Your stay at One Eleven is confirmed',
       html: createEmailWrapper(`
@@ -238,13 +238,13 @@ export async function sendBookingConfirmation(booking: any) {
           </td>
         </tr>
 
-        ${bodyText(`Three days before your check-in, you'll receive our digital guidebook with your door code, Wi-Fi details, and house instructions.`, true)}
+        ${bodyText(`Three days before your check-in, we will send our digital guidebook with your door code, Wi-Fi details, and house instructions.`, true)}
 
         <!-- Spacer -->
         <tr><td style="height: 20px;"></td></tr>
 
         ${footer()}
-      `, 'We can\'t wait to host you in Taupō.')
+      `, 'We cannot wait to host you in Taupō.')
     });
 
     console.log(`✅ Booking confirmation sent to ${booking.email}`);
@@ -263,7 +263,7 @@ export async function sendOwnerNotification(booking: any) {
   try {
     await resend.emails.send({
       from: 'One Eleven Bookings <bookings@carlsonproperties.co.nz>',
-      replyTo: 'matt@carlsonproperties.co.nz',
+      replyTo: 'bookings@carlsonproperties.co.nz',
       to: ['bookings@carlsonproperties.co.nz'],
       subject: `New booking · ${booking.guest} · ${checkInShort}`,
       html: createEmailWrapper(`
@@ -379,7 +379,7 @@ export async function sendPreArrivalEmail(booking: any) {
   try {
     await resend.emails.send({
       from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'matt@carlsonproperties.co.nz',
+      replyTo: 'bookings@carlsonproperties.co.nz',
       to: [booking.email],
       subject: 'Your arrival details for One Eleven',
       html: createEmailWrapper(`
@@ -394,8 +394,8 @@ export async function sendPreArrivalEmail(booking: any) {
         <tr><td style="height: 40px;"></td></tr>
 
         ${eyebrow('ALMOST TIME')}
-        ${headline(`We're ready for you.`)}
-        ${bodyText(`Your stay begins soon. Here's everything you need to know, ${firstName}.`)}
+        ${headline(`We are ready for you.`)}
+        ${bodyText(`Your stay begins soon. Here is everything you need to know, ${firstName}.`)}
 
         <!-- Info Card -->
         <tr>
@@ -437,7 +437,7 @@ export async function sendPreArrivalEmail(booking: any) {
           </td>
         </tr>
 
-        ${bodyText(`It's a self check-in. We live nearby if you need anything.`)}
+        ${bodyText(`This is a self check-in. We live nearby if you need anything.`)}
         ${ctaButton('VIEW DIGITAL HOUSE MANUAL', 'https://www.carlsonproperties.co.nz/guest-info')}
 
         <!-- Spacer -->
@@ -462,7 +462,7 @@ export async function sendCheckInDayEmail(booking: any) {
   try {
     await resend.emails.send({
       from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'matt@carlsonproperties.co.nz',
+      replyTo: 'bookings@carlsonproperties.co.nz',
       to: [booking.email],
       subject: 'Welcome to One Eleven',
       html: createEmailWrapper(`
@@ -473,8 +473,8 @@ export async function sendCheckInDayEmail(booking: any) {
         ${headline(`Welcome, ${firstName}.`)}
         ${bodyText('A few things to know as you settle in.')}
 
-        ${bodyText(`Please grab milk on your way — with so many alternatives these days, we can't guess what you'll want. We do have a barista coffee machine and beans ready for you.`)}
-        ${bodyText(`If anything's off or missing, tell us now rather than waiting until your review. We'd rather fix it while you're here.`)}
+        ${bodyText(`Please grab milk on your way — with so many alternatives these days, we cannot guess what you will want. We do have a barista coffee machine and beans ready for you.`)}
+        ${bodyText(`If anything is off or missing, tell us now rather than waiting until your review. We would rather fix it while you are here.`)}
 
         <!-- Contact Card -->
         <tr>
@@ -517,7 +517,7 @@ export async function sendCheckOutDayEmail(booking: any) {
   try {
     await resend.emails.send({
       from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'matt@carlsonproperties.co.nz',
+      replyTo: 'bookings@carlsonproperties.co.nz',
       to: [booking.email],
       subject: 'See you again — check-out today',
       html: createEmailWrapper(`
@@ -526,7 +526,7 @@ export async function sendCheckOutDayEmail(booking: any) {
 
         ${eyebrow('SAFE TRAVELS')}
         ${headline(`Thank you, ${firstName}.`)}
-        ${bodyText(`We hope you've had a good stay.`)}
+        ${bodyText(`We hope you have had a good stay.`)}
 
         ${bodyText('We clean the house ourselves to keep costs down. A quick hand before you go helps us turn it around faster.')}
 
@@ -539,7 +539,7 @@ export async function sendCheckOutDayEmail(booking: any) {
                   <ul style="margin: 0; padding-left: 20px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.8; color: ${BODY_GREY};">
                     <li>Load and start the dishwasher</li>
                     <li>Take rubbish to the wheelie bin down the side</li>
-                    <li>Strip the beds if you're able (not required)</li>
+                    <li>Strip the beds if you are able (not required)</li>
                   </ul>
                   <p style="margin: 16px 0 0; padding-top: 16px; border-top: 1px solid ${HAIRLINE}; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; line-height: 1.6; color: ${MUTED};">
                     If you do strip the beds, please leave the mattress protectors and duvet inners on. Everything goes to the commercial laundry.
@@ -572,7 +572,7 @@ export async function sendReviewRequestEmail(booking: any) {
   try {
     await resend.emails.send({
       from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'matt@carlsonproperties.co.nz',
+      replyTo: 'bookings@carlsonproperties.co.nz',
       to: [booking.email],
       subject: 'How was your stay at One Eleven?',
       html: createEmailWrapper(`
@@ -588,12 +588,12 @@ export async function sendReviewRequestEmail(booking: any) {
 
         ${eyebrow('THANK YOU')}
         ${headline(`How was your stay?`)}
-        ${bodyText(`Thanks for being a respectful guest, ${firstName}. If you'd like to book again, reach out through our website.`, true)}
+        ${bodyText(`Thanks for being a respectful guest, ${firstName}. If you would like to book again, reach out through our website.`, true)}
 
         ${bodyText('A review helps us as a small local business. Two minutes that mean the world to us.', true)}
         ${ctaButton('SHARE A REVIEW', 'https://share.google/EU7JN7Rw5jJDsS5Ci')}
 
-        ${bodyText(`If something went wrong, please email us privately instead of posting it publicly. We'd rather learn from you than from a review.`, true)}
+        ${bodyText(`If something went wrong, please email us privately instead of posting it publicly. We would rather learn from you than from a review.`, true)}
 
         <!-- Spacer -->
         <tr><td style="height: 20px;"></td></tr>

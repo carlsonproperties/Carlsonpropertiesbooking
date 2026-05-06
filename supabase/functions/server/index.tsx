@@ -477,6 +477,12 @@ const handleCalendarEvents = async (c: any) => {
   }
 }
 
+// Valid coupon codes
+const COUPON_CODES: Record<string, { discount: number; description: string }> = {
+  'TEST100': { discount: 100, description: 'Test booking - 100% off' },
+  'WELCOME10': { discount: 10, description: 'Welcome discount - 10% off' },
+};
+
 const handleCreateCheckout = async (c: any) => {
   const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
 
@@ -490,7 +496,7 @@ const handleCreateCheckout = async (c: any) => {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
-    const { bookingData } = body;
+    const { bookingData, couponCode } = body;
 
     if (!stripeKey) {
       return new Response(JSON.stringify({ error: 'Stripe API key is missing. Please set STRIPE_SECRET_KEY in Supabase secrets.' }), {
@@ -503,9 +509,24 @@ const handleCreateCheckout = async (c: any) => {
     const bookingId = crypto.randomUUID();
     const origin = c.req.header('origin') || c.req.header('referer') || 'https://oneeleven.nz';
     const baseUrl = origin.split('?')[0].replace(/\/$/, '');
-    const amountInCents = Math.round(parseFloat(String(bookingData.amount)) * 100);
 
-    const session = await stripe.checkout.sessions.create({
+    // Validate and apply coupon code
+    let discount = 0;
+    let couponDescription = '';
+    let finalAmount = parseFloat(String(bookingData.amount));
+
+    if (couponCode && COUPON_CODES[couponCode.toUpperCase()]) {
+      const coupon = COUPON_CODES[couponCode.toUpperCase()];
+      discount = coupon.discount;
+      couponDescription = coupon.description;
+      finalAmount = finalAmount * (1 - discount / 100);
+      console.log(`Coupon ${couponCode} applied: ${discount}% off. Original: $${bookingData.amount}, Final: $${finalAmount}`);
+    }
+
+    // Stripe requires minimum 50 cents for NZD
+    const amountInCents = Math.max(50, Math.round(finalAmount * 100));
+
+    const sessionData: any = {
       payment_method_types: ['card'],
       customer_email: bookingData.guestEmail,
       line_items: [{
@@ -513,7 +534,7 @@ const handleCreateCheckout = async (c: any) => {
           currency: 'nzd',
           product_data: {
             name: `Stay at One Eleven | On the Mile`,
-            description: `${bookingData.checkIn} to ${bookingData.checkOut} (${bookingData.guests} guests)`,
+            description: `${bookingData.checkIn} to ${bookingData.checkOut} (${bookingData.guests} guests)${discount > 0 ? ` - ${couponDescription}` : ''}`,
             images: ['https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/032_Open2view_ID584542-111_Jarden_Mile.jpg'],
           },
           unit_amount: amountInCents,
@@ -523,8 +544,18 @@ const handleCreateCheckout = async (c: any) => {
       mode: 'payment',
       success_url: `${baseUrl}/booking-success?session_id={CHECKOUT_SESSION_ID}&booking_id=${bookingId}`,
       cancel_url: `${baseUrl}/checkout`,
-      metadata: { ...bookingData, bookingId, guests: String(bookingData.guests), amount: String(bookingData.amount) },
-    });
+      metadata: {
+        ...bookingData,
+        bookingId,
+        guests: String(bookingData.guests),
+        amount: String(bookingData.amount),
+        originalAmount: String(bookingData.amount),
+        discountPercent: String(discount),
+        couponCode: couponCode || '',
+      },
+    };
+
+    const session = await stripe.checkout.sessions.create(sessionData);
 
     return new Response(JSON.stringify({ url: session.url }), {
       status: 200,

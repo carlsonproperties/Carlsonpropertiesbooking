@@ -25,6 +25,7 @@ export function CheckoutPage() {
     lastName: '',
     email: '',
     phone: '',
+    couponCode: '',
     notes: ''
   });
 
@@ -103,7 +104,8 @@ export function CheckoutPage() {
           checkOut: activeBooking.checkOut,
           amount: amount,
           guests: Number(activeBooking.guests)
-        }
+        },
+        couponCode: formData.couponCode || undefined
       };
 
       console.log(`Initiating ${paymentMethod} request:`, { url: checkoutUrl, payload });
@@ -353,14 +355,25 @@ export function CheckoutPage() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-stone-500">Phone Number</label>
-                  <input 
+                  <input
                     required
-                    type="tel" 
+                    type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     placeholder="+64 00 000 0000"
                     className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all"
                   />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-stone-500">Coupon Code (Optional)</label>
+                  <input
+                    type="text"
+                    value={formData.couponCode}
+                    onChange={(e) => setFormData({...formData, couponCode: e.target.value.toUpperCase()})}
+                    placeholder="Enter code (e.g. TEST100)"
+                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all uppercase"
+                  />
+                  <p className="text-[10px] text-stone-400">Have a promo code? Enter it here for a discount.</p>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-stone-500">Message to Host (Optional)</label>
