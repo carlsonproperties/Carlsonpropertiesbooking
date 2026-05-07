@@ -359,7 +359,7 @@ export function Home() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                   {[
                     { title: "Best Rate", desc: "No commission fees — direct prices, every time" },
-                    { title: "Flexible Service", desc: "Personal check-in arrangements and concierge support" },
+                    { title: "Self Check-in", desc: "A personalised door code arrives before your stay — arrive on your schedule" },
                     { title: "Local Expertise", desc: "Curated recommendations from your hosts" },
                     { title: "Direct Contact", desc: "Speak with the property owners — no middlemen" },
                   ].map((b, i) => (
