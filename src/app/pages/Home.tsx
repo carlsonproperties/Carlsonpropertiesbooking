@@ -90,9 +90,9 @@ export function Home() {
   return (
     <>
       <SEO 
-        title="One Eleven On The Mile - Luxury Lakefront Accommodation Taupō"
-        description="Experience ultimate luxury at One Eleven On The Mile. 5-bedroom lakefront estate in Taupō with pool, sauna, gym, and breathtaking Lake Taupō views. Book your exclusive stay."
-        keywords="Taupō luxury accommodation, lakefront holiday home Taupō, Taupō vacation rental, luxury Taupō stay, Lake Taupō accommodation, Taupō pool house, 5 bedroom Taupō rental"
+        title="One Eleven On The Mile - Luxury Taupō Accommodation with Panoramic Lake Views"
+        description="Experience luxury at One Eleven On The Mile — 5-bedroom Taupō estate with panoramic Lake Taupō views, pool, sauna and gym. Book your exclusive stay."
+        keywords="Taupō luxury accommodation, holiday home with lake views Taupō, Taupō vacation rental, luxury Taupō stay, Lake Taupō accommodation, Taupō pool house, 5 bedroom Taupō rental"
         canonicalUrl="https://carlsonproperties.co.nz"
       />
 
@@ -157,18 +157,13 @@ export function Home() {
                       src={DRONE_VIDEO}
                       type="video/mp4" 
                     />
-                    <img 
-                      src={heroImg} 
-                      className="w-full h-full object-cover" 
-                      alt="One Eleven Taupo - Luxury lakefront accommodation with mountain views"
+                    <img
+                      src={heroImg}
+                      className="w-full h-full object-cover"
+                      alt="One Eleven Taupo - Luxury Taupō accommodation with panoramic lake and mountain views"
                       onError={(e) => {
-                        console.error('Hero image failed to load');
-                        console.error('Hero image URL:', e.currentTarget.src);
-                        console.error('Check if Supabase Storage bucket "Website Media" is set to PUBLIC');
-                        // Set fallback image
                         e.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&h=900&fit=crop';
                       }}
-                      onLoad={() => console.log('Hero image loaded successfully:', heroImg)}
                     />
                   </video>
                 </div>

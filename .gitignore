@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+
+# Build artefact: deploy-staging copy of the Edge Function (see scripts/deploy-edge-function.mjs)
+supabase/functions/make-server-edef7798/
+
+# Supabase CLI local state
+supabase/.temp/

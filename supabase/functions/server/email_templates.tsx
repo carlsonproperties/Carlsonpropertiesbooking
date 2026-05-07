@@ -13,8 +13,10 @@ const MUTED = '#AFAFAF';
 const HAIRLINE = '#F1F1EE';
 
 // Images
-const LOGO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Black%20White%20Minimalist%20Calligraphy%20Signature%20Logo.png';
-const HERO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/032_Open2view_ID584542-111_Jarden_Mile.jpg';
+const LOGO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Logo.png';
+const HERO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg';
+const HERO_LAKE_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg';
+const HERO_KITCHEN_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/looking%20into%20kitchen.png';
 
 // Email wrapper with consistent structure
 const createEmailWrapper = (content: string, preheader: string) => `
@@ -115,7 +117,8 @@ const footer = () => `
         <td align="center">
           <p style="margin: 0 0 8px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.5; color: ${BODY_GREY}; text-align: center;">
             <strong>Matt &amp; Ashleigh Carlson</strong><br/>
-            One Eleven on the Mile
+            ONE ELEVEN | ON THE MILE<br/>
+            <a href="tel:0276977961" style="color: ${BODY_GREY}; text-decoration: none;">0276977961</a>
           </p>
           <p style="margin: 0 0 16px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 12px; line-height: 1.5; color: ${MUTED}; text-align: center;">
             111 Jarden Mile, Taupō, NZ
@@ -140,6 +143,21 @@ const formatDate = (dateString: string) => {
 const formatDateShort = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-NZ', { month: 'short', day: 'numeric' });
+};
+
+// Format date long with ordinal suffix and optional time (e.g. "Friday 8th May 2026 3pm")
+const formatDateLong = (dateString: string, time?: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const suffix = (n: number) => {
+    if (n >= 11 && n <= 13) return 'th';
+    switch (n % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th'; }
+  };
+  const weekday = date.toLocaleDateString('en-NZ', { weekday: 'long' });
+  const month = date.toLocaleDateString('en-NZ', { month: 'long' });
+  const year = date.getFullYear();
+  const base = `${weekday} ${day}${suffix(day)} ${month} ${year}`;
+  return time ? `${base} ${time}` : base;
 };
 
 // Calculate nights
@@ -386,7 +404,7 @@ export async function sendPreArrivalEmail(booking: any) {
         <!-- Hero Image -->
         <tr>
           <td style="padding: 0;">
-            <img src="${HERO_URL}" alt="One Eleven on the Mile" width="600" style="display: block; width: 100%; max-width: 600px; height: auto;" />
+            <img src="${HERO_LAKE_URL}" alt="Lake views from One Eleven" width="600" style="display: block; width: 100%; max-width: 600px; height: auto;" />
           </td>
         </tr>
 
@@ -407,8 +425,19 @@ export async function sendPreArrivalEmail(booking: any) {
                     <tr>
                       <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
                         <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Door Code</strong>
-                        ${doorCode} followed by #<br/>
-                        <span style="font-size: 12px; color: ${MUTED};">Active from 3pm on ${formatDateShort(booking.checkIn)}</span>
+                        ${doorCode}#
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Check-In</strong>
+                        ${formatDateLong(booking.checkIn, '3pm')}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
+                        <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Check-Out</strong>
+                        ${formatDateLong(booking.checkOut, '10am')}
                       </td>
                     </tr>
                     <tr>
@@ -422,12 +451,6 @@ export async function sendPreArrivalEmail(booking: any) {
                         <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Wi-Fi</strong>
                         Network: Carlson &amp; Co. Guest<br/>
                         Password: Gue$t111. <span style="font-size: 12px; color: ${MUTED};">(note the full stop)</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
-                        <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Hours</strong>
-                        Check-in 3pm · Check-out 10am
                       </td>
                     </tr>
                   </table>
@@ -482,13 +505,18 @@ export async function sendCheckInDayEmail(booking: any) {
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${CREAM}; border-radius: 12px;">
               <tr>
                 <td style="padding: 24px; text-align: center;">
-                  <p style="margin: 0 0 12px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 700; color: ${INK};">
+                  <p style="margin: 0 0 16px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 700; color: ${INK};">
                     Need something?
                   </p>
-                  <p style="margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
-                    Matt &amp; Ash<br/>
-                    <a href="tel:0276977961" style="color: ${SAGE}; text-decoration: none; font-weight: 700;">027 697 7961</a>
-                  </p>
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                    <tr>
+                      <td style="background-color: ${SAGE}; border-radius: 999px;">
+                        <a href="tel:0276977961" style="display: inline-block; padding: 12px 28px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #FFFFFF; text-decoration: none;">
+                          Call us
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
@@ -579,7 +607,7 @@ export async function sendReviewRequestEmail(booking: any) {
         <!-- Small Hero -->
         <tr>
           <td style="padding: 0 40px;">
-            <img src="${HERO_URL}" alt="One Eleven on the Mile" width="520" style="display: block; width: 100%; max-width: 520px; height: auto; border-radius: 8px; margin: 0 auto;" />
+            <img src="${HERO_KITCHEN_URL}" alt="Kitchen at One Eleven" width="520" style="display: block; width: 100%; max-width: 520px; height: auto; border-radius: 8px; margin: 0 auto;" />
           </td>
         </tr>
 
@@ -624,11 +652,14 @@ export async function sendTestEmails(testEmail: string) {
 
   console.log(`🧪 Sending test emails to ${testEmail}...`);
 
-  await sendBookingConfirmation(testBooking);
-  await sendOwnerNotification(testBooking);
-  await sendPreArrivalEmail(testBooking);
-  await sendCheckInDayEmail(testBooking);
-  await sendCheckOutDayEmail(testBooking);
+  // Resend's default rate limit is 2 req/sec — pace each call ~600ms apart so all 6 land.
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  await sendBookingConfirmation(testBooking); await sleep(600);
+  await sendOwnerNotification(testBooking);   await sleep(600);
+  await sendPreArrivalEmail(testBooking);     await sleep(600);
+  await sendCheckInDayEmail(testBooking);     await sleep(600);
+  await sendCheckOutDayEmail(testBooking);    await sleep(600);
   await sendReviewRequestEmail(testBooking);
 
   console.log(`✅ All test emails sent to ${testEmail}`);

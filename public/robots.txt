@@ -2,12 +2,20 @@
 User-agent: *
 Allow: /
 
-# Disallow owner dashboard and checkout pages
+# Block owner-only and transactional pages
 Disallow: /dashboard
 Disallow: /owner-login
 Disallow: /checkout
 Disallow: /cart
 Disallow: /booking-success
+Disallow: /reset-password
+Disallow: /reset-bookings-password
+Disallow: /create-bookings-user
+Disallow: /view-latest-booking
+Disallow: /test-emails
+Disallow: /image-mapper
+Disallow: /image-test
+Disallow: /health-check
 
-# Sitemap location
-Sitemap: https://carlsonproperties.co.nz/sitemap.xml
+# Sitemap
+Sitemap: https://www.carlsonproperties.co.nz/sitemap.xml
