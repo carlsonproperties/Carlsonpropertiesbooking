@@ -13,7 +13,7 @@ const MUTED = '#AFAFAF';
 const HAIRLINE = '#F1F1EE';
 
 // Images
-const LOGO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Black%20White%20Minimalist%20Calligraphy%20Signature%20Logo.png';
+const LOGO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Logo.png';
 const HERO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/032_Open2view_ID584542-111_Jarden_Mile.jpg';
 
 // Email wrapper with consistent structure
@@ -624,11 +624,14 @@ export async function sendTestEmails(testEmail: string) {
 
   console.log(`🧪 Sending test emails to ${testEmail}...`);
 
-  await sendBookingConfirmation(testBooking);
-  await sendOwnerNotification(testBooking);
-  await sendPreArrivalEmail(testBooking);
-  await sendCheckInDayEmail(testBooking);
-  await sendCheckOutDayEmail(testBooking);
+  // Resend's default rate limit is 2 req/sec — pace each call ~600ms apart so all 6 land.
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  await sendBookingConfirmation(testBooking); await sleep(600);
+  await sendOwnerNotification(testBooking);   await sleep(600);
+  await sendPreArrivalEmail(testBooking);     await sleep(600);
+  await sendCheckInDayEmail(testBooking);     await sleep(600);
+  await sendCheckOutDayEmail(testBooking);    await sleep(600);
   await sendReviewRequestEmail(testBooking);
 
   console.log(`✅ All test emails sent to ${testEmail}`);
