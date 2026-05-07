@@ -1,52 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage - Highest Priority -->
   <url>
-    <loc>https://www.carlsonproperties.co.nz/</loc>
-    <xhtml:link rel="alternate" hreflang="en-NZ" href="https://www.carlsonproperties.co.nz/" />
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  
+  <!-- Booking Page - High Priority for Conversions -->
   <url>
-    <loc>https://www.carlsonproperties.co.nz/book</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/book</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+  
+  <!-- About Page - Important for SEO -->
   <url>
-    <loc>https://www.carlsonproperties.co.nz/about</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/about</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  
+  <!-- Guest Information Page -->
   <url>
-    <loc>https://www.carlsonproperties.co.nz/guest-info</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/guest-info</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  
+  <!-- Meet Hosts Page -->
   <url>
-    <loc>https://www.carlsonproperties.co.nz/meet-hosts</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/meet-hosts</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <!-- Blog Index -->
   <url>
-    <loc>https://www.carlsonproperties.co.nz/terms</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/blog</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog Posts -->
+  <url>
+    <loc>https://carlsonproperties.co.nz/blog/supercars-taupo-fan-guide-2026</loc>
+    <lastmod>2027-04-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://carlsonproperties.co.nz/blog/ironman-new-zealand-taupo-2026</loc>
+    <lastmod>2027-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://carlsonproperties.co.nz/blog/taupo-summer-concert-guide-2026</loc>
+    <lastmod>2027-01-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://carlsonproperties.co.nz/blog/taupo-winter-festival-guide-2026</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://carlsonproperties.co.nz/blog/best-things-to-do-in-taupo</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://carlsonproperties.co.nz/blog/best-restaurants-cafes-taupo</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://carlsonproperties.co.nz/terms</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  
   <url>
-    <loc>https://www.carlsonproperties.co.nz/privacy</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/privacy</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  
   <url>
-    <loc>https://www.carlsonproperties.co.nz/refund</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://carlsonproperties.co.nz/refund</loc>
+    <lastmod>2026-02-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

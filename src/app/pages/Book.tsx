@@ -39,8 +39,8 @@ export function Book() {
     <div className="min-h-screen bg-[#fdfcf8] selection:bg-[#9DA07E] selection:text-white pb-20">
       <SEO 
         title="Book Direct - Best Rates"
-        description="Book One Eleven Taupo luxury accommodation directly and save. $1275/night for a 5-bedroom holiday home with panoramic Lake Taupō views, spa, sauna and gym. Secure booking with flexible cancellation. Best rates guaranteed."
-        keywords="book accommodation taupo, taupo booking direct, reserve taupo holiday home, book luxury taupo, taupo vacation rental booking, one eleven taupo booking, taupo holiday home rates, book taupo with lake views, direct booking taupo, taupo accommodation booking, taupo rental reservation"
+        description="Book One Eleven Taupo luxury accommodation directly and save. $1275/night for 5-bedroom lakefront holiday home with spa, sauna, and gym. Secure booking with flexible cancellation. Best rates guaranteed."
+        keywords="book accommodation taupo, taupo booking direct, reserve taupo holiday home, book luxury taupo, taupo vacation rental booking, one eleven taupo booking, taupo holiday home rates, book lakefront taupo, direct booking taupo, taupo accommodation booking, taupo rental reservation"
         url="/book"
         type="website"
       />

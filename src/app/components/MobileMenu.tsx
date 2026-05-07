@@ -1,6 +1,6 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Instagram, Facebook, Home, Info, Users, Calendar, Shield, Lock } from "lucide-react";
+import { X, Instagram, Facebook, Home, Info, Users, Calendar, Shield, Lock, BookOpen } from "lucide-react";
 import { Link } from "react-router";
 import { CarlsonLogo } from "./CarlsonLogo";
 
@@ -15,6 +15,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     { name: "About the Property", path: "/about", icon: <Info size={20} /> },
     { name: "Meet Your Hosts", path: "/meet-hosts", icon: <Users size={20} /> },
     { name: "Guest Information", path: "/guest-info", icon: <Calendar size={20} /> },
+    { name: "Journal", path: "/blog", icon: <BookOpen size={20} /> },
     { name: "Owner Portal", path: "/owner-login", icon: <Lock size={20} /> },
     { name: "Book Your Stay", path: "/book", icon: <Shield size={20} />, primary: true },
   ];

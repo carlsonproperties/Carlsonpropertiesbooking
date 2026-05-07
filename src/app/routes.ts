@@ -27,6 +27,8 @@ import { StripeAccountCheck } from "./pages/StripeAccountCheck";
 import { ResendConfirmation } from "./pages/ResendConfirmation";
 import { BookingPaymentLookup } from "./pages/BookingPaymentLookup";
 import { StripeInfo } from "./pages/StripeInfo";
+import { Blog } from "./pages/Blog";
+import { BlogPost } from "./pages/BlogPost";
 
 // MAINTENANCE MODE
 // Set to true to show maintenance page for all routes
@@ -41,6 +43,8 @@ export const router = createBrowserRouter([
       { path: "about", Component: About },
       { path: "meet-hosts", Component: MeetHosts },
       { path: "guest-info", Component: GuestInformation },
+      { path: "blog", Component: Blog },
+      { path: "blog/:slug", Component: BlogPost },
       { path: "book", Component: Book },
       { path: "cart", Component: CartPage },
       { path: "checkout", Component: CheckoutPage },

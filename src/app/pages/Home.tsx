@@ -90,9 +90,9 @@ export function Home() {
   return (
     <>
       <SEO 
-        title="One Eleven On The Mile - Luxury Taupō Accommodation with Panoramic Lake Views"
-        description="Experience luxury at One Eleven On The Mile — 5-bedroom Taupō estate with panoramic Lake Taupō views, pool, sauna and gym. Book your exclusive stay."
-        keywords="Taupō luxury accommodation, holiday home with lake views Taupō, Taupō vacation rental, luxury Taupō stay, Lake Taupō accommodation, Taupō pool house, 5 bedroom Taupō rental"
+        title="One Eleven On The Mile - Luxury Lakefront Accommodation Taupō"
+        description="Experience ultimate luxury at One Eleven On The Mile. 5-bedroom lakefront estate in Taupō with pool, sauna, gym, and breathtaking Lake Taupō views. Book your exclusive stay."
+        keywords="Taupō luxury accommodation, lakefront holiday home Taupō, Taupō vacation rental, luxury Taupō stay, Lake Taupō accommodation, Taupō pool house, 5 bedroom Taupō rental"
         canonicalUrl="https://carlsonproperties.co.nz"
       />
 
@@ -119,7 +119,8 @@ export function Home() {
                   <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>About</Link>
                   <Link to="/meet-hosts" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Meet Your Hosts</Link>
                   <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Guest Info</Link>
-                  <Link 
+                  <Link to="/blog" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Journal</Link>
+                  <Link
                     to="/owner-login"
                     className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}
                   >
@@ -156,13 +157,18 @@ export function Home() {
                       src={DRONE_VIDEO}
                       type="video/mp4" 
                     />
-                    <img
-                      src={heroImg}
-                      className="w-full h-full object-cover"
-                      alt="One Eleven Taupo - Luxury Taupō accommodation with panoramic lake and mountain views"
+                    <img 
+                      src={heroImg} 
+                      className="w-full h-full object-cover" 
+                      alt="One Eleven Taupo - Luxury lakefront accommodation with mountain views"
                       onError={(e) => {
+                        console.error('Hero image failed to load');
+                        console.error('Hero image URL:', e.currentTarget.src);
+                        console.error('Check if Supabase Storage bucket "Website Media" is set to PUBLIC');
+                        // Set fallback image
                         e.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&h=900&fit=crop';
                       }}
+                      onLoad={() => console.log('Hero image loaded successfully:', heroImg)}
                     />
                   </video>
                 </div>
@@ -231,6 +237,129 @@ export function Home() {
                     </div>
                     <span className="text-[10px] uppercase tracking-widest font-bold">Discover</span>
                   </button>
+                </motion.div>
+              </div>
+            </section>
+
+            <section className="py-24 px-6 bg-[#fdfcf8]">
+              <div className="max-w-5xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="text-center mb-16"
+                >
+                  <h2 className="text-4xl md:text-6xl font-serif text-slate-900 mb-6 leading-tight">
+                    Welcome to Carlson Properties – <br className="hidden md:block" />
+                    <span className="text-[#9DA07E] italic">Luxury Taupō Accommodation</span>
+                  </h2>
+                  <p className="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto font-light">
+                    Discover the finest luxury Taupō accommodation at One Eleven on the Mile, where contemporary design meets unrivalled lake and mountain views. Our premium lakefront property redefines the art of relaxation, offering an exclusive retreat that combines world-class amenities with the natural beauty of New Zealand's Great Lake.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="mb-16"
+                >
+                  <h3 className="text-3xl md:text-4xl font-serif text-slate-900 mb-6">
+                    Unrivalled Panoramic <span className="text-[#9DA07E] italic">Lakeviews</span>
+                  </h3>
+                  <p className="text-lg text-slate-600 leading-relaxed mb-8 font-light">
+                    Our five-bedroom, four-bathroom estate is purpose-built to showcase sweeping views of Lake Taupō and the majestic Tongariro mountain range. Whether you are lounging by the heated pool, unwinding in the spa, or preparing a meal in the gourmet kitchen, every moment is framed by breathtaking scenery. With accommodation for up to 10 guests, this is the ultimate destination for families, groups, or couples seeking a luxurious escape.
+                  </p>
+
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {[
+                      { title: "Heated Pool & Spa", desc: "Relax in climate-controlled comfort year-round" },
+                      { title: "Outdoor Sauna & Gym", desc: "Maintain your wellness routine in style" },
+                      { title: "Lake & Mountain Views", desc: "Panoramic vistas from every room" }
+                    ].map((feature, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 + i * 0.1 }}
+                        className="bg-white p-6 rounded-2xl border border-[#9DA07E]/20 shadow-sm"
+                      >
+                        <h4 className="font-serif text-xl text-[#9DA07E] mb-2">{feature.title}</h4>
+                        <p className="text-sm text-slate-600 font-light leading-relaxed">{feature.desc}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="mb-16"
+                >
+                  <h3 className="text-3xl md:text-4xl font-serif text-slate-900 mb-6">
+                    Experience the Best of <span className="text-[#9DA07E] italic">Taupō</span>
+                  </h3>
+                  <p className="text-lg text-slate-600 leading-relaxed font-light">
+                    Ideally located just five minutes from Taupō town center, One Eleven on the Mile offers easy access to the region's finest attractions. Spend your days exploring geothermal wonders, fishing on the lake, or dining at award-winning restaurants. When evening falls, return to your private sanctuary to enjoy a quiet drink by the fire or a soak under the stars.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="mb-12"
+                >
+                  <h3 className="text-3xl md:text-4xl font-serif text-slate-900 mb-6">
+                    Why Book Direct with <span className="text-[#9DA07E] italic">Carlson Properties?</span>
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
+                    {[
+                      { title: "Best Rate Guarantee", desc: "Save on commission fees when you book directly with us" },
+                      { title: "Flexible Booking", desc: "Personalized service and flexible check-in arrangements" },
+                      { title: "Exclusive Perks", desc: "Special offers and local recommendations from your hosts" },
+                      { title: "Direct Communication", desc: "Speak directly with property owners for a seamless stay" }
+                    ].map((benefit, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.7 + i * 0.1 }}
+                        className="flex gap-4 items-start"
+                      >
+                        <div className="w-2 h-2 rounded-full bg-[#9DA07E] mt-2 flex-shrink-0" />
+                        <div>
+                          <h4 className="font-serif text-lg text-slate-900 mb-1">{benefit.title}</h4>
+                          <p className="text-sm text-slate-600 font-light leading-relaxed">{benefit.desc}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="text-center"
+                >
+                  <p className="text-xl text-slate-700 mb-6 font-light">
+                    Check availability and book your dates today
+                  </p>
+                  <Link
+                    to="/book"
+                    className="inline-block bg-[#9DA07E] text-white px-12 py-4 rounded-full text-sm uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#9DA07E]/20"
+                  >
+                    Book Now
+                  </Link>
                 </motion.div>
               </div>
             </section>

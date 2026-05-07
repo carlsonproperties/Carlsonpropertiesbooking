@@ -27,8 +27,7 @@ import {
   LayoutDashboard,
   FolderOpen,
   Mail as MailIcon,
-  PieChart as PieChartIcon,
-  Moon
+  PieChart as PieChartIcon
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CarlsonLogo } from "../components/CarlsonLogo";
@@ -74,9 +73,6 @@ interface Guest {
   stripeSessionId?: string;
   channel?: string;
   source: 'direct' | 'airtable';
-  doorCode?: string;
-  review?: string;
-  reviewText?: string;
 }
 
 interface DashboardStats {
@@ -84,12 +80,12 @@ interface DashboardStats {
   totalBookings: number;
   occupancyRate: number;
   avgBookingValue: number;
-  avgNightStay?: number;
   upcomingBookings: number;
   allGuests: Guest[];
   yearlyEarnings?: any;
-  channelBreakdown?: Record<string, number>;
-  channelRevenue?: Record<string, number>;
+  yearlyExpenses?: any;
+  channelBreakdown?: any;
+  totalAirtableExpenses?: number;
 }
 
 const EMAIL_TEMPLATES = [
@@ -205,10 +201,6 @@ export function DashboardComplete() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showChannelBreakdown, setShowChannelBreakdown] = useState(false);
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
-  // Directory-tab filters
-  const [filterYear, setFilterYear] = useState<string>('all');
-  const [filterChannel, setFilterChannel] = useState<string>('all');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
 
   useEffect(() => {
     checkAuth();
@@ -425,56 +417,13 @@ export function DashboardComplete() {
     .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime())
     .slice(0, 10);
 
-  // Upcoming arrivals: check-in date within next 30 days, soonest first
-  const upcomingArrivals = (() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const horizon = new Date(today);
-    horizon.setDate(horizon.getDate() + 30);
-    return [...(stats?.allGuests || [])]
-      .filter(g => {
-        const d = new Date(g.checkIn);
-        return !isNaN(d.getTime()) && d >= today && d <= horizon;
-      })
-      .sort((a, b) => new Date(a.checkIn).getTime() - new Date(b.checkIn).getTime());
-  })();
-
-  // Recent reviews: bookings that have a review/reviewText, newest check-out first
-  const reviewsList = [...(stats?.allGuests || [])]
-    .filter((g: any) => (g.review && String(g.review).trim()) || (g.reviewText && String(g.reviewText).trim()))
-    .sort((a, b) => new Date(b.checkOut).getTime() - new Date(a.checkOut).getTime())
-    .slice(0, 12);
-
   // Get available years and current year data for charts
   const availableYears = stats?.yearlyEarnings ? Object.keys(stats.yearlyEarnings).sort().reverse() : [];
   const currentYearData = stats?.yearlyEarnings?.[selectedYear] || [];
 
-  // Calculate channel counts + revenue
+  // Calculate channel percentages
   const channelData = stats?.channelBreakdown || {};
-  const channelRevenueData = stats?.channelRevenue || {};
   const totalChannelBookings = Object.values(channelData).reduce((sum: number, count: any) => sum + count, 0) as number;
-  const totalChannelRevenue = Object.values(channelRevenueData).reduce((sum: number, rev: any) => sum + rev, 0) as number;
-
-  // Filter options derived from full dataset
-  const filterYearOptions = Array.from(new Set(
-    (stats?.allGuests || [])
-      .map(g => g.checkIn ? new Date(g.checkIn).getFullYear() : null)
-      .filter((y): y is number => !!y && !isNaN(y))
-  )).sort((a, b) => b - a);
-  const filterChannelOptions = Array.from(new Set(
-    (stats?.allGuests || []).map(g => g.channel || 'Direct Booking (Website)')
-  )).sort();
-
-  // Apply filters to the directory list
-  const filteredGuests = allGuestsSorted.filter(g => {
-    if (filterYear !== 'all') {
-      const y = g.checkIn ? new Date(g.checkIn).getFullYear() : null;
-      if (String(y) !== filterYear) return false;
-    }
-    if (filterChannel !== 'all' && (g.channel || 'Direct Booking (Website)') !== filterChannel) return false;
-    if (filterStatus !== 'all' && g.status !== filterStatus) return false;
-    return true;
-  });
 
   if (loading) {
     return (
@@ -681,7 +630,7 @@ export function DashboardComplete() {
         {/* Stats Cards - Show on Overview */}
         {activeTab === 'overview' && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -779,25 +728,6 @@ export function DashboardComplete() {
                   </div>
                 </div>
               </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 shadow-sm"
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-[#9DA07E]/10 rounded-2xl flex items-center justify-center">
-                    <Moon className="w-6 h-6 text-[#9DA07E]" />
-                  </div>
-                  <div>
-                    <p className="text-[#9DA07E] text-xs font-bold uppercase tracking-widest mb-1">Avg Night Stay</p>
-                    <p className="text-[#2D2D2D] text-2xl font-bold">
-                      {stats?.avgNightStay ? Number(stats.avgNightStay).toFixed(1) : '0.0'}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
             </div>
 
             {/* Financial Performance Chart */}
@@ -811,7 +741,7 @@ export function DashboardComplete() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-2xl font-serif text-[#2D2D2D] mb-1">Financial Performance</h2>
-                    <p className="text-sm text-[#9DA07E] font-medium">Revenue by Month</p>
+                    <p className="text-sm text-[#9DA07E] font-medium">Revenue vs Expenses by Month</p>
                   </div>
                   <select
                     value={selectedYear}
@@ -830,6 +760,10 @@ export function DashboardComplete() {
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#9DA07E" stopOpacity={0.8}/>
                         <stop offset="95%" stopColor="#9DA07E" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#9DA07E" opacity={0.1} />
@@ -858,8 +792,25 @@ export function DashboardComplete() {
                       fill="url(#colorRevenue)"
                       name="Gross Revenue"
                     />
+                    <Area
+                      type="monotone"
+                      dataKey="expenses"
+                      stroke="#ef4444"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorExpenses)"
+                      name="Monthly Expenses"
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
+
+                {stats?.totalAirtableExpenses && (
+                  <div className="mt-6 pt-6 border-t border-[#9DA07E]/20 text-center">
+                    <p className="text-sm text-[#2D2D2D]/60">
+                      Total Expenses: <span className="font-bold text-red-600">${stats.totalAirtableExpenses.toLocaleString()}</span>
+                    </p>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -930,158 +881,6 @@ export function DashboardComplete() {
                 </div>
               )}
             </motion.div>
-
-            {/* Upcoming Arrivals (next 30 days) */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55 }}
-              className="bg-white border border-[#9DA07E]/20 rounded-3xl p-8 shadow-sm mt-6"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#9DA07E]/10 rounded-xl flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-[#9DA07E]" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-serif text-[#2D2D2D]">Upcoming Arrivals</h2>
-                    <p className="text-sm text-[#9DA07E] font-medium">Next 30 days</p>
-                  </div>
-                </div>
-                <div className="bg-[#9DA07E]/10 px-4 py-2 rounded-full">
-                  <span className="text-[#9DA07E] font-bold text-sm">{upcomingArrivals.length}</span>
-                </div>
-              </div>
-
-              {upcomingArrivals.length === 0 ? (
-                <div className="text-center py-8">
-                  <Calendar className="w-12 h-12 text-[#9DA07E]/30 mx-auto mb-3" />
-                  <p className="text-sm text-[#2D2D2D]/60">Nothing arriving in the next 30 days</p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-[#9DA07E]/20 text-left text-[10px] uppercase tracking-widest text-[#9DA07E] font-bold">
-                        <th className="pb-3 pr-4">Guest</th>
-                        <th className="pb-3 pr-4">Check-in</th>
-                        <th className="pb-3 pr-4">Check-out</th>
-                        <th className="pb-3 pr-4">Door code</th>
-                        <th className="pb-3 pr-4">Phone</th>
-                        <th className="pb-3 pr-4">Email</th>
-                        <th className="pb-3 pr-4">Channel</th>
-                        <th className="pb-3">Notes</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {upcomingArrivals.map((g: any) => (
-                        <tr key={g.id} className="border-b border-[#9DA07E]/10 hover:bg-[#fdfcf8]">
-                          <td className="py-3 pr-4 font-semibold text-[#2D2D2D]">{g.guest}</td>
-                          <td className="py-3 pr-4 text-[#2D2D2D]/80">{formatNZDate(g.checkIn)}</td>
-                          <td className="py-3 pr-4 text-[#2D2D2D]/80">{formatNZDate(g.checkOut)}</td>
-                          <td className="py-3 pr-4 font-mono text-[#2D2D2D]">{g.doorCode || '—'}</td>
-                          <td className="py-3 pr-4">
-                            {g.phone ? <a href={`tel:${g.phone}`} className="text-[#9DA07E] hover:underline">{g.phone}</a> : <span className="text-[#2D2D2D]/40">—</span>}
-                          </td>
-                          <td className="py-3 pr-4">
-                            {g.email ? <a href={`mailto:${g.email}`} className="text-[#9DA07E] hover:underline break-all">{g.email}</a> : <span className="text-[#2D2D2D]/40">—</span>}
-                          </td>
-                          <td className="py-3 pr-4">
-                            <span className="inline-block text-[10px] uppercase tracking-wider bg-[#9DA07E]/10 text-[#9DA07E] px-2 py-1 rounded">{g.channel || '—'}</span>
-                          </td>
-                          <td className="py-3 max-w-xs text-[#2D2D2D]/70 whitespace-pre-wrap">{g.notes || ''}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </motion.div>
-
-            {/* Channel Revenue Split */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="bg-white border border-[#9DA07E]/20 rounded-3xl p-8 shadow-sm mt-6"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#9DA07E]/10 rounded-xl flex items-center justify-center">
-                  <PieChartIcon className="w-5 h-5 text-[#9DA07E]" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-serif text-[#2D2D2D]">Channel Revenue</h2>
-                  <p className="text-sm text-[#9DA07E] font-medium">Bookings and dollars by source</p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                {Object.entries(channelRevenueData)
-                  .sort(([, a], [, b]) => (b as number) - (a as number))
-                  .map(([channel, revenue]) => {
-                    const count = (channelData[channel] as number) || 0;
-                    const revPct = totalChannelRevenue > 0 ? ((revenue as number) / totalChannelRevenue * 100) : 0;
-                    return (
-                      <div key={channel} className="grid grid-cols-12 items-center gap-3 py-2 border-b border-[#9DA07E]/10 last:border-0">
-                        <div className="col-span-3 text-[#2D2D2D] font-medium">{channel}</div>
-                        <div className="col-span-2 text-[#2D2D2D]/70 text-sm">{count} {count === 1 ? 'booking' : 'bookings'}</div>
-                        <div className="col-span-2 text-right text-[#2D2D2D] font-semibold">${(revenue as number).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                        <div className="col-span-4">
-                          <div className="h-2 bg-[#9DA07E]/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-[#9DA07E] rounded-full" style={{ width: `${revPct}%` }} />
-                          </div>
-                        </div>
-                        <div className="col-span-1 text-right text-[#9DA07E] font-bold text-sm">{revPct.toFixed(0)}%</div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </motion.div>
-
-            {/* Recent Reviews */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.65 }}
-              className="bg-white border border-[#9DA07E]/20 rounded-3xl p-8 shadow-sm mt-6"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#9DA07E]/10 rounded-xl flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-[#9DA07E]" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-serif text-[#2D2D2D]">Recent Reviews</h2>
-                    <p className="text-sm text-[#9DA07E] font-medium">Guest feedback from past stays</p>
-                  </div>
-                </div>
-                <div className="bg-[#9DA07E]/10 px-4 py-2 rounded-full">
-                  <span className="text-[#9DA07E] font-bold text-sm">{reviewsList.length}</span>
-                </div>
-              </div>
-
-              {reviewsList.length === 0 ? (
-                <div className="text-center py-8">
-                  <Sparkles className="w-12 h-12 text-[#9DA07E]/30 mx-auto mb-3" />
-                  <p className="text-sm text-[#2D2D2D]/60">No reviews captured yet</p>
-                </div>
-              ) : (
-                <div className="grid md:grid-cols-2 gap-4">
-                  {reviewsList.map((g: any) => (
-                    <div key={g.id} className="border border-[#9DA07E]/20 rounded-2xl p-5 bg-[#fdfcf8]">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <p className="text-[#2D2D2D] font-semibold">{g.guest}</p>
-                          <p className="text-xs text-[#2D2D2D]/60">{formatNZDate(g.checkIn)} → {formatNZDate(g.checkOut)} · {g.channel}</p>
-                        </div>
-                      </div>
-                      {g.review && <p className="text-sm text-[#2D2D2D] font-medium mb-2">{g.review}</p>}
-                      {g.reviewText && <p className="text-sm text-[#2D2D2D]/80 leading-relaxed whitespace-pre-wrap">{g.reviewText}</p>}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </motion.div>
           </>
         )}
 
@@ -1100,52 +899,13 @@ export function DashboardComplete() {
                 </div>
                 <div className="bg-[#9DA07E]/10 px-4 py-2 rounded-full">
                   <span className="text-[#9DA07E] font-bold text-sm">
-                    {filteredGuests.length} of {allGuestsSorted.length}
+                    {allGuestsSorted.length} Total
                   </span>
                 </div>
               </div>
 
-              {/* Filters */}
-              <div className="flex flex-wrap gap-3 mb-6 pb-6 border-b border-[#9DA07E]/10">
-                <select
-                  value={filterYear}
-                  onChange={(e) => setFilterYear(e.target.value)}
-                  className="px-4 py-2 rounded-full border border-[#9DA07E]/30 bg-white text-sm font-medium text-[#2D2D2D] focus:outline-none focus:border-[#9DA07E] hover:bg-[#9DA07E]/5 transition-all"
-                >
-                  <option value="all">All years</option>
-                  {filterYearOptions.map(y => <option key={y} value={String(y)}>{y}</option>)}
-                </select>
-                <select
-                  value={filterChannel}
-                  onChange={(e) => setFilterChannel(e.target.value)}
-                  className="px-4 py-2 rounded-full border border-[#9DA07E]/30 bg-white text-sm font-medium text-[#2D2D2D] focus:outline-none focus:border-[#9DA07E] hover:bg-[#9DA07E]/5 transition-all"
-                >
-                  <option value="all">All channels</option>
-                  {filterChannelOptions.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-                <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-4 py-2 rounded-full border border-[#9DA07E]/30 bg-white text-sm font-medium text-[#2D2D2D] focus:outline-none focus:border-[#9DA07E] hover:bg-[#9DA07E]/5 transition-all"
-                >
-                  <option value="all">All statuses</option>
-                  <option value="upcoming">Upcoming</option>
-                  <option value="current">Current</option>
-                  <option value="completed">Past</option>
-                </select>
-                {(filterYear !== 'all' || filterChannel !== 'all' || filterStatus !== 'all') && (
-                  <button
-                    type="button"
-                    onClick={() => { setFilterYear('all'); setFilterChannel('all'); setFilterStatus('all'); }}
-                    className="px-4 py-2 rounded-full text-sm font-medium text-[#9DA07E] hover:bg-[#9DA07E]/10 transition-all"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-
               <div className="space-y-3">
-                {filteredGuests.map((guest, index) => (
+                {allGuestsSorted.map((guest, index) => (
                   <motion.div
                     key={guest.id}
                     initial={{ opacity: 0, x: -20 }}
@@ -1310,12 +1070,10 @@ export function DashboardComplete() {
                   </motion.div>
                 ))}
 
-                {filteredGuests.length === 0 && (
+                {allGuestsSorted.length === 0 && (
                   <div className="text-center py-16">
                     <Users className="w-16 h-16 text-[#9DA07E]/30 mx-auto mb-4" />
-                    <p className="text-[#2D2D2D]/60">
-                      {allGuestsSorted.length === 0 ? 'No bookings yet' : 'No bookings match the current filters'}
-                    </p>
+                    <p className="text-[#2D2D2D]/60">No bookings yet</p>
                   </div>
                 )}
               </div>
