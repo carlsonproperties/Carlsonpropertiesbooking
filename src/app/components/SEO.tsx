@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet-async';
 interface SEOProps {
   title?: string;
   description?: string;
+  // `keywords` is intentionally still accepted for backwards compat but no longer rendered —
+  // Google has ignored the meta keywords tag since 2009.
   keywords?: string;
   image?: string;
   url?: string;
@@ -12,34 +14,33 @@ interface SEOProps {
 }
 
 const DEFAULT_SEO = {
-  siteName: 'One Eleven Taupo - Luxury Accommodation',
+  siteName: 'One Eleven Taupo',
   defaultTitle: 'One Eleven Taupo | Luxury Lakefront Holiday Home & Accommodation',
-  defaultDescription: 'Book luxury accommodation in Taupo, New Zealand. Five-bedroom lakefront holiday home with spa, sauna, gym, and stunning Lake Taupo views. Perfect for families and groups seeking premium Taupo accommodation.',
-  defaultKeywords: 'accommodation taupo, taupo accommodation, luxury accommodation taupo, holiday home taupo, lakefront taupo, taupo holiday homes, vacation rental taupo, taupo rentals, lake taupo accommodation, luxury holiday homes taupo, family accommodation taupo, taupo lakefront accommodation, premium accommodation taupo, taupo vacation homes, spa accommodation taupo, sauna taupo, gym accommodation taupo, taupo airbnb alternative, direct booking taupo, taupo luxury rentals, five bedroom taupo, group accommodation taupo, large holiday home taupo, taupo property rental, new zealand accommodation, taupo nz accommodation, taupo stays, boutique accommodation taupo',
-  siteUrl: typeof window !== 'undefined' ? window.location.origin : '',
-  image: '/og-image.jpg', // We'll need to create this
+  defaultDescription: 'Book luxury accommodation in Taupō, New Zealand. Five-bedroom lakefront holiday home with spa, sauna, gym, and stunning Lake Taupō views. Direct booking — no platform fees.',
+  siteUrl: 'https://www.carlsonproperties.co.nz',
+  image: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg',
 };
 
 export function SEO({
   title,
   description = DEFAULT_SEO.defaultDescription,
-  keywords = DEFAULT_SEO.defaultKeywords,
   image,
   url,
   type = 'website',
   schemaData,
 }: SEOProps) {
-  const fullTitle = title 
-    ? `${title} | One Eleven Taupo` 
+  const fullTitle = title
+    ? `${title} | One Eleven Taupo`
     : DEFAULT_SEO.defaultTitle;
-  
-  const fullUrl = url 
-    ? `${DEFAULT_SEO.siteUrl}${url}` 
+
+  const fullUrl = url
+    ? `${DEFAULT_SEO.siteUrl}${url}`
     : DEFAULT_SEO.siteUrl;
-  
-  const fullImage = image 
-    ? `${DEFAULT_SEO.siteUrl}${image}` 
-    : `${DEFAULT_SEO.siteUrl}${DEFAULT_SEO.image}`;
+
+  // Allow callers to pass either an absolute URL or a path; default is an absolute URL already.
+  const fullImage = image
+    ? (image.startsWith('http') ? image : `${DEFAULT_SEO.siteUrl}${image}`)
+    : DEFAULT_SEO.image;
 
   // Default structured data for the property
   const defaultSchema = {
@@ -104,7 +105,8 @@ export function SEO({
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": "5.0",
-          "reviewCount": "47"
+          "bestRating": "5",
+          "reviewCount": "73"
         }
       },
       {
@@ -112,7 +114,7 @@ export function SEO({
         "name": "Carlson Properties - One Eleven Taupo",
         "description": "Premium vacation rental property management in Taupo, New Zealand",
         "url": DEFAULT_SEO.siteUrl,
-        "telephone": "",
+        "telephone": "+64-27-697-7961",
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Taupo",
@@ -154,7 +156,6 @@ export function SEO({
       {/* Basic Meta Tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
-      <meta name="keywords" content={keywords} />
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
