@@ -1008,29 +1008,12 @@ registerRoute('post', '/delete-booking', handleDeleteBooking);
 // NEW: Test all email templates endpoint
 registerRoute('get', '/test-emails', async (c: any) => {
   const testEmail = c.req.query('email') || 'grantashl1@gmail.com';
-  
+
   try {
     console.log(`🧪 Testing all email templates, sending to: ${testEmail}`);
-    
-    // Send all test emails
-    const testBooking = {
-      id: 'test-' + crypto.randomUUID(),
-      guest: 'Grant Ashleigh',
-      email: testEmail,
-      phone: '0276977961',
-      checkIn: '2026-03-20',
-      checkOut: '2026-03-25',
-      guests: 4,
-      total: 6375,
-      notes: 'Test booking for email verification'
-    };
-    
-    await sendBookingConfirmation(testBooking);
-    await sendOwnerNotification(testBooking);
-    await sendPreArrivalEmail(testBooking);
-    await sendCheckInDayEmail(testBooking);
-    await sendCheckOutDayEmail(testBooking);
-    await sendReviewRequestEmail(testBooking);
+    // Delegates to email_templates.tsx#sendTestEmails which paces sends ~600ms apart
+    // to stay under Resend's 2 req/sec rate limit. Inlining the calls bypasses the throttle.
+    await sendTestEmails(testEmail);
     
     return new Response(JSON.stringify({ 
       success: true, 
@@ -1112,8 +1095,8 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
         await sleep(600);
       }
 
-      // Email 6: Review Request (2 days after check-out)
-      if (daysSinceCheckOut === 2 && !booking.reviewRequestSent) {
+      // Email 6: Review Request (24h after check-out — i.e. the day after)
+      if (daysSinceCheckOut === 1 && !booking.reviewRequestSent) {
         console.log(`📧 Sending review request to ${booking.email}...`);
         await sendReviewRequestEmail(booking);
         booking.reviewRequestSent = true;
