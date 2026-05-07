@@ -15,8 +15,8 @@ interface SEOProps {
 
 const DEFAULT_SEO = {
   siteName: 'One Eleven Taupo',
-  defaultTitle: 'One Eleven Taupo | Luxury Lakefront Holiday Home & Accommodation',
-  defaultDescription: 'Book luxury accommodation in Taupō, New Zealand. Five-bedroom lakefront holiday home with spa, sauna, gym, and stunning Lake Taupō views. Direct booking — no platform fees.',
+  defaultTitle: 'One Eleven Taupo | Luxury Holiday Home with Panoramic Lake Views',
+  defaultDescription: 'Book luxury accommodation in Taupō, New Zealand. Five-bedroom holiday home with panoramic Lake Taupō views, spa, sauna and gym. Direct booking — no platform fees.',
   siteUrl: 'https://www.carlsonproperties.co.nz',
   image: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg',
 };
@@ -49,7 +49,7 @@ export function SEO({
       {
         "@type": "VacationRental",
         "name": "One Eleven Taupo",
-        "description": "Luxury five-bedroom lakefront holiday home in Taupo with spa, sauna, gym, and stunning Lake Taupo views",
+        "description": "Luxury five-bedroom holiday home in Taupo with panoramic Lake Taupo views, spa, sauna and gym",
         "image": [
           fullImage
         ],
