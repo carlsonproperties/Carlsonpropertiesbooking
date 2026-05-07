@@ -67,6 +67,11 @@ export function SEO({
         "amenityFeature": [
           {
             "@type": "LocationFeatureSpecification",
+            "name": "Heated Pool (Year-round)",
+            "value": true
+          },
+          {
+            "@type": "LocationFeatureSpecification",
             "name": "Spa",
             "value": true
           },
