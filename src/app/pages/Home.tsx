@@ -89,10 +89,10 @@ export function Home() {
 
   return (
     <>
-      <SEO 
-        title="One Eleven On The Mile - Luxury Taupō Accommodation with Panoramic Lake Views"
-        description="Experience luxury at One Eleven On The Mile — 5-bedroom Taupō estate with panoramic Lake Taupō views, pool, sauna and gym. Book your exclusive stay."
-        keywords="Taupō luxury accommodation, holiday home with lake views Taupō, Taupō vacation rental, luxury Taupō stay, Lake Taupō accommodation, Taupō pool house, 5 bedroom Taupō rental"
+      <SEO
+        title="One Eleven On The Mile - Luxury Accommodation Taupō with Lake Views"
+        description="Experience ultimate luxury at One Eleven On The Mile. 5-bedroom estate in Taupō with pool, sauna, gym, and breathtaking panoramic Lake Taupō views. Book your exclusive stay."
+        keywords="Taupō luxury accommodation, lake view holiday home Taupō, Taupō vacation rental, luxury Taupō stay, Lake Taupō accommodation, Taupō pool house, 5 bedroom Taupō rental"
         canonicalUrl="https://carlsonproperties.co.nz"
       />
 
@@ -157,13 +157,18 @@ export function Home() {
                       src={DRONE_VIDEO}
                       type="video/mp4" 
                     />
-                    <img
-                      src={heroImg}
-                      className="w-full h-full object-cover"
-                      alt="One Eleven Taupo - Luxury Taupō accommodation with panoramic lake and mountain views"
+                    <img 
+                      src={heroImg} 
+                      className="w-full h-full object-cover" 
+                      alt="One Eleven Taupo - Luxury accommodation with panoramic lake and mountain views"
                       onError={(e) => {
+                        console.error('Hero image failed to load');
+                        console.error('Hero image URL:', e.currentTarget.src);
+                        console.error('Check if Supabase Storage bucket "Website Media" is set to PUBLIC');
+                        // Set fallback image
                         e.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&h=900&fit=crop';
                       }}
+                      onLoad={() => console.log('Hero image loaded successfully:', heroImg)}
                     />
                   </video>
                 </div>
@@ -255,7 +260,7 @@ export function Home() {
                     </div>
                   </motion.div>
 
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -267,10 +272,7 @@ export function Home() {
                       <span className="italic text-[#9DA07E]">Holiday Stay</span>
                     </h2>
                     <p className="text-xl text-slate-600 leading-relaxed font-light">
-                      Discover the finest luxury accommodation in Taupō at One Eleven on the Mile,
-                      where contemporary design meets unrivalled lake and mountain views. Our
-                      purpose-built five-bedroom estate is an exclusive retreat sleeping up to 10 guests,
-                      five minutes from Taupō town centre.
+                      Discover the finest luxury accommodation in Taupō at One Eleven on the Mile, where contemporary design meets unrivalled lake and mountain views. Our five-bedroom, four-bathroom property offers an exclusive retreat for up to 10 guests with panoramic vistas.
                     </p>
 
                     <div className="grid grid-cols-2 gap-12 pt-10 border-t border-slate-200">
@@ -287,7 +289,7 @@ export function Home() {
                       ))}
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-6">
                       <Link
                         to="/book"
                         className="inline-block bg-[#9DA07E] text-white px-10 py-4 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#9DA07E]/20"
@@ -302,10 +304,16 @@ export function Home() {
 
             <section className="py-16 px-6 bg-gradient-to-b from-[#fdfcf8] to-white">
               <div className="max-w-4xl mx-auto text-center">
-                <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#9DA07E] mb-4 inline-block">Five Minutes From Town</span>
-                <p className="text-xl md:text-2xl text-slate-700 font-serif italic leading-relaxed">
-                  Geothermal wonders, lake activities, and award-winning restaurants on your doorstep.
-                </p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <p className="text-lg md:text-xl text-slate-700 leading-relaxed font-light">
+                    Ideally located just <span className="font-serif text-[#9DA07E] italic">five minutes from Taupō town center</span>, offering easy access to geothermal wonders, lake activities, and award-winning restaurants
+                  </p>
+                </motion.div>
               </div>
             </section>
 
@@ -347,44 +355,43 @@ export function Home() {
               </div>
             </section>
 
-            <section className="py-24 px-6 bg-[#fdfcf8]">
-              <div className="max-w-5xl mx-auto">
-                <div className="text-center mb-14">
-                  <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#9DA07E] mb-4 inline-block">Direct Booking</span>
-                  <h2 className="text-4xl md:text-5xl font-serif text-slate-900 leading-tight">
-                    Why Book Direct with <span className="italic text-[#9DA07E]">Carlson Properties</span>
+            <section className="py-24 px-6 bg-white">
+              <div className="max-w-6xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="text-center mb-16"
+                >
+                  <h2 className="text-4xl md:text-5xl font-serif text-slate-900 mb-4">
+                    Why Book <span className="italic text-[#9DA07E]">Direct?</span>
                   </h2>
-                </div>
+                  <p className="text-slate-600 max-w-2xl mx-auto font-light">
+                    Experience the best of Taupō with exclusive benefits when you book directly with Carlson Properties
+                  </p>
+                </motion.div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div className="grid md:grid-cols-4 gap-8">
                   {[
-                    { title: "Best Rate", desc: "No commission fees — direct prices, every time" },
-                    { title: "Self Check-in", desc: "A personalised door code arrives before your stay — arrive on your schedule" },
-                    { title: "Local Expertise", desc: "Curated recommendations from your hosts" },
-                    { title: "Direct Contact", desc: "Speak with the property owners — no middlemen" },
-                  ].map((b, i) => (
+                    { title: "Best Rate", desc: "Save on booking fees" },
+                    { title: "Flexible Service", desc: "Personalized check-in" },
+                    { title: "Local Expertise", desc: "Insider recommendations" },
+                    { title: "Direct Contact", desc: "Speak with owners" }
+                  ].map((benefit, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 0.1 + i * 0.1 }}
-                      className="text-left"
+                      transition={{ delay: 0.1 * i }}
+                      className="text-center"
                     >
-                      <div className="w-2 h-2 rounded-full bg-[#9DA07E] mb-4" />
-                      <h4 className="font-serif text-xl text-slate-900 mb-2">{b.title}</h4>
-                      <p className="text-sm text-slate-500 font-light leading-relaxed">{b.desc}</p>
+                      <div className="w-3 h-3 rounded-full bg-[#9DA07E] mx-auto mb-4" />
+                      <h4 className="font-serif text-lg text-slate-900 mb-2">{benefit.title}</h4>
+                      <p className="text-sm text-slate-600 font-light">{benefit.desc}</p>
                     </motion.div>
                   ))}
-                </div>
-
-                <div className="text-center">
-                  <Link
-                    to="/book"
-                    className="inline-block bg-[#9DA07E] text-white px-12 py-4 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#9DA07E]/20"
-                  >
-                    Book Now
-                  </Link>
                 </div>
               </div>
             </section>

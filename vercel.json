@@ -1,44 +1,35 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-
-  "redirects": [
-    { "source": "/products/book-your-stay-at-one-eleven-on-the-mile", "destination": "/book", "permanent": true },
-    { "source": "/pages/about-the-property", "destination": "/about", "permanent": true },
-    { "source": "/pages/meet-your-host", "destination": "/meet-hosts", "permanent": true },
-    { "source": "/pages/contact-us", "destination": "/about", "permanent": true },
-    { "source": "/pages/eat-drink", "destination": "/blog/best-restaurants-cafes-taupo", "permanent": true },
-    { "source": "/pages/local-attractions", "destination": "/blog/best-things-to-do-in-taupo", "permanent": true },
-    { "source": "/pages/digital-guide-book", "destination": "/guest-info", "permanent": true },
-    { "source": "/pages/house-rules", "destination": "/guest-info", "permanent": true },
-    { "source": "/pages/photo-gallery", "destination": "/", "permanent": true },
-    { "source": "/pages/instructional-videos", "destination": "/guest-info", "permanent": true },
-    { "source": "/a/bnb/bookings", "destination": "/book", "permanent": true },
-
-    { "source": "/blogs/news/:slug*", "destination": "/blog", "permanent": true },
-    { "source": "/blogs/:path*", "destination": "/blog", "permanent": true },
-    { "source": "/products/:slug*", "destination": "/", "permanent": true },
-    { "source": "/pages/:slug*", "destination": "/", "permanent": true },
-    { "source": "/collections/:slug*", "destination": "/", "permanent": true }
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
-
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-
   "headers": [
     {
       "source": "/sitemap.xml",
       "headers": [
-        { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     },
     {
       "source": "/robots.txt",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     }
   ]

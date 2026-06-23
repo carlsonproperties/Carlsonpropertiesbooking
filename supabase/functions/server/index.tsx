@@ -36,13 +36,8 @@ app.use('*', cors({
 const AIRTABLE_PAT = Deno.env.get('AIRTABLE_PAT')
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const ICAL_FEED_URL = Deno.env.get('ICAL_FEED_URL') || "https://calendar.google.com/calendar/ical/guest%40carlsonproperties.co.nz/public/basic.ics"
-const AIRTABLE_BASE_ID = 'app2SaraxJ53msJB2'
-const AIRTABLE_TABLE_NAME = 'Bookings'
-const AIRTABLE_PROPERTY_FILTER = '111 Jarden Mile'
-// "Customer Name" field has an invisible BOM-prefix in this base — write via field ID to avoid matching issues.
-const AIRTABLE_FIELD_ID_CUSTOMER_NAME = 'fldf0MXVxw4isjbZw'
-// Expenses still live in the original base (the new "Airbnb Tracking - CP" base only has a Bookings table).
-const AIRTABLE_EXPENSES_BASE_ID = 'appdLyi60QUkPJdEP'
+const AIRTABLE_BASE_ID = 'appdLyi60QUkPJdEP'
+const AIRTABLE_TABLE_NAME = 'Bookings' 
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
@@ -152,26 +147,30 @@ async function syncToAirtable(booking: any) {
     return;
   }
   try {
-    console.log(`Syncing booking for ${booking.guest} to Airtable (${AIRTABLE_BASE_ID})...`);
-    const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?typecast=true`, {
+    const checkInDate = new Date(booking.checkIn)
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    const monthDisplay = `${monthNames[checkInDate.getMonth()]} ${checkInDate.getFullYear()}`
+
+    console.log(`Syncing booking for ${booking.guest} to Airtable...`);
+    const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${AIRTABLE_PAT}`,
-        'Content-Type': 'application/json'
+      headers: { 
+        'Authorization': `Bearer ${AIRTABLE_PAT}`, 
+        'Content-Type': 'application/json' 
       },
       body: JSON.stringify({
         records: [{
           fields: {
-            // Customer Name field has a leading invisible BOM character — address it by field ID
-            [AIRTABLE_FIELD_ID_CUSTOMER_NAME]: booking.guest,
+            'Customer Name': booking.guest,
             'Email': booking.email || '',
             'Cellphone': booking.phone || '',
-            'Check In': booking.checkIn,
-            'Check Out': booking.checkOut,
+            'Check-In': booking.checkIn,
+            'Check-Out': booking.checkOut,
             'Revenue': booking.total,
             'Booking Channel': 'Direct Booking (Website)',
-            'Property': AIRTABLE_PROPERTY_FILTER,
-            'Special Requests/Booking Notes': booking.notes ? `${booking.notes}\n\nWebsite Booking ID: ${booking.id}` : `Website Booking ID: ${booking.id}`
+            'Month Display': monthDisplay,
+            'Property': '111 jarden mile',
+            'Notes': booking.notes ? `${booking.notes}\n\nWebsite Booking ID: ${booking.id}` : `Website Booking ID: ${booking.id}`
           }
         }]
       })
@@ -207,40 +206,39 @@ async function fetchWithTimeout(url: string, options: any = {}, timeout = 8000) 
 
 async function getFromAirtable() {
   if (!AIRTABLE_PAT) return [];
-  const filterFormula = `{Property}='${AIRTABLE_PROPERTY_FILTER}'`;
+  const baseId = 'appdLyi60QUkPJdEP';
+  const tableNames = ['Bookings', 'Booking', 'Reservations', 'Stay', 'Stays', 'Property Bookings', 'Direct Bookings'];
   let allRecords: any[] = [];
-  let offset = '';
 
-  try {
-    while (true) {
-      const params = new URLSearchParams({ filterByFormula: filterFormula, pageSize: '100' });
-      if (offset) params.set('offset', offset);
-      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?${params.toString()}`;
-      const response = await fetchWithTimeout(url, {
-        headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}`, 'Accept': 'application/json' }
-      }, 10000);
-      if (!response.ok) {
-        const body = await response.text();
-        console.error(`Airtable fetch failed: ${response.status} ${body}`);
-        break;
+  for (const tableName of tableNames) {
+    try {
+      let offset = '';
+      let tableFound = false;
+      while (true) {
+        const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}${offset ? `?offset=${offset}` : ''}`;
+        const response = await fetchWithTimeout(url, {
+          headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}`, 'Accept': 'application/json' }
+        }, 10000);
+        if (!response.ok) {
+          if (response.status === 404) break;
+          break;
+        }
+        tableFound = true;
+        const data = await response.json();
+        allRecords = [...allRecords, ...(data.records || [])];
+        offset = data.offset;
+        if (!offset) break;
       }
-      const data = await response.json();
-      allRecords = [...allRecords, ...(data.records || [])];
-      offset = data.offset || '';
-      if (!offset) break;
-    }
-    console.log(`✅ Fetched ${allRecords.length} bookings from Airtable (Property=${AIRTABLE_PROPERTY_FILTER})`);
-    return processAirtableRecords(allRecords);
-  } catch (err) {
-    console.error(`Airtable fetch error:`, err);
-    return [];
+      if (tableFound && allRecords.length > 0) return processAirtableRecords(allRecords);
+    } catch (err) { console.error(`Airtable fetch error:`, err); }
   }
+  return [];
 }
 
 // NEW: Fetch expenses from Airtable with full pagination
 async function getExpensesFromAirtable() {
   if (!AIRTABLE_PAT) return [];
-  const baseId = AIRTABLE_EXPENSES_BASE_ID;
+  const baseId = 'appdLyi60QUkPJdEP';
   const tableNames = ['Expenses', 'Expense', 'Costs', 'Outgoings'];
   let allRecords: any[] = [];
 
@@ -361,61 +359,43 @@ function processAirtableExpenses(records: any[]) {
 }
 
 function processAirtableRecords(records: any[]) {
-  // Strip leading invisible/control characters (BOM, zero-width) from a key.
-  const normalizeKey = (k: string) => k.replace(/^[﻿​-‍⁠]+/, '').trim().toLowerCase();
-
-  const buildLookup = (fields: any) => {
-    const map: Record<string, any> = {};
-    for (const k of Object.keys(fields)) map[normalizeKey(k)] = fields[k];
-    return map;
-  };
-
-  const getVal = (lookup: Record<string, any>, possibleKeys: string[]) => {
+  const getVal = (fields: any, possibleKeys: string[]) => {
     for (const key of possibleKeys) {
-      const v = lookup[key.toLowerCase()];
-      if (v !== undefined && v !== null && v !== '') return Array.isArray(v) ? v[0] : v;
+      if (fields[key] !== undefined && fields[key] !== null) {
+        const val = fields[key];
+        return Array.isArray(val) ? val[0] : val;
+      }
     }
     return undefined;
   };
 
   return records.map((r: any) => {
-    const lookup = buildLookup(r.fields || {});
-
+    const f = r.fields;
     let monthIndex = -1;
-    const monthSortVal = getVal(lookup, ['Month Sort', 'MonthIndex']);
+    const monthSortVal = getVal(f, ['Month Sort', 'month sort', 'MonthIndex']);
     if (monthSortVal) {
       const match = String(monthSortVal).match(/^(\d+)/);
       if (match) monthIndex = parseInt(match[1], 10) - 1;
     }
 
-    const checkIn = getVal(lookup, ['Check In', 'Check-In', 'Arrival', 'Start Date']);
-    const checkOut = getVal(lookup, ['Check Out', 'Check-Out', 'Departure', 'End Date']);
-    const status = checkIn && new Date(checkIn) > new Date() ? 'upcoming' : 'completed';
-
-    // Combine the two notes fields the new base exposes
-    const noteParts = [
-      getVal(lookup, ['Special Requests/Booking Notes']),
-      getVal(lookup, ['Notes', 'Comment', 'Special Request'])
-    ].filter(Boolean);
+    const checkIn = getVal(f, ['Check-In', 'Check In', 'Arrival', 'Start Date', 'check-in']);
+    const checkOut = getVal(f, ['Check-Out', 'Check Out', 'Departure', 'End Date', 'check-out']);
+    let status = checkIn && new Date(checkIn) > new Date() ? 'upcoming' : 'completed';
 
     return {
       id: r.id,
-      guest: getVal(lookup, ['Customer Name', 'Guest Name', 'Name', 'Guest']) || 'Guest',
-      email: getVal(lookup, ['Email', 'Guest Email', 'Contact Email']) || '',
-      phone: String(getVal(lookup, ['Cellphone', 'Cell', 'Phone', 'Mobile', 'Telephone']) || ''),
-      doorCode: String(getVal(lookup, ['Door Code', 'Code', 'Doorcode', 'Key Code']) || ''),
+      guest: getVal(f, ['Customer Name', 'Guest Name', 'Name', 'Guest', 'customer']) || 'Guest',
+      email: getVal(f, ['Email', 'Guest Email', 'email', 'Contact Email']) || '',
+      phone: String(getVal(f, ['Cellphone', 'Cell', 'Phone', 'Mobile', 'phone', 'Telephone']) || ''),
+      doorCode: String(getVal(f, ['Door Code', 'Code', 'Doorcode', 'Key Code']) || ''),
       checkIn,
       checkOut,
-      total: parseFloat(String(getVal(lookup, ['Revenue', 'Total Gross Revenue', 'Amount', 'Total', 'Price']) || '0')),
-      expenses: parseFloat(String(getVal(lookup, ['Expenses', 'Cost', 'Commission']) || '0')),
-      property: getVal(lookup, ['Property', 'House', 'Listing', 'Unit']) || '',
-      nightsStayed: parseFloat(String(getVal(lookup, ['Nights Stayed', 'Nights', 'Duration']) || '0')),
-      channel: getVal(lookup, ['Booking Channel', 'Source', 'Platform', 'Channel']) || 'Direct',
-      notes: noteParts.join('\n\n') || '',
-      review: getVal(lookup, ['Review']) || '',
-      reviewText: getVal(lookup, ['Review Text']) || '',
-      createdAt: r.createdTime || '',
-      source: 'airtable',
+      total: parseFloat(String(getVal(f, ['Revenue', 'Total Gross Revenue', 'Amount', 'Total', 'Price', 'gross revenue']) || '0')),
+      expenses: parseFloat(String(getVal(f, ['Expenses', 'Cost', 'Commission', 'fees', 'expense']) || '0')),
+      property: getVal(f, ['Property', 'House', 'Listing', 'Unit']) || '',
+      nightsStayed: parseFloat(String(getVal(f, ['Nights Stayed', 'nights stayed', 'Nights', 'Duration', 'Nights Stayed Formula']) || '0')),
+      channel: getVal(f, ['Booking Channel', 'Source', 'Platform', 'Channel']) || 'Direct',
+      notes: getVal(f, ['Notes', 'Comment', 'Special Request']) || '',
       status,
       monthIndex
     };
@@ -715,28 +695,22 @@ const handleResetPassword = async (c: any) => {
 const handleDashboardStats = async (c: any) => {
   try {
     console.log('Dashboard stats requested');
-    const rawKv = await kv.get('bookings') || [];
-    const bookings = rawKv.map((b: any) => ({ source: 'direct', ...b }));
+    const bookings = await kv.get('bookings') || [];
     console.log('Local bookings:', bookings.length);
 
     const airtableBookings = await getFromAirtable();
     console.log('Airtable bookings:', airtableBookings.length);
 
-    // Fetch expenses from Airtable (still in the original base — new "Airbnb Tracking" base only has Bookings).
+    // Fetch expenses from Airtable
     const expenses = await getExpensesFromAirtable();
     console.log('Airtable expenses:', expenses.length);
-
-    // Airtable side is already pre-filtered to Property = 111 Jarden Mile, KV bookings are website-direct.
-    // Dedupe by guest+checkIn+checkOut so a booking that exists in both sources only counts once.
-    const seen = new Set<string>();
-    const allBookings: any[] = [];
-    for (const b of [...bookings, ...airtableBookings]) {
-      const key = `${(b.guest || '').toLowerCase()}|${b.checkIn || ''}|${b.checkOut || ''}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      allBookings.push(b);
-    }
-    console.log('Total bookings (deduped):', allBookings.length);
+    
+    // Merge bookings, avoiding duplicates - filter for 111 Jarden Mile property
+    const allBookings = [...bookings, ...airtableBookings].filter((b: any) => {
+      const property = (b.property || '').toLowerCase();
+      return !property || property.includes('111') || property.includes('jarden') || property.includes('mile');
+    });
+    console.log('Total bookings (111 Jarden Mile):', allBookings.length);
     
     // Improved sorting: Upcoming bookings first (closest arrival first), 
     // followed by past bookings (most recent completion first).
@@ -771,7 +745,6 @@ const handleDashboardStats = async (c: any) => {
     const yearlyOccupancy: any = {};
     const yearlyExpenses: any = {};
     const channelBreakdown: any = {};
-    const channelRevenue: any = {};
 
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const currentYear = new Date().getFullYear();
@@ -803,10 +776,9 @@ const handleDashboardStats = async (c: any) => {
       totalRevenue += revenue;
       totalExpenses += expense;
 
-      // Track booking channels — count + revenue
+      // Track booking channels
       const channel = b.channel || 'Direct Booking (Website)';
       channelBreakdown[channel] = (channelBreakdown[channel] || 0) + 1;
-      channelRevenue[channel] = (channelRevenue[channel] || 0) + revenue;
 
       // Initialize year data if not exists
       if (!yearlyEarnings[year]) {
@@ -871,15 +843,6 @@ const handleDashboardStats = async (c: any) => {
     const avgBookingValue = allBookings.length > 0 ? totalRevenue / allBookings.length : 0;
     const upcomingBookings = allBookings.filter((b: any) => new Date(b.checkIn) >= today).length;
 
-    // Average nights per stay across all bookings
-    const totalNightsAll = allBookings.reduce((sum: number, b: any) => {
-      const nights = b.nightsStayed || (b.checkIn && b.checkOut
-        ? Math.max(0, Math.ceil((new Date(b.checkOut).getTime() - new Date(b.checkIn).getTime()) / (1000 * 60 * 60 * 24)))
-        : 0);
-      return sum + nights;
-    }, 0);
-    const avgNightStay = allBookings.length > 0 ? totalNightsAll / allBookings.length : 0;
-
     const response = {
       allGuests: allBookings,
       recentGuests: allBookings.slice(0, 10),
@@ -888,7 +851,6 @@ const handleDashboardStats = async (c: any) => {
       totalExpenses,
       totalFees,
       avgBookingValue,
-      avgNightStay,
       upcomingBookings,
       occupancyRate,
       yearlyEarnings,
@@ -896,7 +858,6 @@ const handleDashboardStats = async (c: any) => {
       yearlyOccupancy,
       yearlyExpenses,
       channelBreakdown,
-      channelRevenue,
       totalAirtableExpenses: expenses.reduce((sum: number, e: any) => sum + e.amount, 0)
     };
 
@@ -923,15 +884,31 @@ const handleDashboardStats = async (c: any) => {
 const handleManualBooking = async (c: any) => {
   try {
     const { bookingData } = await c.req.json();
-    const newBooking = { id: crypto.randomUUID(), ...bookingData, total: parseFloat(bookingData.amount), status: 'pending_payment', createdAt: new Date().toISOString() };
+    // Normalize field names so email templates and dashboard work correctly
+    const newBooking = {
+      id: crypto.randomUUID(),
+      guest: bookingData.guestName || bookingData.guest || 'Guest',
+      email: bookingData.guestEmail || bookingData.email || '',
+      phone: bookingData.guestPhone || bookingData.phone || '',
+      notes: bookingData.guestNotes || bookingData.notes || '',
+      checkIn: bookingData.checkIn,
+      checkOut: bookingData.checkOut,
+      guests: bookingData.guests || 1,
+      total: parseFloat(bookingData.amount || bookingData.total || '0'),
+      status: 'pending_payment',
+      channel: 'Direct Booking (Website)',
+      createdAt: new Date().toISOString()
+    };
     const bookings = await kv.get('bookings') || [];
     await kv.set('bookings', [...bookings, newBooking]);
+    // Send confirmation emails immediately — same as Stripe flow
+    await sendAutomationEmails(newBooking);
     await syncToAirtable(newBooking);
     return new Response(JSON.stringify({ success: true, booking: newBooking }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
-  } catch (err: any) { 
+  } catch (err: any) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
@@ -950,7 +927,16 @@ const handleUpdateBooking = async (c: any) => {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
-    bookings[idx] = { ...bookings[idx], ...updates };
+    // Normalise legacy field names (guestName → guest, etc.) when merging
+    const existing = bookings[idx];
+    const normalizedExisting = {
+      ...existing,
+      guest: existing.guest || existing.guestName || 'Guest',
+      email: existing.email || existing.guestEmail || '',
+      phone: existing.phone || existing.guestPhone || '',
+      notes: existing.notes || existing.guestNotes || '',
+    };
+    bookings[idx] = { ...normalizedExisting, ...updates };
     await kv.set('bookings', bookings);
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
@@ -1004,16 +990,97 @@ registerRoute('post', '/manual-booking', handleManualBooking);
 registerRoute('post', '/create-checkout-session', handleCreateCheckout);
 registerRoute('post', '/update-booking', handleUpdateBooking);
 registerRoute('post', '/delete-booking', handleDeleteBooking);
+registerRoute('post', '/resend-confirmation', async (c: any) => {
+  try {
+    const { bookingId } = await c.req.json();
+    const bookings = await kv.get('bookings') || [];
+    const booking = bookings.find((b: any) => b.id === bookingId);
+    if (!booking) {
+      return new Response(JSON.stringify({ error: 'Booking not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    // Normalize field names in case this is an old booking with wrong keys
+    const normalized = {
+      ...booking,
+      guest: booking.guest || booking.guestName || 'Guest',
+      email: booking.email || booking.guestEmail || '',
+      phone: booking.phone || booking.guestPhone || '',
+      notes: booking.notes || booking.guestNotes || '',
+    };
+    await sendAutomationEmails(normalized);
+    return new Response(JSON.stringify({ success: true, message: `Confirmation emails sent to ${normalized.email}` }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+});
+
+registerRoute('post', '/create-booking', async (c: any) => {
+  try {
+    const { bookingData, sendEmails } = await c.req.json();
+    const newBooking = {
+      id: crypto.randomUUID(),
+      guest: bookingData.guest || 'Guest',
+      email: bookingData.email || '',
+      phone: bookingData.phone || '',
+      notes: bookingData.notes || '',
+      checkIn: bookingData.checkIn,
+      checkOut: bookingData.checkOut,
+      guests: bookingData.guests || 1,
+      total: parseFloat(bookingData.total || '0'),
+      status: bookingData.status || 'upcoming',
+      channel: bookingData.channel || 'Direct Booking (Manual Entry)',
+      createdAt: new Date().toISOString()
+    };
+    const bookings = await kv.get('bookings') || [];
+    await kv.set('bookings', [...bookings, newBooking]);
+    if (sendEmails) await sendAutomationEmails(newBooking);
+    await syncToAirtable(newBooking);
+    return new Response(JSON.stringify({ success: true, booking: newBooking }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+});
 
 // NEW: Test all email templates endpoint
 registerRoute('get', '/test-emails', async (c: any) => {
   const testEmail = c.req.query('email') || 'grantashl1@gmail.com';
-
+  
   try {
     console.log(`🧪 Testing all email templates, sending to: ${testEmail}`);
-    // Delegates to email_templates.tsx#sendTestEmails which paces sends ~600ms apart
-    // to stay under Resend's 2 req/sec rate limit. Inlining the calls bypasses the throttle.
-    await sendTestEmails(testEmail);
+    
+    // Send all test emails
+    const testBooking = {
+      id: 'test-' + crypto.randomUUID(),
+      guest: 'Grant Ashleigh',
+      email: testEmail,
+      phone: '0276977961',
+      checkIn: '2026-03-20',
+      checkOut: '2026-03-25',
+      guests: 4,
+      total: 6375,
+      notes: 'Test booking for email verification'
+    };
+    
+    await sendBookingConfirmation(testBooking);
+    await sendOwnerNotification(testBooking);
+    await sendPreArrivalEmail(testBooking);
+    await sendCheckInDayEmail(testBooking);
+    await sendCheckOutDayEmail(testBooking);
+    await sendReviewRequestEmail(testBooking);
     
     return new Response(JSON.stringify({ 
       success: true, 
@@ -1053,18 +1120,15 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
     
     let emailsSent = 0;
     const results: any[] = [];
-
-    // Resend's default rate limit is 2 req/sec — pace each send to stay under it.
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
+    
     for (const booking of bookings) {
       const checkInDate = new Date(booking.checkIn);
       const checkOutDate = new Date(booking.checkOut);
-
+      
       // Calculate days until/since check-in
       const daysUntilCheckIn = Math.floor((checkInDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
       const daysSinceCheckOut = Math.floor((today.getTime() - checkOutDate.getTime()) / (1000 * 60 * 60 * 24));
-
+      
       // Email 3: Pre-Arrival (4 days before check-in)
       if (daysUntilCheckIn === 4 && !booking.preArrivalSent) {
         console.log(`📧 Sending pre-arrival email to ${booking.email}...`);
@@ -1072,9 +1136,8 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
         booking.preArrivalSent = true;
         emailsSent++;
         results.push({ type: 'Pre-Arrival', guest: booking.guest, email: booking.email });
-        await sleep(600);
       }
-
+      
       // Email 4: Check-In Day (on check-in date at 9am)
       if (daysUntilCheckIn === 0 && !booking.checkInDaySent) {
         console.log(`📧 Sending check-in day email to ${booking.email}...`);
@@ -1082,9 +1145,8 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
         booking.checkInDaySent = true;
         emailsSent++;
         results.push({ type: 'Check-In Day', guest: booking.guest, email: booking.email });
-        await sleep(600);
       }
-
+      
       // Email 5: Check-Out Day (on check-out date at 9am)
       if (checkOutDate.toDateString() === today.toDateString() && !booking.checkOutDaySent) {
         console.log(`📧 Sending check-out day email to ${booking.email}...`);
@@ -1092,17 +1154,15 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
         booking.checkOutDaySent = true;
         emailsSent++;
         results.push({ type: 'Check-Out Day', guest: booking.guest, email: booking.email });
-        await sleep(600);
       }
-
-      // Email 6: Review Request (24h after check-out — i.e. the day after)
-      if (daysSinceCheckOut === 1 && !booking.reviewRequestSent) {
+      
+      // Email 6: Review Request (2 days after check-out)
+      if (daysSinceCheckOut === 2 && !booking.reviewRequestSent) {
         console.log(`📧 Sending review request to ${booking.email}...`);
         await sendReviewRequestEmail(booking);
         booking.reviewRequestSent = true;
         emailsSent++;
         results.push({ type: 'Review Request', guest: booking.guest, email: booking.email });
-        await sleep(600);
       }
     }
     

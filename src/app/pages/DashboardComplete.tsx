@@ -22,6 +22,8 @@ import {
   X,
   CheckCircle,
   Trash2,
+  Pencil,
+  Save,
   Copy,
   Send,
   LayoutDashboard,
@@ -201,6 +203,11 @@ export function DashboardComplete() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showChannelBreakdown, setShowChannelBreakdown] = useState(false);
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
+  const [editingGuest, setEditingGuest] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Guest>>({});
+  const [showAddBooking, setShowAddBooking] = useState(false);
+  const [addBookingForm, setAddBookingForm] = useState({ guest: '', email: '', phone: '', checkIn: '', checkOut: '', guests: '2', total: '1275', notes: '', status: 'upcoming', sendEmails: false });
+  const [addBookingLoading, setAddBookingLoading] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -241,15 +248,21 @@ export function DashboardComplete() {
 
       const processedGuests = (data.allGuests || []).map((g: any) => ({
         ...g,
-        source: g.stripeSessionId || g.createdAt ? 'direct' : 'airtable',
+        // Normalise legacy field names from old bookings
+        guest: g.guest || g.guestName || 'Guest',
+        email: g.email || g.guestEmail || '',
+        phone: g.phone || g.guestPhone || '',
+        notes: g.notes || g.guestNotes || '',
+        source: (g.stripeSessionId || g.createdAt) ? 'direct' : 'airtable',
         channel: g.channel || 'Direct Booking (Website)'
       }));
 
       const uniqueGuests = processedGuests.reduce((acc: Guest[], guest: Guest) => {
+        // For direct bookings use ID; for Airtable use name+dates to deduplicate
         const duplicate = acc.find(g =>
-          g.guest === guest.guest &&
-          g.checkIn === guest.checkIn &&
-          g.checkOut === guest.checkOut
+          guest.source === 'direct'
+            ? g.id === guest.id
+            : g.guest === guest.guest && g.checkIn === guest.checkIn && g.checkOut === guest.checkOut
         );
 
         if (duplicate) {
@@ -349,6 +362,74 @@ export function DashboardComplete() {
       toast.error("Failed to delete booking", { description: error.message });
     } finally {
       setActionLoading(null);
+    }
+  };
+
+  const handleStartEdit = (guest: Guest, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingGuest(guest.id);
+    setEditForm({
+      guest: guest.guest,
+      email: guest.email,
+      phone: guest.phone || '',
+      checkIn: guest.checkIn,
+      checkOut: guest.checkOut,
+      notes: guest.notes || '',
+      status: guest.status,
+    });
+  };
+
+  const handleSaveEdit = async (bookingId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActionLoading(bookingId);
+    try {
+      const res = await fetch(
+        `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/update-booking`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${publicAnonKey.trim()}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ bookingId, updates: editForm })
+        }
+      );
+      if (!res.ok) throw new Error('Failed to update booking');
+      toast.success("Booking Updated", { description: "Guest details have been saved." });
+      setEditingGuest(null);
+      await fetchDashboardData();
+    } catch (error: any) {
+      toast.error("Failed to update booking", { description: error.message });
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleAddBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addBookingForm.guest || !addBookingForm.checkIn || !addBookingForm.checkOut) {
+      toast.error("Required fields missing", { description: "Guest name, check-in, and check-out are required." });
+      return;
+    }
+    setAddBookingLoading(true);
+    try {
+      const res = await fetch(
+        `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/create-booking`,
+        {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${publicAnonKey.trim()}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookingData: { ...addBookingForm, total: parseFloat(addBookingForm.total || '0'), guests: parseInt(addBookingForm.guests || '1') }, sendEmails: addBookingForm.sendEmails })
+        }
+      );
+      if (!res.ok) throw new Error('Failed to create booking');
+      toast.success("Booking Added", { description: `${addBookingForm.guest} has been added to the directory.` });
+      setShowAddBooking(false);
+      setAddBookingForm({ guest: '', email: '', phone: '', checkIn: '', checkOut: '', guests: '2', total: '1275', notes: '', status: 'upcoming', sendEmails: false });
+      await fetchDashboardData();
+    } catch (error: any) {
+      toast.error("Failed to add booking", { description: error.message });
+    } finally {
+      setAddBookingLoading(false);
     }
   };
 
@@ -897,10 +978,19 @@ export function DashboardComplete() {
                   <h2 className="text-2xl font-serif text-[#2D2D2D] mb-1">Guest Directory</h2>
                   <p className="text-sm text-[#9DA07E] font-medium">All bookings and reservations</p>
                 </div>
-                <div className="bg-[#9DA07E]/10 px-4 py-2 rounded-full">
-                  <span className="text-[#9DA07E] font-bold text-sm">
-                    {allGuestsSorted.length} Total
-                  </span>
+                <div className="flex items-center gap-3">
+                  <div className="bg-[#9DA07E]/10 px-4 py-2 rounded-full">
+                    <span className="text-[#9DA07E] font-bold text-sm">
+                      {allGuestsSorted.length} Total
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowAddBooking(true)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#9DA07E] hover:bg-[#8a8d6e] text-white text-sm font-medium transition-all"
+                  >
+                    <Pencil className="w-4 h-4" />
+                    Add Booking
+                  </button>
                 </div>
               </div>
 
@@ -975,60 +1065,165 @@ export function DashboardComplete() {
                           className="border-t border-[#9DA07E]/20 bg-white/50"
                         >
                           <div className="p-5 space-y-4">
-                            <div className="grid md:grid-cols-2 gap-4">
-                              <div>
-                                <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Contact</p>
-                                <div className="space-y-2">
-                                  <div className="flex items-center gap-2">
-                                    <Mail className="w-4 h-4 text-[#9DA07E]" />
-                                    <a
-                                      href={`mailto:${guest.email}`}
-                                      className="text-[#2D2D2D] hover:text-[#9DA07E] transition-colors text-sm underline"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      {guest.email}
-                                    </a>
+
+                            {/* Edit Form (shown when editing) */}
+                            {editingGuest === guest.id ? (
+                              <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+                                <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest">Edit Booking Details</p>
+                                <div className="grid md:grid-cols-2 gap-3">
+                                  <div>
+                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Guest Name</label>
+                                    <input
+                                      type="text"
+                                      value={editForm.guest || ''}
+                                      onChange={(e) => setEditForm(f => ({ ...f, guest: e.target.value }))}
+                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                    />
                                   </div>
-                                  {guest.phone && (
-                                    <div className="flex items-center gap-2">
-                                      <Phone className="w-4 h-4 text-[#9DA07E]" />
-                                      <a
-                                        href={`tel:${guest.phone}`}
-                                        className="text-[#2D2D2D] hover:text-[#9DA07E] transition-colors text-sm"
-                                        onClick={(e) => e.stopPropagation()}
-                                      >
-                                        {guest.phone}
-                                      </a>
+                                  <div>
+                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Email</label>
+                                    <input
+                                      type="email"
+                                      value={editForm.email || ''}
+                                      onChange={(e) => setEditForm(f => ({ ...f, email: e.target.value }))}
+                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Phone</label>
+                                    <input
+                                      type="tel"
+                                      value={editForm.phone || ''}
+                                      onChange={(e) => setEditForm(f => ({ ...f, phone: e.target.value }))}
+                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Status</label>
+                                    <select
+                                      value={editForm.status || ''}
+                                      onChange={(e) => setEditForm(f => ({ ...f, status: e.target.value }))}
+                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                    >
+                                      <option value="upcoming">Upcoming</option>
+                                      <option value="pending_payment">Pending Payment</option>
+                                      <option value="completed">Completed</option>
+                                      <option value="confirmed">Confirmed</option>
+                                    </select>
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Check-In</label>
+                                    <input
+                                      type="date"
+                                      value={editForm.checkIn || ''}
+                                      onChange={(e) => setEditForm(f => ({ ...f, checkIn: e.target.value }))}
+                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Check-Out</label>
+                                    <input
+                                      type="date"
+                                      value={editForm.checkOut || ''}
+                                      onChange={(e) => setEditForm(f => ({ ...f, checkOut: e.target.value }))}
+                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <label className="block text-xs text-[#2D2D2D]/60 mb-1">Notes</label>
+                                  <textarea
+                                    value={editForm.notes || ''}
+                                    onChange={(e) => setEditForm(f => ({ ...f, notes: e.target.value }))}
+                                    rows={2}
+                                    className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40 resize-none"
+                                  />
+                                </div>
+                                <div className="flex gap-3 pt-2">
+                                  <button
+                                    onClick={(e) => handleSaveEdit(guest.id, e)}
+                                    disabled={actionLoading === guest.id}
+                                    className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#9DA07E] hover:bg-[#8a8d6e] text-white transition-all text-sm font-medium disabled:opacity-50"
+                                  >
+                                    {actionLoading === guest.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                    Save Changes
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setEditingGuest(null); }}
+                                    className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-all text-sm font-medium"
+                                  >
+                                    <X className="w-4 h-4" />
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="grid md:grid-cols-2 gap-4">
+                                  <div>
+                                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Contact</p>
+                                    <div className="space-y-2">
+                                      <div className="flex items-center gap-2">
+                                        <Mail className="w-4 h-4 text-[#9DA07E]" />
+                                        <a
+                                          href={`mailto:${guest.email}`}
+                                          className="text-[#2D2D2D] hover:text-[#9DA07E] transition-colors text-sm underline"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          {guest.email || <span className="text-[#2D2D2D]/40 italic">No email</span>}
+                                        </a>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <Phone className="w-4 h-4 text-[#9DA07E]" />
+                                        {guest.phone ? (
+                                          <a
+                                            href={`tel:${guest.phone}`}
+                                            className="text-[#2D2D2D] hover:text-[#9DA07E] transition-colors text-sm"
+                                            onClick={(e) => e.stopPropagation()}
+                                          >
+                                            {guest.phone}
+                                          </a>
+                                        ) : (
+                                          <span className="text-[#2D2D2D]/40 text-sm italic">No phone</span>
+                                        )}
+                                      </div>
                                     </div>
-                                  )}
+                                  </div>
+                                  <div>
+                                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Details</p>
+                                    <div className="space-y-1 text-sm text-[#2D2D2D]/80">
+                                      <p><strong>Guests:</strong> {guest.guests}</p>
+                                      <p><strong>Source:</strong> {guest.source === 'direct' ? 'Direct Website' : 'Airtable'}</p>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                              <div>
-                                <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Details</p>
-                                <div className="space-y-1 text-sm text-[#2D2D2D]/80">
-                                  <p><strong>Guests:</strong> {guest.guests}</p>
-                                  <p><strong>Source:</strong> {guest.source === 'direct' ? 'Direct Website' : 'Airtable'}</p>
-                                </div>
-                              </div>
-                            </div>
-                            {guest.notes && (
-                              <div>
-                                <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Guest Notes</p>
-                                <p className="text-sm text-[#2D2D2D]/80 leading-relaxed bg-[#9DA07E]/5 p-3 rounded-xl">
-                                  {guest.notes}
-                                </p>
-                              </div>
-                            )}
-                            {guest.createdAt && (
-                              <div className="flex items-center gap-2 text-xs text-[#2D2D2D]/50">
-                                <Clock className="w-3 h-3" />
-                                <span>Booked on {formatNZDateTime(guest.createdAt)}</span>
-                              </div>
+                                {guest.notes && (
+                                  <div>
+                                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Guest Notes</p>
+                                    <p className="text-sm text-[#2D2D2D]/80 leading-relaxed bg-[#9DA07E]/5 p-3 rounded-xl">
+                                      {guest.notes}
+                                    </p>
+                                  </div>
+                                )}
+                                {guest.createdAt && (
+                                  <div className="flex items-center gap-2 text-xs text-[#2D2D2D]/50">
+                                    <Clock className="w-3 h-3" />
+                                    <span>Booked on {formatNZDateTime(guest.createdAt)}</span>
+                                  </div>
+                                )}
+                              </>
                             )}
 
                             {/* Action Buttons */}
-                            {guest.source === 'direct' && (
+                            {guest.source === 'direct' && editingGuest !== guest.id && (
                               <div className="flex gap-3 pt-4 border-t border-[#9DA07E]/20">
+                                <button
+                                  onClick={(e) => handleStartEdit(guest, e)}
+                                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#9DA07E]/10 hover:bg-[#9DA07E]/20 text-[#9DA07E] transition-all text-sm font-medium"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                  Edit Details
+                                </button>
                                 {guest.status === 'pending_payment' && (
                                   <button
                                     onClick={(e) => {
@@ -1060,6 +1255,31 @@ export function DashboardComplete() {
                                     <Trash2 className="w-4 h-4" />
                                   )}
                                   Delete Booking
+                                </button>
+                                <button
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (!guest.email) { toast.error("No email address on this booking."); return; }
+                                    setActionLoading(guest.id + '-email');
+                                    try {
+                                      const res = await fetch(
+                                        `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/resend-confirmation`,
+                                        { method: 'POST', headers: { 'Authorization': `Bearer ${publicAnonKey.trim()}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ bookingId: guest.id }) }
+                                      );
+                                      const data = await res.json();
+                                      if (!res.ok) throw new Error(data.error || 'Failed');
+                                      toast.success("Emails Sent", { description: `Confirmation sent to ${guest.email}` });
+                                    } catch (err: any) {
+                                      toast.error("Failed to send emails", { description: err.message });
+                                    } finally {
+                                      setActionLoading(null);
+                                    }
+                                  }}
+                                  disabled={!!actionLoading}
+                                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-all text-sm font-medium disabled:opacity-50"
+                                >
+                                  {actionLoading === guest.id + '-email' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                  Send Emails
                                 </button>
                               </div>
                             )}
@@ -1214,6 +1434,157 @@ export function DashboardComplete() {
           </motion.div>
         )}
       </div>
+
+      {/* Add Booking Modal */}
+      <AnimatePresence>
+        {showAddBooking && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowAddBooking(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-serif text-[#2D2D2D]">Add Booking</h2>
+                <button onClick={() => setShowAddBooking(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+              <form onSubmit={handleAddBooking} className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Guest Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Alice Grey"
+                      value={addBookingForm.guest}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, guest: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Email</label>
+                    <input
+                      type="email"
+                      placeholder="alice@example.com"
+                      value={addBookingForm.email}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, email: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Phone</label>
+                    <input
+                      type="tel"
+                      placeholder="021 234 5678"
+                      value={addBookingForm.phone}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, phone: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Check-In *</label>
+                    <input
+                      type="date"
+                      required
+                      value={addBookingForm.checkIn}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, checkIn: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Check-Out *</label>
+                    <input
+                      type="date"
+                      required
+                      value={addBookingForm.checkOut}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, checkOut: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Guests</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={addBookingForm.guests}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, guests: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Total (NZD)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={addBookingForm.total}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, total: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Status</label>
+                    <select
+                      value={addBookingForm.status}
+                      onChange={(e) => setAddBookingForm(f => ({ ...f, status: e.target.value }))}
+                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                    >
+                      <option value="upcoming">Upcoming</option>
+                      <option value="pending_payment">Pending Payment</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Notes</label>
+                  <textarea
+                    rows={2}
+                    value={addBookingForm.notes}
+                    onChange={(e) => setAddBookingForm(f => ({ ...f, notes: e.target.value }))}
+                    className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40 resize-none"
+                  />
+                </div>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={addBookingForm.sendEmails}
+                    onChange={(e) => setAddBookingForm(f => ({ ...f, sendEmails: e.target.checked }))}
+                    className="w-4 h-4 accent-[#9DA07E]"
+                  />
+                  <span className="text-sm text-[#2D2D2D]/70">Send confirmation emails to guest & owner</span>
+                </label>
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={addBookingLoading}
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#9DA07E] hover:bg-[#8a8d6e] text-white font-medium transition-all disabled:opacity-50"
+                  >
+                    {addBookingLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    Add Booking
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddBooking(false)}
+                    className="px-6 py-3 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
