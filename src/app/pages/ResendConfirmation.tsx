@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
+import { getOwnerToken } from "../lib/supabase";
 import { Mail, Loader2, CheckCircle, AlertCircle, Send } from "lucide-react";
 import { toast } from "sonner";
 
@@ -20,7 +21,7 @@ export function ResendConfirmation() {
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${publicAnonKey.trim()}`,
+            'Authorization': `Bearer ${await getOwnerToken()}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ bookingId })

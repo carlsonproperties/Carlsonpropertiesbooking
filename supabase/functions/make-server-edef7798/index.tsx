@@ -47,6 +47,54 @@ const supabaseAdmin = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 );
 
+// ─── Authorization ───────────────────────────────────────────────────────────
+// These endpoints previously enforced NOTHING server-side — the owner-dashboard
+// email check ran only in the browser, so anyone who knew a URL could read all
+// guest data or tamper with bookings. Enforce the owner allowlist here, on the
+// server, using the caller's Supabase session token (not the public anon key).
+const AUTHORIZED_EMAILS = [
+  'grantashl1@gmail.com',
+  'donki.bmbr@gmail.com',
+  'bookings@carlsonproperties.co.nz',
+];
+const ANON_KEY = (Deno.env.get('SUPABASE_ANON_KEY') ?? '').trim();
+const CRON_SECRET = (Deno.env.get('CRON_SECRET') ?? '').trim();
+
+function unauthorized(message = 'Unauthorized') {
+  return new Response(JSON.stringify({ error: message }), {
+    status: 401,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+  });
+}
+
+// Verify the caller is a signed-in, authorized owner.
+// Returns { ok: true, user } on success, or { ok: false, response } to return.
+async function requireOwner(c: any): Promise<{ ok: true; user: any } | { ok: false; response: Response }> {
+  const header = c.req.header('Authorization') || c.req.header('authorization') || '';
+  const token = header.replace(/^Bearer\s+/i, '').trim();
+  if (!token) return { ok: false, response: unauthorized('Missing authorization token') };
+  // The public anon key is not a user session — reject it explicitly.
+  if (ANON_KEY && token === ANON_KEY) return { ok: false, response: unauthorized('Owner session required') };
+  try {
+    const { data, error } = await supabaseAdmin.auth.getUser(token);
+    const email = data?.user?.email?.toLowerCase();
+    if (error || !email) return { ok: false, response: unauthorized('Invalid or expired session') };
+    if (!AUTHORIZED_EMAILS.includes(email)) return { ok: false, response: unauthorized('Not an authorized owner') };
+    return { ok: true, user: data.user };
+  } catch (_err) {
+    return { ok: false, response: unauthorized('Invalid or expired session') };
+  }
+}
+
+// For endpoints a cron job may call: accept a matching CRON_SECRET query param,
+// otherwise fall back to owner authentication.
+async function requireOwnerOrCron(c: any): Promise<{ ok: true } | { ok: false; response: Response }> {
+  const secret = (c.req.query('secret') || '').trim();
+  if (CRON_SECRET && secret && secret === CRON_SECRET) return { ok: true };
+  const auth = await requireOwner(c);
+  return auth.ok ? { ok: true } : { ok: false, response: auth.response };
+}
+
 // Auto-fix storage bucket permissions on server startup
 async function ensureStorageBucketIsPublic() {
   const bucketName = 'Website Media';
@@ -628,6 +676,14 @@ const handleSignup = async (c: any) => {
   try {
     const { email, password, name } = await c.req.json();
     const cleanEmail = email.toLowerCase().trim();
+    // Only pre-approved owner emails may create an account. Without this,
+    // anyone could POST to /signup and mint an account on this project.
+    if (!AUTHORIZED_EMAILS.includes(cleanEmail)) {
+      return new Response(JSON.stringify({ error: 'This email address is not authorized.' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
     const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
     const { data, error } = await supabase.auth.admin.createUser({ email: cleanEmail, password, user_metadata: { name }, email_confirm: true });
     if (error) {
@@ -648,51 +704,21 @@ const handleSignup = async (c: any) => {
   }
 }
 
-const handleResetPassword = async (c: any) => {
-  try {
-    const { email, newPassword } = await c.req.json();
-    const cleanEmail = email.toLowerCase().trim();
-    const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
-    
-    // Get the user by email first
-    const { data: users, error: getUserError } = await supabase.auth.admin.listUsers();
-    if (getUserError) {
-      return new Response(JSON.stringify({ error: getUserError.message }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-      });
-    }
-    
-    const user = users.users.find(u => u.email?.toLowerCase() === cleanEmail);
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-      });
-    }
-    
-    // Update the password
-    const { data, error } = await supabase.auth.admin.updateUserById(user.id, { password: newPassword });
-    if (error) {
-      return new Response(JSON.stringify({ error: error.message }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-      });
-    }
-    
-    return new Response(JSON.stringify({ success: true, message: 'Password updated successfully' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    });
-  } catch (err: any) { 
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    });
-  }
+// DISABLED — security. This endpoint used to set ANY account's password given
+// only an email + new password, with no authentication: a full account-takeover
+// backdoor. Legitimate password resets go through Supabase's email-recovery
+// flow (OwnerLogin "Forgot Password" → resetPasswordForEmail → /reset-password
+// page → supabase.auth.updateUser), which never touches this endpoint.
+const handleResetPassword = async (_c: any) => {
+  return new Response(
+    JSON.stringify({ error: 'This endpoint has been disabled. Use the “Forgot Password” link on the owner login to reset your password by email.' }),
+    { status: 410, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
+  );
 }
 
 const handleDashboardStats = async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     console.log('Dashboard stats requested');
     const bookings = await kv.get('bookings') || [];
@@ -882,6 +908,8 @@ const handleDashboardStats = async (c: any) => {
 }
 
 const handleManualBooking = async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const { bookingData } = await c.req.json();
     // Normalize field names so email templates and dashboard work correctly
@@ -917,6 +945,8 @@ const handleManualBooking = async (c: any) => {
 }
 
 const handleUpdateBooking = async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const { bookingId, updates } = await c.req.json();
     const bookings = await kv.get('bookings') || [];
@@ -951,6 +981,8 @@ const handleUpdateBooking = async (c: any) => {
 }
 
 const handleDeleteBooking = async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const { bookingId } = await c.req.json();
     const bookings = await kv.get('bookings') || [];
@@ -991,6 +1023,8 @@ registerRoute('post', '/create-checkout-session', handleCreateCheckout);
 registerRoute('post', '/update-booking', handleUpdateBooking);
 registerRoute('post', '/delete-booking', handleDeleteBooking);
 registerRoute('post', '/resend-confirmation', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const { bookingId } = await c.req.json();
     const bookings = await kv.get('bookings') || [];
@@ -1023,6 +1057,8 @@ registerRoute('post', '/resend-confirmation', async (c: any) => {
 });
 
 registerRoute('post', '/create-booking', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const { bookingData, sendEmails } = await c.req.json();
     const newBooking = {
@@ -1057,8 +1093,10 @@ registerRoute('post', '/create-booking', async (c: any) => {
 
 // NEW: Test all email templates endpoint
 registerRoute('get', '/test-emails', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   const testEmail = c.req.query('email') || 'grantashl1@gmail.com';
-  
+
   try {
     console.log(`🧪 Testing all email templates, sending to: ${testEmail}`);
     
@@ -1111,6 +1149,8 @@ registerRoute('get', '/test-emails', async (c: any) => {
 
 // NEW: Process scheduled emails (for cron job)
 registerRoute('get', '/process-scheduled-emails', async (c: any) => {
+  const auth = await requireOwnerOrCron(c);
+  if (!auth.ok) return auth.response;
   try {
     console.log('⏰ Processing scheduled emails...');
     
@@ -1196,6 +1236,8 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
 
 // NEW: Fix booking statuses based on dates
 registerRoute('post', '/fix-booking-statuses', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const bookings = await kv.get('bookings') || [];
     const today = new Date();
@@ -1251,6 +1293,8 @@ registerRoute('post', '/fix-booking-statuses', async (c: any) => {
 
 // NEW: Manually resend booking confirmation to a specific customer
 registerRoute('post', '/resend-confirmation', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const { bookingId } = await c.req.json();
 
@@ -1301,9 +1345,11 @@ registerRoute('post', '/resend-confirmation', async (c: any) => {
 
 // NEW: Test individual email types
 registerRoute('get', '/test-single-email', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   const emailType = c.req.query('type') || 'booking-confirmation';
   const testEmail = c.req.query('email') || 'grantashl1@gmail.com';
-  
+
   const testBooking = {
     id: 'test-' + crypto.randomUUID(),
     guest: 'Grant Ashleigh',
@@ -1402,6 +1448,8 @@ app.get('/make-server-edef7798/list-storage-images', async (c) => {
 
 // NEW: List all available buckets to find the correct name
 app.get('/make-server-edef7798/list-buckets', async (c) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -1432,6 +1480,8 @@ app.get('/make-server-edef7798/list-buckets', async (c) => {
 
 // NEW: Manual fix for storage bucket permissions
 app.get('/make-server-edef7798/fix-storage-bucket', async (c) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     console.log('🔧 Manual storage bucket fix triggered...');
     await ensureStorageBucketIsPublic();
@@ -1461,6 +1511,8 @@ app.get('/make-server-edef7798/fix-storage-bucket', async (c) => {
 
 // NEW: Check Stripe account details
 app.get('/make-server-edef7798/stripe-account-info', async (c) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
 

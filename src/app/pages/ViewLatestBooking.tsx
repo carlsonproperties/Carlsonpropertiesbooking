@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
+import { getOwnerToken } from "../lib/supabase";
 import { motion } from "motion/react";
 import { Calendar, User, Mail, Phone, DollarSign, StickyNote, CheckCircle, Clock, Loader2 } from "lucide-react";
 
@@ -22,7 +23,7 @@ export function ViewLatestBooking() {
         `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/dashboard-stats`,
         {
           headers: {
-            'Authorization': `Bearer ${publicAnonKey.trim()}`,
+            'Authorization': `Bearer ${await getOwnerToken()}`,
             'Content-Type': 'application/json'
           }
         }

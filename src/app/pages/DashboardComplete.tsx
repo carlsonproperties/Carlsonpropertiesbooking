@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { supabase } from "../lib/supabase";
+import { supabase, getOwnerToken } from "../lib/supabase";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -237,7 +237,7 @@ export function DashboardComplete() {
       const url = `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/dashboard-stats`;
       const res = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${publicAnonKey.trim()}`,
+          'Authorization': `Bearer ${await getOwnerToken()}`,
           'Content-Type': 'application/json'
         }
       });
@@ -310,7 +310,7 @@ export function DashboardComplete() {
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${publicAnonKey.trim()}`,
+            'Authorization': `Bearer ${await getOwnerToken()}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -345,7 +345,7 @@ export function DashboardComplete() {
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${publicAnonKey.trim()}`,
+            'Authorization': `Bearer ${await getOwnerToken()}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ bookingId })
@@ -388,7 +388,7 @@ export function DashboardComplete() {
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${publicAnonKey.trim()}`,
+            'Authorization': `Bearer ${await getOwnerToken()}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ bookingId, updates: editForm })
@@ -417,7 +417,7 @@ export function DashboardComplete() {
         `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/create-booking`,
         {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${publicAnonKey.trim()}`, 'Content-Type': 'application/json' },
+          headers: { 'Authorization': `Bearer ${await getOwnerToken()}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ bookingData: { ...addBookingForm, total: parseFloat(addBookingForm.total || '0'), guests: parseInt(addBookingForm.guests || '1') }, sendEmails: addBookingForm.sendEmails })
         }
       );
@@ -1264,7 +1264,7 @@ export function DashboardComplete() {
                                     try {
                                       const res = await fetch(
                                         `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/resend-confirmation`,
-                                        { method: 'POST', headers: { 'Authorization': `Bearer ${publicAnonKey.trim()}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ bookingId: guest.id }) }
+                                        { method: 'POST', headers: { 'Authorization': `Bearer ${await getOwnerToken()}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ bookingId: guest.id }) }
                                       );
                                       const data = await res.json();
                                       if (!res.ok) throw new Error(data.error || 'Failed');
