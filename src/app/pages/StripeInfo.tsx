@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
+import { getOwnerToken } from "../lib/supabase";
 import { Loader2, CreditCard, Mail, CheckCircle, AlertCircle } from "lucide-react";
 
 export function StripeInfo() {
@@ -17,7 +18,7 @@ export function StripeInfo() {
       const url = `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/stripe-account-info`;
       const res = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${publicAnonKey.trim()}`,
+          'Authorization': `Bearer ${await getOwnerToken()}`,
           'Content-Type': 'application/json'
         }
       });

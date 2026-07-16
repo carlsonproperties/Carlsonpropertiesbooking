@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# This project uses pnpm — do not commit an npm lockfile
+package-lock.json
+
+# Build output
+dist/
+dist-ssr/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Env
+.env
+.env.*
+!.env.example

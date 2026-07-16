@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { supabase } from "../lib/supabase";
+import { supabase, getOwnerToken } from "../lib/supabase";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
 import { Loader2, Search, CreditCard, ExternalLink, ArrowLeft, DollarSign, Calendar, User, Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
@@ -57,7 +57,7 @@ export function BookingPaymentLookup() {
       const url = `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/dashboard-stats`;
       const res = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${publicAnonKey.trim()}`,
+          'Authorization': `Bearer ${await getOwnerToken()}`,
           'Content-Type': 'application/json'
         }
       });

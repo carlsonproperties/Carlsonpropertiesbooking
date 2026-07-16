@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { projectId, publicAnonKey } from '/utils/supabase/info';
+import { getOwnerToken } from "../lib/supabase";
 import { Mail, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 export function TestEmails() {
@@ -20,7 +21,7 @@ export function TestEmails() {
       
       const res = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${publicAnonKey.trim()}`,
+          'Authorization': `Bearer ${await getOwnerToken()}`,
           'Content-Type': 'application/json'
         }
       });

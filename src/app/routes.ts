@@ -18,7 +18,6 @@ import { ImageMapper } from "./pages/ImageMapper";
 import { SimpleImageTest } from "./pages/SimpleImageTest";
 import { Maintenance } from "./pages/Maintenance";
 import { CreateBookingsUser } from "./pages/CreateBookingsUser";
-import { ResetBookingsPassword } from "./pages/ResetBookingsPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { ViewLatestBooking } from "./pages/ViewLatestBooking";
 import { HealthCheck } from "./pages/HealthCheck";
@@ -58,7 +57,6 @@ export const router = createBrowserRouter([
       { path: "image-mapper", Component: ImageMapper },
       { path: "image-test", Component: SimpleImageTest },
       { path: "create-bookings-user", Component: CreateBookingsUser },
-      { path: "reset-bookings-password", Component: ResetBookingsPassword },
       { path: "view-latest-booking", Component: ViewLatestBooking },
       { path: "health-check", Component: HealthCheck },
       { path: "test-emails", Component: TestEmails },
