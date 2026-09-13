@@ -454,6 +454,8 @@ function processAirtableRecords(records: any[]) {
       nightsStayed: parseFloat(String(getVal(f, ['Nights Stayed', 'nights stayed', 'Nights', 'Duration', 'Nights Stayed Formula']) || '0')),
       channel: getVal(f, ['Booking Channel', 'Source', 'Platform', 'Channel']) || 'Direct',
       notes: getVal(f, ['Notes', 'Comment', 'Special Request']) || '',
+      outstandingBalance: parseFloat(String(getVal(f, ['Outstanding Balance', 'Balance Due', 'Outstanding']) || '0')),
+      depositPaid: !!getVal(f, ['Deposit Paid/Payout Received', 'Deposit Paid', 'Payout Received']),
       status,
       monthIndex
     };
