@@ -29,7 +29,8 @@ import {
   LayoutDashboard,
   FolderOpen,
   Mail as MailIcon,
-  PieChart as PieChartIcon
+  PieChart as PieChartIcon,
+  CreditCard
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CarlsonLogo } from "../components/CarlsonLogo";
@@ -37,7 +38,7 @@ import { toast } from "sonner";
 
 const AUTHORIZED_EMAILS = ["grantashl1@gmail.com", "donki.bmbr@gmail.com", "bookings@carlsonproperties.co.nz"];
 
-type TabType = 'overview' | 'directory' | 'templates';
+type TabType = 'overview' | 'directory' | 'payments' | 'templates';
 
 // Format date to NZ format DD-MM-YYYY
 const formatNZDate = (dateString: string): string => {
@@ -74,8 +75,35 @@ interface Guest {
   createdAt?: string;
   stripeSessionId?: string;
   channel?: string;
+  outstandingBalance?: number;
+  depositPaid?: boolean;
   source: 'direct' | 'airtable';
 }
+
+type PaymentTone = 'green' | 'amber' | 'slate';
+
+// Derive how a booking was paid for, from the data we already hold.
+// Website bookings with a Stripe session were paid by card; website bookings
+// left as pending_payment were entered manually / awaiting a bank transfer.
+// Airtable (channel) bookings show their outstanding balance if any.
+function getPayment(guest: Guest): { method: string; status: string; tone: PaymentTone } {
+  if (guest.source === 'direct') {
+    if (guest.stripeSessionId) return { method: 'Stripe card', status: 'Paid', tone: 'green' };
+    if (guest.status === 'pending_payment') return { method: 'Manual / bank transfer', status: 'Awaiting payment', tone: 'amber' };
+    return { method: 'Manual entry', status: 'Recorded', tone: 'slate' };
+  }
+  const channel = guest.channel || 'External';
+  const outstanding = Number(guest.outstandingBalance || 0);
+  if (outstanding > 0) return { method: channel, status: `Balance due $${outstanding.toLocaleString()}`, tone: 'amber' };
+  if (guest.depositPaid) return { method: channel, status: 'Paid', tone: 'green' };
+  return { method: channel, status: 'Recorded', tone: 'slate' };
+}
+
+const PAYMENT_TONE_CLASS: Record<PaymentTone, string> = {
+  green: 'bg-green-50 text-green-700',
+  amber: 'bg-amber-50 text-amber-700',
+  slate: 'bg-slate-100 text-slate-600',
+};
 
 interface DashboardStats {
   totalRevenue: number;
@@ -570,6 +598,17 @@ export function DashboardComplete() {
                 Guest Directory
               </button>
               <button
+                onClick={() => setActiveTab('payments')}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all text-sm font-medium ${
+                  activeTab === 'payments'
+                    ? 'bg-[#9DA07E] text-white'
+                    : 'border border-[#9DA07E]/30 text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                }`}
+              >
+                <CreditCard className="w-4 h-4" />
+                Payments
+              </button>
+              <button
                 onClick={() => setActiveTab('templates')}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all text-sm font-medium ${
                   activeTab === 'templates'
@@ -661,6 +700,21 @@ export function DashboardComplete() {
                 >
                   <FolderOpen className="w-5 h-5" />
                   <span className="font-medium">Guest Directory</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveTab('payments');
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all text-left ${
+                    activeTab === 'payments'
+                      ? 'bg-[#9DA07E] text-white'
+                      : 'bg-[#fdfcf8] text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                  }`}
+                >
+                  <CreditCard className="w-5 h-5" />
+                  <span className="font-medium">Payments</span>
                 </button>
 
                 <button
@@ -1039,6 +1093,11 @@ export function DashboardComplete() {
                             <span className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded-full font-medium">
                               {guest.source === 'direct' ? 'Direct' : 'Airtable'}
                             </span>
+                            {(() => { const pay = getPayment(guest); return (
+                              <span className={`text-xs px-2 py-1 rounded-full font-medium ${PAYMENT_TONE_CLASS[pay.tone]}`}>
+                                {pay.method}
+                              </span>
+                            ); })()}
                           </div>
                         </div>
                         <div className="flex items-center gap-3 ml-4">
@@ -1368,6 +1427,101 @@ export function DashboardComplete() {
             </motion.div>
           </div>
         )}
+
+        {/* Payments Tab */}
+        {activeTab === 'payments' && (() => {
+          const rows = [...(stats?.allGuests || [])].map((g) => ({ g, pay: getPayment(g) }));
+          rows.sort((a, b) => {
+            const aw = a.pay.tone === 'amber' ? 0 : 1;
+            const bw = b.pay.tone === 'amber' ? 0 : 1;
+            if (aw !== bw) return aw - bw;
+            return new Date(b.g.checkIn).getTime() - new Date(a.g.checkIn).getTime();
+          });
+          const paidRows = rows.filter((r) => r.pay.status === 'Paid');
+          const awaitingRows = rows.filter((r) => r.pay.tone === 'amber');
+          const stripeRows = rows.filter((r) => r.g.stripeSessionId);
+          const sum = (rs: typeof rows) => rs.reduce((s, r) => s + Number(r.g.total || 0), 0);
+          return (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 md:p-8 shadow-sm"
+            >
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+                <div>
+                  <h2 className="text-2xl font-serif text-[#2D2D2D] mb-1">Payments</h2>
+                  <p className="text-sm text-[#9DA07E] font-medium">How each booking was paid, and what's outstanding</p>
+                </div>
+                <button
+                  onClick={fetchDashboardData}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#9DA07E]/10 hover:bg-[#9DA07E]/20 text-[#9DA07E] text-sm font-medium transition-all"
+                >
+                  <TrendingUp className="w-4 h-4" />
+                  Refresh
+                </button>
+              </div>
+
+              {/* Summary tiles */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="bg-green-50 border border-green-100 rounded-2xl p-5">
+                  <p className="text-green-700 text-xs font-bold uppercase tracking-widest mb-1">Paid</p>
+                  <p className="text-2xl font-serif text-[#2D2D2D]">${sum(paidRows).toLocaleString()}</p>
+                  <p className="text-sm text-[#2D2D2D]/60">{paidRows.length} booking{paidRows.length === 1 ? '' : 's'}</p>
+                </div>
+                <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5">
+                  <p className="text-amber-700 text-xs font-bold uppercase tracking-widest mb-1">Awaiting / balance due</p>
+                  <p className="text-2xl font-serif text-[#2D2D2D]">${sum(awaitingRows).toLocaleString()}</p>
+                  <p className="text-sm text-[#2D2D2D]/60">{awaitingRows.length} booking{awaitingRows.length === 1 ? '' : 's'}</p>
+                </div>
+                <div className="bg-[#9DA07E]/10 border border-[#9DA07E]/20 rounded-2xl p-5">
+                  <p className="text-[#9DA07E] text-xs font-bold uppercase tracking-widest mb-1">Paid by Stripe card</p>
+                  <p className="text-2xl font-serif text-[#2D2D2D]">${sum(stripeRows).toLocaleString()}</p>
+                  <p className="text-sm text-[#2D2D2D]/60">{stripeRows.length} card payment{stripeRows.length === 1 ? '' : 's'}</p>
+                </div>
+              </div>
+
+              {/* Payment rows */}
+              <div className="space-y-3">
+                {rows.length === 0 && (
+                  <p className="text-sm text-[#2D2D2D]/60 py-8 text-center">No bookings to show.</p>
+                )}
+                {rows.map(({ g, pay }, index) => (
+                  <div
+                    key={g.id || `${g.guest}-${g.checkIn}-${index}`}
+                    className="border border-[#9DA07E]/20 rounded-2xl p-4 md:p-5 flex flex-wrap items-center justify-between gap-3 hover:bg-[#fdfcf8] transition-all"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-[#2D2D2D] font-semibold truncate">{g.guest}</h3>
+                        <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${PAYMENT_TONE_CLASS[pay.tone]}`}>
+                          {pay.status}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-[#2D2D2D]/60">
+                        <span className="font-medium">{formatNZDate(g.checkIn)} → {formatNZDate(g.checkOut)}</span>
+                        <span className="mx-1">•</span>
+                        <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full font-medium">{pay.method}</span>
+                        {g.stripeSessionId && (
+                          <span className="px-2 py-0.5 bg-[#9DA07E]/10 text-[#9DA07E] rounded-full font-mono">
+                            {String(g.stripeSessionId).slice(0, 14)}…
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[#9DA07E] font-bold text-lg">${Number(g.total || 0).toLocaleString()}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-6 text-xs text-[#2D2D2D]/50 leading-relaxed">
+                "Stripe card" = paid online by card (has a Stripe reference). "Manual / bank transfer" = entered by hand or awaiting a transfer.
+                Channel bookings (e.g. AirBnB) show a balance only if one is recorded in Airtable. Payment capture is automatic — this site does not use Stripe's manual-capture (authorise-then-capture) mode.
+              </p>
+            </motion.div>
+          );
+        })()}
 
         {/* Email Templates Tab */}
         {activeTab === 'templates' && (

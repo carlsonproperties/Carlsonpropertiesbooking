@@ -25,8 +25,18 @@ app.use('*', async (c, next) => {
   console.log(`${c.req.method} ${c.req.path} - ${ms}ms`)
 })
 
+// Only allow the site's own origins to call the API from a browser.
+const ALLOWED_ORIGINS = [
+  'https://carlsonproperties.co.nz',
+  'https://www.carlsonproperties.co.nz',
+];
 app.use('*', cors({
-  origin: '*',
+  origin: (origin) => {
+    if (!origin) return '*';                       // non-browser / server-to-server
+    if (ALLOWED_ORIGINS.includes(origin)) return origin;
+    if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) return origin; // Vercel previews
+    return null;                                   // any other site is refused
+  },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'x-user-token'],
   exposeHeaders: ['Content-Length'],
@@ -444,6 +454,8 @@ function processAirtableRecords(records: any[]) {
       nightsStayed: parseFloat(String(getVal(f, ['Nights Stayed', 'nights stayed', 'Nights', 'Duration', 'Nights Stayed Formula']) || '0')),
       channel: getVal(f, ['Booking Channel', 'Source', 'Platform', 'Channel']) || 'Direct',
       notes: getVal(f, ['Notes', 'Comment', 'Special Request']) || '',
+      outstandingBalance: parseFloat(String(getVal(f, ['Outstanding Balance', 'Balance Due', 'Outstanding']) || '0')),
+      depositPaid: !!getVal(f, ['Deposit Paid/Payout Received', 'Deposit Paid', 'Payout Received']),
       status,
       monthIndex
     };
@@ -558,22 +570,49 @@ const handleCreateCheckout = async (c: any) => {
     const origin = c.req.header('origin') || c.req.header('referer') || 'https://oneeleven.nz';
     const baseUrl = origin.split('?')[0].replace(/\/$/, '');
 
-    // Validate and apply coupon code
+    // ── Server-side pricing ──────────────────────────────────────────────
+    // The price is computed HERE from the dates and the fixed rate. The amount
+    // sent by the browser is NEVER trusted for the charge (it can be edited to
+    // pay any value). These must match the values in BookingEngine.tsx.
+    const NIGHTLY_RATE = 1275;      // NZD per night
+    const DIRECT_DISCOUNT = 0.10;   // 10% direct-booking discount on every direct booking
+    const MIN_NIGHTS = 2;
+
+    const checkInDate = new Date(`${bookingData.checkIn}T00:00:00Z`);
+    const checkOutDate = new Date(`${bookingData.checkOut}T00:00:00Z`);
+    const nights = Math.round((checkOutDate.getTime() - checkInDate.getTime()) / 86400000);
+
+    if (isNaN(nights) || nights < MIN_NIGHTS) {
+      return new Response(JSON.stringify({ error: `Invalid dates — a minimum of ${MIN_NIGHTS} nights is required.` }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    const subtotal = nights * NIGHTLY_RATE;
+    let finalAmount = subtotal * (1 - DIRECT_DISCOUNT);   // price the guest sees
+
+    // Validate and apply coupon code (stacks on top of the direct discount)
     let discount = 0;
     let couponDescription = '';
-    let finalAmount = parseFloat(String(bookingData.amount));
-
     if (couponCode && COUPON_CODES[couponCode.toUpperCase()]) {
       const coupon = COUPON_CODES[couponCode.toUpperCase()];
       discount = coupon.discount;
       couponDescription = coupon.description;
       finalAmount = finalAmount * (1 - discount / 100);
-      console.log(`Coupon ${couponCode} applied: ${discount}% off. Original: $${bookingData.amount}, Final: $${finalAmount}`);
+    }
+    finalAmount = Math.round(finalAmount * 100) / 100;
+
+    // Log if the browser-sent amount disagrees with the server price (tamper signal)
+    const clientAmount = parseFloat(String(bookingData.amount));
+    if (!isNaN(clientAmount) && Math.abs(clientAmount - subtotal * (1 - DIRECT_DISCOUNT)) > 1) {
+      console.warn(`⚠️ Client amount ($${clientAmount}) != server price ($${subtotal * (1 - DIRECT_DISCOUNT)}) — charging server-computed price.`);
     }
 
     // Stripe requires minimum 50 cents for NZD
     const amountInCents = Math.max(50, Math.round(finalAmount * 100));
 
+    // Only carry safe, known fields into Stripe metadata (not the raw client amount)
     const sessionData: any = {
       payment_method_types: ['card'],
       customer_email: bookingData.guestEmail,
@@ -593,11 +632,17 @@ const handleCreateCheckout = async (c: any) => {
       success_url: `${baseUrl}/booking-success?session_id={CHECKOUT_SESSION_ID}&booking_id=${bookingId}`,
       cancel_url: `${baseUrl}/checkout`,
       metadata: {
-        ...bookingData,
         bookingId,
+        guestName: bookingData.guestName || '',
+        guestEmail: bookingData.guestEmail || '',
+        guestPhone: bookingData.guestPhone || '',
+        guestNotes: bookingData.guestNotes || '',
+        checkIn: bookingData.checkIn || '',
+        checkOut: bookingData.checkOut || '',
         guests: String(bookingData.guests),
-        amount: String(bookingData.amount),
-        originalAmount: String(bookingData.amount),
+        nights: String(nights),
+        amount: String(finalAmount),
+        originalAmount: String(subtotal),
         discountPercent: String(discount),
         couponCode: couponCode || '',
       },
