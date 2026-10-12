@@ -5,8 +5,8 @@ Redesign the 6 email templates in supabase/functions/server/email_templates.tsx 
   working.
 
   BRAND
-  - Primary sage: #9DA07E
-  - Cream background: #FDFCF8
+  - Primary sage: #203F3A
+  - Cream background: #F4F1EA
   - Card white: #FFFFFF
   - Ink: #1A1A1A / body grey: #666 / muted: #AFAFAF
   - Hairline: #F1F1EE

@@ -52,7 +52,7 @@ export function ResendConfirmation() {
       <div className="max-w-2xl mx-auto">
         <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-10 shadow-2xl">
           <div className="text-center mb-10">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#9DA07E] to-[#7A7E5F] rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-[#9DA07E]/20">
+            <div className="w-20 h-20 bg-gradient-to-br from-[#203F3A] to-[#16302B] rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-[#203F3A]/20">
               <Mail className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">Resend Booking Confirmation</h1>
@@ -94,7 +94,7 @@ export function ResendConfirmation() {
               type="text"
               value={bookingId}
               onChange={(e) => setBookingId(e.target.value)}
-              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#9DA07E] transition-colors font-mono text-sm"
+              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#203F3A] transition-colors font-mono text-sm"
               placeholder="Enter booking ID"
             />
             <p className="text-xs text-slate-500 mt-2">
@@ -106,7 +106,7 @@ export function ResendConfirmation() {
           <button
             onClick={handleResendEmail}
             disabled={loading || !bookingId}
-            className="w-full bg-gradient-to-r from-[#9DA07E] to-[#7A7E5F] text-white py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#9DA07E]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mb-6"
+            className="w-full bg-gradient-to-r from-[#203F3A] to-[#16302B] text-white py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#203F3A]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mb-6"
           >
             {loading ? (
               <>

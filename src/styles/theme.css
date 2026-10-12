@@ -1,85 +1,114 @@
 @import './tailwind.css';
+@import './fonts.css';
 @custom-variant dark (&:is(.dark *));
 
+/* ─────────────────────────────────────────────────────────────
+   Lake & Stone — One Eleven on the Mile
+   Lake Green #203F3A · Warm Ivory #F4F1EA
+   Sandstone  #D7C8B4 · Muted Bronze #9B7955 (decorative only)
+   ───────────────────────────────────────────────────────────── */
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
+
+  /* Brand source of truth — reference these, don't paste hex */
+  --brand-green: #203F3A;
+  --brand-green-deep: #16302B;
+  --brand-green-light: #5E7F77;
+  --brand-ivory: #F4F1EA;
+  --brand-sandstone: #D7C8B4;
+  --brand-bronze: #9B7955;
+
+  --background: #F4F1EA;
+  --foreground: #203F3A;
+  --card: #FFFFFF;
+  --card-foreground: #203F3A;
+  --popover: #FFFFFF;
+  --popover-foreground: #203F3A;
+  --primary: #203F3A;
+  --primary-foreground: #F4F1EA;
+  --secondary: #D7C8B4;
+  --secondary-foreground: #203F3A;
+  --muted: #EDE8DE;
+  --muted-foreground: #6B6459;
+  --accent: #9B7955;
+  --accent-foreground: #F4F1EA;
+  --destructive: #A8432F;
+  --destructive-foreground: #F4F1EA;
+  --border: #DED6C8;
+  --input: #DED6C8;
+  --input-background: #FFFFFF;
+  --switch-background: #D7C8B4;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --ring: #203F3A;
+  --chart-1: #203F3A;
+  --chart-2: #9B7955;
+  --chart-3: #D7C8B4;
+  --chart-4: #5E7F77;
+  --chart-5: #B9A88F;
+  --radius: 0.25rem;
+  --sidebar: #F4F1EA;
+  --sidebar-foreground: #203F3A;
+  --sidebar-primary: #203F3A;
+  --sidebar-primary-foreground: #F4F1EA;
+  --sidebar-accent: #EDE8DE;
+  --sidebar-accent-foreground: #203F3A;
+  --sidebar-border: #DED6C8;
+  --sidebar-ring: #203F3A;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  --background: #16211E;
+  --foreground: #F4F1EA;
+  --card: #1D2B27;
+  --card-foreground: #F4F1EA;
+  --popover: #1D2B27;
+  --popover-foreground: #F4F1EA;
+  --primary: #D7C8B4;
+  --primary-foreground: #16211E;
+  --secondary: #26352F;
+  --secondary-foreground: #F4F1EA;
+  --muted: #26352F;
+  --muted-foreground: #A9B5AE;
+  --accent: #C49A6E;
+  --accent-foreground: #16211E;
+  --destructive: #C96A51;
+  --destructive-foreground: #16211E;
+  --border: #2F413A;
+  --input: #2F413A;
+  --input-background: #1D2B27;
+  --switch-background: #2F413A;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --ring: #D7C8B4;
+  --chart-1: #8FB3A8;
+  --chart-2: #C49A6E;
+  --chart-3: #D7C8B4;
+  --chart-4: #5E7F77;
+  --chart-5: #B9A88F;
+  --sidebar: #16211E;
+  --sidebar-foreground: #F4F1EA;
+  --sidebar-primary: #D7C8B4;
+  --sidebar-primary-foreground: #16211E;
+  --sidebar-accent: #26352F;
+  --sidebar-accent-foreground: #F4F1EA;
+  --sidebar-border: #2F413A;
+  --sidebar-ring: #D7C8B4;
 }
 
 @theme inline {
+  /* Typefaces — makes `font-serif` / `font-sans` resolve to the brand faces */
+  --font-serif: var(--brand-font-display);
+  --font-sans: var(--brand-font-body);
+
+  /* Brand colours as utilities: bg-brand-green, text-brand-bronze, … */
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-deep: var(--brand-green-deep);
+  --color-brand-green-light: var(--brand-green-light);
+  --color-brand-ivory: var(--brand-ivory);
+  --color-brand-sandstone: var(--brand-sandstone);
+  --color-brand-bronze: var(--brand-bronze);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

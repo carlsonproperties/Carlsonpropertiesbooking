@@ -40,7 +40,7 @@ export function RefundPolicy() {
   ];
 
   return (
-    <div className="bg-[#fdfcf8] min-h-screen selection:bg-[#9DA07E] selection:text-white font-sans">
+    <div className="bg-[#F4F1EA] min-h-screen selection:bg-[#203F3A] selection:text-white font-sans">
       <SEO 
         title="Refund Policy"
         description="Refund and cancellation policy for One Eleven Taupo bookings. Understand our 30-day cancellation terms."
@@ -56,12 +56,12 @@ export function RefundPolicy() {
           </Link>
           
           <div className="hidden md:flex items-center gap-10">
-            <Link to="/about" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#9DA07E] transition-all">Property</Link>
-            <Link to="/meet-hosts" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#9DA07E] transition-all">Meet Hosts</Link>
-            <Link to="/guest-info" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#9DA07E] transition-all">Guest Info</Link>
+            <Link to="/about" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#203F3A] transition-all">Property</Link>
+            <Link to="/meet-hosts" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#203F3A] transition-all">Meet Hosts</Link>
+            <Link to="/guest-info" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#203F3A] transition-all">Guest Info</Link>
             <Link 
               to="/book" 
-              className="bg-slate-900 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#9DA07E] hover:shadow-xl hover:shadow-[#9DA07E]/20 transition-all"
+              className="bg-slate-900 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#203F3A] hover:shadow-xl hover:shadow-[#203F3A]/20 transition-all"
             >
               Book Now
             </Link>
@@ -87,11 +87,11 @@ export function RefundPolicy() {
             className="mb-20"
           >
             <div className="flex items-center gap-4 mb-6">
-              <span className="h-[1px] w-12 bg-[#9DA07E]" />
-              <span className="text-[#9DA07E] text-[10px] font-black uppercase tracking-[0.6em]">Flexibility & Peace of Mind</span>
+              <span className="h-[1px] w-12 bg-[#203F3A]" />
+              <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.6em]">Flexibility & Peace of Mind</span>
             </div>
             <h1 className="text-6xl md:text-8xl font-serif text-slate-900 leading-[0.9] tracking-tighter mb-8 uppercase">
-              Refund <span className="italic text-[#9DA07E]">Policy.</span>
+              Refund <span className="italic text-[#203F3A]">Policy.</span>
             </h1>
             <p className="text-xl text-slate-500 font-light max-w-2xl leading-relaxed italic">
               "At One Eleven | On the Mile, we understand that plans can change. Please review our cancellation policy below to understand your options."
@@ -106,11 +106,11 @@ export function RefundPolicy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className={`p-10 rounded-[40px] border border-slate-100 flex flex-col justify-between group transition-all duration-700 hover:shadow-2xl hover:shadow-[#9DA07E]/5 ${index === 0 ? "md:col-span-2 bg-white" : "bg-white"}`}
+                className={`p-10 rounded-[40px] border border-slate-100 flex flex-col justify-between group transition-all duration-700 hover:shadow-2xl hover:shadow-[#203F3A]/5 ${index === 0 ? "md:col-span-2 bg-white" : "bg-white"}`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <div className="w-14 h-14 rounded-2xl bg-[#9DA07E]/10 text-[#9DA07E] flex items-center justify-center group-hover:bg-[#9DA07E] group-hover:text-white transition-all duration-500">
+                    <div className="w-14 h-14 rounded-2xl bg-[#203F3A]/10 text-[#203F3A] flex items-center justify-center group-hover:bg-[#203F3A] group-hover:text-white transition-all duration-500">
                       {section.icon}
                     </div>
                     <span className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full ${section.highlight === "Full Refund" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
@@ -128,7 +128,7 @@ export function RefundPolicy() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="bg-[#9DA07E]/5 p-12 rounded-[40px] border border-[#9DA07E]/10"
+            className="bg-[#203F3A]/5 p-12 rounded-[40px] border border-[#203F3A]/10"
           >
             <h4 className="text-xl font-serif text-slate-900 mb-4 uppercase">Questions regarding your booking?</h4>
             <p className="text-slate-600 font-light leading-relaxed mb-8">
@@ -136,13 +136,13 @@ export function RefundPolicy() {
             </p>
             <div className="flex flex-col sm:flex-row gap-8">
               <a href="mailto:bookings@carlsonproperties.co.nz" className="flex items-center gap-4 group">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#9DA07E] group-hover:bg-[#9DA07E] group-hover:text-white transition-all shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#203F3A] group-hover:bg-[#203F3A] group-hover:text-white transition-all shadow-sm">
                   <Mail size={18} />
                 </div>
                 <span className="text-sm font-bold text-slate-900">bookings@carlsonproperties.co.nz</span>
               </a>
               <a href="tel:0276977961" className="flex items-center gap-4 group">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#9DA07E] group-hover:bg-[#9DA07E] group-hover:text-white transition-all shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#203F3A] group-hover:bg-[#203F3A] group-hover:text-white transition-all shadow-sm">
                   <Phone size={18} />
                 </div>
                 <span className="text-sm font-bold text-slate-900">027 697 7961</span>

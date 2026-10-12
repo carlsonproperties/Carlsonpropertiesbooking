@@ -78,7 +78,7 @@ const GalleryItem = ({ item, index }: { item: any; index: number }) => {
       </motion.div>
       
       <div className="mt-6 px-4 text-left">
-        <span className="text-[10px] text-[#9DA07E] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1}//</span>
+        <span className="text-[10px] text-[#203F3A] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1}//</span>
         <h5 className="font-serif text-xl text-slate-800 uppercase">{item.title}</h5>
       </div>
     </motion.div>
@@ -100,7 +100,7 @@ export function About() {
   }, []);
 
   return (
-    <div className="bg-[#fdfcf8] min-h-screen">
+    <div className="bg-[#F4F1EA] min-h-screen">
       <SEO 
         title="About Our Luxury Property"
         description="Discover One Eleven Taupo - a purpose-built luxury holiday home featuring 5 bedrooms, 4 bathrooms, heated pool, sauna, gym, and stunning Lake Taupo views. Perfect Taupo accommodation for families and groups."
@@ -141,17 +141,17 @@ export function About() {
           </Link>
           
           <div className="flex gap-12 items-center text-[11px] uppercase tracking-widest font-semibold hidden lg:flex">
-            <Link to="/" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Home</Link>
-            <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>About</Link>
-            <Link to="/meet-hosts" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Meet Your Hosts</Link>
-            <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Guest Info</Link>
+            <Link to="/" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Home</Link>
+            <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>About</Link>
+            <Link to="/meet-hosts" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Meet Your Hosts</Link>
+            <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Guest Info</Link>
             <Link 
               to="/owner-login"
-              className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}
+              className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}
             >
               Owner Portal
             </Link>
-            <Link to="/book" className="bg-[#9DA07E] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#9DA07E]/20">
+            <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#203F3A]/20">
               Book Now
             </Link>
           </div>
@@ -171,7 +171,7 @@ export function About() {
       <header className="relative h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-slate-900">
           <img src={heroImg} className="w-full h-full object-cover opacity-60" alt="About Hero" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#fdfcf8]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#F4F1EA]" />
         </div>
         <div className="relative z-10 text-center text-white space-y-6">
           <motion.span 
@@ -204,7 +204,7 @@ export function About() {
                 className="text-4xl md:text-6xl font-serif text-slate-900 leading-tight"
               >
                 A purpose-built sanctuary <br />
-                <span className="italic text-[#9DA07E]">designed for excellence.</span>
+                <span className="italic text-[#203F3A]">designed for excellence.</span>
               </motion.h2>
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -254,8 +254,8 @@ export function About() {
 
         {/* Where You'll Sleep Section */}
         <section className="bg-[#1a1c16] py-32 px-6 relative overflow-hidden">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#9DA07E]/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#9DA07E]/5 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#203F3A]/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#203F3A]/5 rounded-full blur-[120px] pointer-events-none" />
 
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10 text-left">
@@ -264,7 +264,7 @@ export function About() {
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="text-[#9DA07E] text-[10px] font-bold uppercase tracking-[0.4em] block"
+                  className="text-[#203F3A] text-[10px] font-bold uppercase tracking-[0.4em] block"
                 >
                   Rest & Rejuvenate
                 </motion.span>
@@ -286,13 +286,13 @@ export function About() {
               >
                 <button 
                   onClick={() => setShowEnsuites(false)}
-                  className={`px-8 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-500 ${!showEnsuites ? "bg-[#9DA07E] text-white shadow-xl" : "text-white/60 hover:text-white hover:bg-white/5"}`}
+                  className={`px-8 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-500 ${!showEnsuites ? "bg-[#203F3A] text-white shadow-xl" : "text-white/60 hover:text-white hover:bg-white/5"}`}
                 >
                   The Bedrooms
                 </button>
                 <button 
                   onClick={() => setShowEnsuites(true)}
-                  className={`px-8 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-500 ${showEnsuites ? "bg-[#9DA07E] text-white shadow-xl" : "text-white/60 hover:text-white hover:bg-white/5"}`}
+                  className={`px-8 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-500 ${showEnsuites ? "bg-[#203F3A] text-white shadow-xl" : "text-white/60 hover:text-white hover:bg-white/5"}`}
                 >
                   The Ensuites
                 </button>
@@ -315,7 +315,7 @@ export function About() {
                   transition={{ delay: i * 0.1, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
                   className="relative group text-left"
                 >
-                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-white/5 italic pointer-events-none group-hover:text-[#9DA07E]/20 transition-colors duration-500">
+                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-white/5 italic pointer-events-none group-hover:text-[#203F3A]/20 transition-colors duration-500">
                     0{i + 1}
                   </div>
 
@@ -342,14 +342,14 @@ export function About() {
                   </div>
 
                   <div className="space-y-4 relative px-2">
-                    <h4 className="font-serif text-2xl text-white group-hover:text-[#9DA07E] transition-colors duration-300">
+                    <h4 className="font-serif text-2xl text-white group-hover:text-[#203F3A] transition-colors duration-300">
                       {room.title}
                     </h4>
-                    <div className="h-px w-8 bg-[#9DA07E]/40 group-hover:w-full transition-all duration-700" />
+                    <div className="h-px w-8 bg-[#203F3A]/40 group-hover:w-full transition-all duration-700" />
                     <div className="space-y-2">
                       {room.desc.map((line, idx) => (
                         <div key={idx} className="flex items-center gap-2">
-                          <div className="w-1 h-1 rounded-full bg-[#9DA07E]/40" />
+                          <div className="w-1 h-1 rounded-full bg-[#203F3A]/40" />
                           <p className="text-white/50 text-[10px] tracking-widest leading-relaxed font-medium uppercase">{line}</p>
                         </div>
                       ))}
@@ -371,7 +371,7 @@ export function About() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="text-[#9DA07E] text-[10px] font-bold uppercase tracking-[0.5em] block"
+                    className="text-[#203F3A] text-[10px] font-bold uppercase tracking-[0.5em] block"
                   >
                     The Distinction
                   </motion.span>
@@ -382,7 +382,7 @@ export function About() {
                     className="text-4xl md:text-6xl font-serif text-slate-900 leading-tight"
                   >
                     Why guests choose <br />
-                    <span className="italic text-[#9DA07E]">One Eleven | On The Mile.</span>
+                    <span className="italic text-[#203F3A]">One Eleven | On The Mile.</span>
                   </motion.h3>
                 </div>
 
@@ -402,12 +402,12 @@ export function About() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 }}
-                      className={`group p-8 rounded-3xl transition-all duration-500 hover:bg-slate-50 border border-transparent hover:border-slate-100 ${i === 6 ? "md:col-span-2 bg-[#9DA07E]/5 hover:bg-[#9DA07E]/10" : ""}`}
+                      className={`group p-8 rounded-3xl transition-all duration-500 hover:bg-slate-50 border border-transparent hover:border-slate-100 ${i === 6 ? "md:col-span-2 bg-[#203F3A]/5 hover:bg-[#203F3A]/10" : ""}`}
                     >
-                      <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#9DA07E] group-hover:text-white transition-all duration-500">
-                        <item.icon size={22} className="text-[#9DA07E] group-hover:text-white transition-colors" />
+                      <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#203F3A] group-hover:text-white transition-all duration-500">
+                        <item.icon size={22} className="text-[#203F3A] group-hover:text-white transition-colors" />
                       </div>
-                      <h5 className="font-serif text-xl text-slate-900 mb-3 group-hover:text-[#9DA07E] transition-colors">{item.title}</h5>
+                      <h5 className="font-serif text-xl text-slate-900 mb-3 group-hover:text-[#203F3A] transition-colors">{item.title}</h5>
                       <p className="text-slate-500 text-sm leading-relaxed font-light">{item.desc}</p>
                     </motion.div>
                   ))}
@@ -416,12 +416,12 @@ export function About() {
 
               <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-8">
                 <div className="relative">
-                  <div className="absolute -top-10 -right-10 w-64 h-64 bg-[#9DA07E]/10 rounded-full blur-[80px] -z-10" />
+                  <div className="absolute -top-10 -right-10 w-64 h-64 bg-[#203F3A]/10 rounded-full blur-[80px] -z-10" />
                   
                   <div className="bg-white rounded-[40px] p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] border border-slate-100 space-y-12">
                     <div className="space-y-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-1 h-10 bg-[#9DA07E] rounded-full" />
+                        <div className="w-1 h-10 bg-[#203F3A] rounded-full" />
                         <h4 className="font-bold text-[10px] uppercase tracking-[0.4em] text-slate-400">The Essentials</h4>
                       </div>
                       
@@ -469,10 +469,10 @@ export function About() {
                   onClick={() => navigate('/book')}
                 >
                   <div className="space-y-1">
-                    <span className="text-[9px] text-[#9DA07E] font-bold uppercase tracking-[0.3em]">Ready to visit?</span>
+                    <span className="text-[9px] text-[#203F3A] font-bold uppercase tracking-[0.3em]">Ready to visit?</span>
                     <h4 className="font-serif text-xl">Reserve Your Dates</h4>
                   </div>
-                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#9DA07E] transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#203F3A] transition-colors">
                     <Zap size={20} className="text-white" />
                   </div>
                 </motion.div>

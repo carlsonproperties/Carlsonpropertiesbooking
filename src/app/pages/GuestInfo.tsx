@@ -314,7 +314,7 @@ export function GuestInformation() {
   }, []);
 
   return (
-    <div className="bg-[#fdfcf8] min-h-screen selection:bg-[#9DA07E] selection:text-white font-sans">
+    <div className="bg-[#F4F1EA] min-h-screen selection:bg-[#203F3A] selection:text-white font-sans">
       <SEO 
         title="Guest Information & Digital Guidebook"
         description="Complete guest guide for One Eleven Taupo accommodation. WiFi details, check-in instructions, local attractions, dining recommendations, and property amenities. Your digital guide to Taupo."
@@ -335,7 +335,7 @@ export function GuestInformation() {
                 key={item}
                 to={item === "Guest Info" ? "/guest-info" : item === "Meet Hosts" ? "/meet-hosts" : "/about"} 
                 className={`text-[10px] uppercase tracking-[0.4em] font-black transition-all ${
-                  item === "Guest Info" ? "text-[#9DA07E]" : "text-slate-500 hover:text-[#9DA07E]"
+                  item === "Guest Info" ? "text-[#203F3A]" : "text-slate-500 hover:text-[#203F3A]"
                 }`}
               >
                 {item}
@@ -343,13 +343,13 @@ export function GuestInformation() {
             ))}
             <Link 
               to="/owner-login"
-              className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#9DA07E] transition-all"
+              className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#203F3A] transition-all"
             >
               Owner Portal
             </Link>
             <Link 
               to="/book" 
-              className="bg-slate-900 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#9DA07E] hover:shadow-xl hover:shadow-[#9DA07E]/20 transition-all"
+              className="bg-slate-900 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#203F3A] hover:shadow-xl hover:shadow-[#203F3A]/20 transition-all"
             >
               Book Direct
             </Link>
@@ -365,9 +365,9 @@ export function GuestInformation() {
       </nav>
 
       {/* Mobile Sticky Sub-Nav */}
-      <div className="md:hidden fixed top-[72px] left-0 right-0 z-[90] bg-[#fdfcf8] border-b border-slate-100 shadow-sm">
+      <div className="md:hidden fixed top-[72px] left-0 right-0 z-[90] bg-[#F4F1EA] border-b border-slate-100 shadow-sm">
         <div className="px-6 py-4">
-          <p className="text-[8px] uppercase tracking-[0.3em] font-black text-[#9DA07E] mb-3">Guide Chapters</p>
+          <p className="text-[8px] uppercase tracking-[0.3em] font-black text-[#203F3A] mb-3">Guide Chapters</p>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
             {SECTIONS.map((section) => (
               <button
@@ -386,11 +386,11 @@ export function GuestInformation() {
                 }}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex-shrink-0 border-2 ${
                   activeTab === section.id 
-                    ? "bg-white border-[#9DA07E] text-[#9DA07E] shadow-md shadow-[#9DA07E]/5" 
+                    ? "bg-white border-[#203F3A] text-[#203F3A] shadow-md shadow-[#203F3A]/5" 
                     : "bg-white border-slate-50 text-slate-400"
                 }`}
               >
-                <span className={`${activeTab === section.id ? "text-[#9DA07E]" : "text-slate-300"}`}>{section.icon}</span>
+                <span className={`${activeTab === section.id ? "text-[#203F3A]" : "text-slate-300"}`}>{section.icon}</span>
                 {section.title}
               </button>
             ))}
@@ -415,11 +415,11 @@ export function GuestInformation() {
           >
             <div className="max-w-3xl">
               <div className="flex items-center gap-4 mb-6">
-                <span className="h-[1px] w-12 bg-[#9DA07E]" />
-                <span className="text-[#9DA07E] text-[10px] font-black uppercase tracking-[0.6em]">Premium Digital Companion</span>
+                <span className="h-[1px] w-12 bg-[#203F3A]" />
+                <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.6em]">Premium Digital Companion</span>
               </div>
               <h1 className="text-5xl md:text-8xl font-serif text-slate-900 leading-[0.9] tracking-tighter">
-                Guest <span className="italic text-[#9DA07E]">Info.</span>
+                Guest <span className="italic text-[#203F3A]">Info.</span>
               </h1>
               <p className="mt-8 text-lg md:text-xl text-slate-500 font-light max-w-xl leading-relaxed">
                 Everything you need for a seamless stay at One Eleven, from check-in details to our hand-picked local favorites.
@@ -433,7 +433,7 @@ export function GuestInformation() {
               rel="noopener noreferrer"
               className="group flex items-center gap-4 px-8 py-5 bg-white border border-slate-100 rounded-[32px] shadow-sm hover:shadow-xl transition-all duration-500 text-slate-700 font-black text-[11px] tracking-widest uppercase"
             >
-              <div className="w-10 h-10 rounded-full bg-[#9DA07E]/10 flex items-center justify-center text-[#9DA07E] group-hover:bg-[#9DA07E] group-hover:text-white transition-colors">
+              <div className="w-10 h-10 rounded-full bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A] group-hover:bg-[#203F3A] group-hover:text-white transition-colors">
                 <FileText size={20} />
               </div>
               Download PDF Guide
@@ -445,9 +445,9 @@ export function GuestInformation() {
           {/* Mobile Table of Contents (Book Style) */}
           <div className="lg:hidden mb-12">
             <div className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#9DA07E]/5 rounded-full -mr-16 -mt-16 blur-3xl" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#203F3A]/5 rounded-full -mr-16 -mt-16 blur-3xl" />
               <h3 className="font-serif text-2xl text-slate-900 mb-6 flex items-center gap-3">
-                <span className="w-8 h-[1px] bg-[#9DA07E]" />
+                <span className="w-8 h-[1px] bg-[#203F3A]" />
                 Contents
               </h3>
               <div className="space-y-2">
@@ -467,19 +467,19 @@ export function GuestInformation() {
                     }}
                     className="w-full flex items-center justify-between p-4 rounded-2xl transition-all group active:scale-[0.98]"
                     style={{
-                      backgroundColor: activeTab === section.id ? '#9DA07E08' : 'transparent',
-                      border: activeTab === section.id ? '1px solid #9DA07E20' : '1px solid transparent'
+                      backgroundColor: activeTab === section.id ? '#203F3A08' : 'transparent',
+                      border: activeTab === section.id ? '1px solid #203F3A20' : '1px solid transparent'
                     }}
                   >
                     <div className="flex items-center gap-4">
-                      <span className={`text-xs font-serif ${activeTab === section.id ? 'text-[#9DA07E]' : 'text-slate-300'}`}>
+                      <span className={`text-xs font-serif ${activeTab === section.id ? 'text-[#203F3A]' : 'text-slate-300'}`}>
                         0{idx + 1}
                       </span>
-                      <span className={`text-[11px] font-black uppercase tracking-widest ${activeTab === section.id ? 'text-[#9DA07E]' : 'text-slate-500'}`}>
+                      <span className={`text-[11px] font-black uppercase tracking-widest ${activeTab === section.id ? 'text-[#203F3A]' : 'text-slate-500'}`}>
                         {section.title}
                       </span>
                     </div>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${activeTab === section.id ? 'bg-[#9DA07E] text-white' : 'bg-slate-50 text-slate-300'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${activeTab === section.id ? 'bg-[#203F3A] text-white' : 'bg-slate-50 text-slate-300'}`}>
                       {section.icon}
                     </div>
                   </button>
@@ -502,8 +502,8 @@ export function GuestInformation() {
                 }}
                 className={`w-full flex items-center gap-5 px-8 py-5 rounded-[24px] text-sm font-bold transition-all duration-500 group ${
                   activeTab === section.id 
-                    ? "bg-[#9DA07E] text-white shadow-2xl shadow-[#9DA07E]/30 scale-[1.02]" 
-                    : "text-slate-500 hover:bg-white hover:text-[#9DA07E] hover:shadow-lg"
+                    ? "bg-[#203F3A] text-white shadow-2xl shadow-[#203F3A]/30 scale-[1.02]" 
+                    : "text-slate-500 hover:bg-white hover:text-[#203F3A] hover:shadow-lg"
                 }`}
               >
                 <div className={`transition-transform duration-500 ${activeTab === section.id ? "scale-110" : "group-hover:scale-110"}`}>
@@ -520,12 +520,12 @@ export function GuestInformation() {
             
             <div className="mt-16 p-10 rounded-[40px] bg-slate-900 text-white relative overflow-hidden group">
               <div className="relative z-10">
-                <Phone className="text-[#9DA07E] mb-6" size={28} />
+                <Phone className="text-[#203F3A] mb-6" size={28} />
                 <h4 className="font-serif text-2xl mb-2">Need Help?</h4>
                 <p className="text-slate-400 text-sm leading-relaxed mb-8">Matt & Ash are just a call or message away if you need anything at all.</p>
-                <a href="tel:0276977961" className="text-[11px] font-black tracking-widest uppercase text-[#9DA07E] hover:text-white transition-colors">Contact Host</a>
+                <a href="tel:0276977961" className="text-[11px] font-black tracking-widest uppercase text-[#203F3A] hover:text-white transition-colors">Contact Host</a>
               </div>
-              <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-[#9DA07E]/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000" />
+              <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-[#203F3A]/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000" />
             </div>
           </aside>
 
@@ -541,7 +541,7 @@ export function GuestInformation() {
                 className="space-y-16"
               >
                 <div className="space-y-6">
-                  <div className="flex items-center gap-3 text-[#9DA07E]">
+                  <div className="flex items-center gap-3 text-[#203F3A]">
                     {activeSection.icon}
                     <span className="text-[10px] tracking-[0.4em] font-black uppercase">One Eleven | Taupō</span>
                   </div>
@@ -562,8 +562,8 @@ export function GuestInformation() {
                         <p className="font-serif text-3xl text-slate-900 mb-8">{activeSection.content.signature}</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                           {activeSection.content.contact?.map((item: any, i: number) => (
-                             <div key={i} className="flex items-center gap-4 text-slate-500 hover:text-[#9DA07E] transition-colors">
-                                <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#9DA07E]">
+                             <div key={i} className="flex items-center gap-4 text-slate-500 hover:text-[#203F3A] transition-colors">
+                                <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#203F3A]">
                                   {item.icon}
                                 </div>
                                 <span className="text-sm font-bold tracking-tight">{item.value}</span>
@@ -586,7 +586,7 @@ export function GuestInformation() {
                         <div className="space-y-4">
                           <p className="text-[10px] tracking-[0.3em] font-black uppercase text-slate-400">The Address</p>
                           <div className="flex items-center gap-6">
-                            <div className="w-16 h-16 rounded-[24px] bg-[#9DA07E]/10 text-[#9DA07E] flex items-center justify-center">
+                            <div className="w-16 h-16 rounded-[24px] bg-[#203F3A]/10 text-[#203F3A] flex items-center justify-center">
                               <MapPin size={32} />
                             </div>
                             <div>
@@ -599,13 +599,13 @@ export function GuestInformation() {
                         <div className="pt-10 border-t border-slate-50 space-y-6">
                           <p className="text-[10px] tracking-[0.3em] font-black uppercase text-slate-400">Digital Access</p>
                           <div className="space-y-4">
-                            <div className="flex justify-between items-center p-6 bg-slate-50 rounded-[24px] group hover:bg-[#9DA07E]/5 transition-colors">
+                            <div className="flex justify-between items-center p-6 bg-slate-50 rounded-[24px] group hover:bg-[#203F3A]/5 transition-colors">
                               <span className="text-sm font-bold text-slate-500">WiFi Network</span>
                               <span className="text-sm font-black text-slate-900">{activeSection.content.network}</span>
                             </div>
-                            <div className="flex justify-between items-center p-6 bg-slate-50 rounded-[24px] group hover:bg-[#9DA07E]/5 transition-colors">
+                            <div className="flex justify-between items-center p-6 bg-slate-50 rounded-[24px] group hover:bg-[#203F3A]/5 transition-colors">
                               <span className="text-sm font-bold text-slate-500">Password</span>
-                              <span className="text-sm font-black text-[#9DA07E] tracking-widest">{activeSection.content.password}</span>
+                              <span className="text-sm font-black text-[#203F3A] tracking-widest">{activeSection.content.password}</span>
                             </div>
                           </div>
                           <p className="text-xs text-slate-400 italic leading-relaxed text-center px-4">
@@ -614,7 +614,7 @@ export function GuestInformation() {
                         </div>
                       </div>
 
-                      <div className="bg-[#9DA07E] p-12 rounded-[48px] text-white shadow-xl shadow-[#9DA07E]/20 relative overflow-hidden group">
+                      <div className="bg-[#203F3A] p-12 rounded-[48px] text-white shadow-xl shadow-[#203F3A]/20 relative overflow-hidden group">
                         <div className="relative z-10 flex items-start gap-6">
                           <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
                             <Clock size={28} />
@@ -632,10 +632,10 @@ export function GuestInformation() {
 
                     <div className="bg-slate-900 p-16 rounded-[56px] text-white flex flex-col justify-between relative overflow-hidden group">
                       <div className="relative z-10 space-y-12">
-                        <div className="w-20 h-20 rounded-[24px] bg-white/10 flex items-center justify-center text-[#9DA07E]">
+                        <div className="w-20 h-20 rounded-[24px] bg-white/10 flex items-center justify-center text-[#203F3A]">
                           <Key size={40} />
                         </div>
-                        <h3 className="text-5xl font-serif leading-tight">Smart Lock <span className="text-[#9DA07E]">Entry.</span></h3>
+                        <h3 className="text-5xl font-serif leading-tight">Smart Lock <span className="text-[#203F3A]">Entry.</span></h3>
                         <p className="text-slate-400 text-lg leading-relaxed">
                           {activeSection.content.pinInfo}
                         </p>
@@ -650,8 +650,8 @@ export function GuestInformation() {
                           </div>
                         </div>
                       </div>
-                      <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-[#9DA07E]/10 to-transparent pointer-events-none" />
-                      <button className="mt-20 w-full py-6 bg-[#9DA07E] rounded-full text-[11px] font-black tracking-widest uppercase hover:bg-white hover:text-[#9DA07E] transition-all duration-500 shadow-xl shadow-[#9DA07E]/20">
+                      <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-[#203F3A]/10 to-transparent pointer-events-none" />
+                      <button className="mt-20 w-full py-6 bg-[#203F3A] rounded-full text-[11px] font-black tracking-widest uppercase hover:bg-white hover:text-[#203F3A] transition-all duration-500 shadow-xl shadow-[#203F3A]/20">
                         GET DIRECTIONS
                       </button>
                     </div>
@@ -665,7 +665,7 @@ export function GuestInformation() {
                         <button
                           key={tab}
                           onClick={() => setInstructionSubTab(tab)}
-                          className={`px-8 py-4 rounded-[20px] text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${instructionSubTab === tab ? "bg-[#9DA07E] text-white shadow-lg" : "text-slate-400 hover:text-[#9DA07E]"}`}
+                          className={`px-8 py-4 rounded-[20px] text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${instructionSubTab === tab ? "bg-[#203F3A] text-white shadow-lg" : "text-slate-400 hover:text-[#203F3A]"}`}
                         >
                           {tab}
                         </button>
@@ -678,7 +678,7 @@ export function GuestInformation() {
                         <div className="space-y-6">
                           {activeSection.content.data[instructionSubTab].steps.map((step: string, i: number) => (
                             <div key={i} className="flex gap-6 p-8 bg-white rounded-[32px] border border-slate-100 hover:shadow-xl transition-all duration-500 group">
-                              <span className="text-4xl font-serif text-[#9DA07E]/20 group-hover:text-[#9DA07E] transition-colors">{i + 1}</span>
+                              <span className="text-4xl font-serif text-[#203F3A]/20 group-hover:text-[#203F3A] transition-colors">{i + 1}</span>
                               <p className="text-slate-600 leading-relaxed font-light">{step}</p>
                             </div>
                           ))}
@@ -715,7 +715,7 @@ export function GuestInformation() {
                     {activeSection.content.categories?.map((cat: any, i: number) => (
                       <div key={i} className="space-y-10">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-[#9DA07E]/10 flex items-center justify-center text-[#9DA07E]">
+                          <div className="w-12 h-12 rounded-2xl bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A]">
                             {cat.icon}
                           </div>
                           <h3 className="text-3xl font-serif text-slate-900">{cat.label}</h3>
@@ -753,7 +753,7 @@ export function GuestInformation() {
                         <button
                           key={tab}
                           onClick={() => setDiningSubTab(tab)}
-                          className={`px-8 py-4 rounded-[20px] text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${diningSubTab === tab ? "bg-[#9DA07E] text-white shadow-lg" : "text-slate-400 hover:text-[#9DA07E]"}`}
+                          className={`px-8 py-4 rounded-[20px] text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${diningSubTab === tab ? "bg-[#203F3A] text-white shadow-lg" : "text-slate-400 hover:text-[#203F3A]"}`}
                         >
                           {tab}
                         </button>
@@ -776,7 +776,7 @@ export function GuestInformation() {
                             </div>
                           </div>
                           <div className="px-4 pb-4 space-y-2 flex-1">
-                            <h4 className="text-2xl font-serif text-slate-900 group-hover:text-[#9DA07E] transition-colors">{item.name}</h4>
+                            <h4 className="text-2xl font-serif text-slate-900 group-hover:text-[#203F3A] transition-colors">{item.name}</h4>
                             <p className="text-slate-500 text-sm font-light leading-relaxed line-clamp-3">{item.desc}</p>
                           </div>
                         </a>
@@ -792,7 +792,7 @@ export function GuestInformation() {
                       <div className="space-y-6">
                         {activeSection.content.rules?.map((rule: any, i: number) => (
                           <div key={i} className="flex gap-6 p-8 bg-white rounded-[32px] border border-slate-100 group hover:bg-slate-50 transition-colors">
-                            <div className="w-12 h-12 rounded-2xl bg-[#9DA07E]/10 flex items-center justify-center text-[#9DA07E] flex-shrink-0">
+                            <div className="w-12 h-12 rounded-2xl bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A] flex-shrink-0">
                               <ShieldCheck size={24} />
                             </div>
                             <div>
@@ -826,13 +826,13 @@ export function GuestInformation() {
                       <h3 className="text-4xl font-serif text-slate-900 mb-8">Medical Services</h3>
                       {activeSection.content.contacts?.map((contact: any, i: number) => (
                         <div key={i} className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-sm flex items-center gap-10 hover:shadow-xl transition-all duration-500">
-                          <div className="w-20 h-20 rounded-[24px] bg-slate-50 flex items-center justify-center text-[#9DA07E]">
+                          <div className="w-20 h-20 rounded-[24px] bg-slate-50 flex items-center justify-center text-[#203F3A]">
                             {contact.icon}
                           </div>
                           <div className="space-y-2">
                             <h4 className="text-2xl font-serif text-slate-900">{contact.name}</h4>
                             <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">{contact.address}</p>
-                            <a href={`tel:${contact.phone}`} className="text-[#9DA07E] font-black text-xl hover:text-slate-900 transition-colors block">{contact.phone}</a>
+                            <a href={`tel:${contact.phone}`} className="text-[#203F3A] font-black text-xl hover:text-slate-900 transition-colors block">{contact.phone}</a>
                           </div>
                         </div>
                       ))}
@@ -848,7 +848,7 @@ export function GuestInformation() {
                         <div className="space-y-4">
                           {activeSection.content.checklist?.map((item: string, i: number) => (
                             <div key={i} className="flex items-center gap-6 p-6 bg-white rounded-[24px] border border-slate-100 group">
-                              <div className="w-10 h-10 rounded-full bg-[#9DA07E]/10 flex items-center justify-center text-[#9DA07E] group-hover:bg-[#9DA07E] group-hover:text-white transition-all">
+                              <div className="w-10 h-10 rounded-full bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A] group-hover:bg-[#203F3A] group-hover:text-white transition-all">
                                 <ShieldCheck size={20} />
                               </div>
                               <span className="text-slate-600 font-light">{item}</span>
@@ -858,7 +858,7 @@ export function GuestInformation() {
                       </div>
                       <div className="p-10 bg-slate-900 rounded-[40px] text-white">
                         <div className="flex gap-6 mb-6">
-                          <Clock className="text-[#9DA07E]" size={28} />
+                          <Clock className="text-[#203F3A]" size={28} />
                           <h4 className="text-2xl font-serif">Check-out by 10:00 AM</h4>
                         </div>
                         <p className="text-slate-400 leading-relaxed italic">{activeSection.content.doorCode}</p>
@@ -873,14 +873,14 @@ export function GuestInformation() {
                 {activeTab === "thanks" && (
                   <div className="text-center space-y-16 py-20">
                     <div className="max-w-2xl mx-auto space-y-8">
-                      <Heart className="text-[#9DA07E] mx-auto animate-bounce" size={64} />
-                      <h2 className="text-6xl font-serif text-slate-900 tracking-tighter">Thank you for <br /><span className="italic text-[#9DA07E]">staying with us.</span></h2>
+                      <Heart className="text-[#203F3A] mx-auto animate-bounce" size={64} />
+                      <h2 className="text-6xl font-serif text-slate-900 tracking-tighter">Thank you for <br /><span className="italic text-[#203F3A]">staying with us.</span></h2>
                       <p className="text-xl text-slate-500 font-light leading-relaxed">{activeSection.content.text}</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                       {activeSection.content.contact?.map((item: any, i: number) => (
                         <div key={i} className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-sm flex flex-col items-center gap-6">
-                          <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-[#9DA07E]">
+                          <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-[#203F3A]">
                             {item.icon}
                           </div>
                           <span className="text-lg font-bold text-slate-900">{item.value}</span>

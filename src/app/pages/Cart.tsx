@@ -56,7 +56,7 @@ export function CartPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-[#2D2D2D] font-sans">
+    <div className="min-h-screen bg-[#FDFCFB] text-[#203F3A] font-sans">
       <SEO 
         title="Cart - Review Your Booking"
         description="Review your booking for One Eleven Taupo luxury accommodation. Confirm your dates and proceed to secure checkout."
@@ -119,14 +119,14 @@ export function CartPage() {
 
                   <div className="grid grid-cols-2 gap-4 py-4 border-y border-stone-50 mb-6">
                     <div className="flex items-center gap-3">
-                      <Calendar className="w-4 h-4 text-[#9DA07E]" />
+                      <Calendar className="w-4 h-4 text-[#203F3A]" />
                       <div>
                         <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Dates</p>
                         <p className="text-sm font-bold">{checkIn ? format(new Date(checkIn), 'MMM d') : ''} - {checkOut ? format(new Date(checkOut), 'MMM d') : ''}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Users className="w-4 h-4 text-[#9DA07E]" />
+                      <Users className="w-4 h-4 text-[#203F3A]" />
                       <div>
                         <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Guests</p>
                         <p className="text-sm font-bold">{guests} Guests</p>
@@ -140,7 +140,7 @@ export function CartPage() {
                     <p className="text-xs text-stone-400 font-bold uppercase tracking-widest mb-1">{nights} nights stay</p>
                     <p className="text-3xl font-serif font-bold text-[#1A1A1A]">${totalPrice ? Number(totalPrice).toLocaleString() : '0'}</p>
                   </div>
-                  <div className="flex items-center gap-2 text-[#9DA07E] font-black text-[10px] uppercase tracking-[0.2em] bg-[#9DA07E]/10 px-4 py-2 rounded-full">
+                  <div className="flex items-center gap-2 text-[#203F3A] font-black text-[10px] uppercase tracking-[0.2em] bg-[#203F3A]/10 px-4 py-2 rounded-full">
                     Direct Discount Applied
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export function CartPage() {
                   <span>Subtotal</span>
                   <span>${subtotal ? Number(subtotal).toLocaleString() : '0'}</span>
                 </div>
-                <div className="flex justify-between text-sm text-[#9DA07E] font-black uppercase tracking-widest text-[10px]">
+                <div className="flex justify-between text-sm text-[#203F3A] font-black uppercase tracking-widest text-[10px]">
                   <span>Direct Booking 10% Off</span>
                   <span>-${discountAmount ? Number(discountAmount).toLocaleString() : '0'}</span>
                 </div>

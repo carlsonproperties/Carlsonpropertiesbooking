@@ -96,13 +96,13 @@ export function Home() {
         canonicalUrl="https://carlsonproperties.co.nz"
       />
 
-      <div ref={containerRef} className="relative min-h-screen bg-[#fdfcf8]">
+      <div ref={containerRef} className="relative min-h-screen bg-[#F4F1EA]">
         {!property ? (
           <div className="h-screen flex items-center justify-center">
             <motion.div 
               animate={{ rotate: 360 }} 
               transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              className="w-12 h-12 border-4 border-[#9DA07E] border-t-transparent rounded-full"
+              className="w-12 h-12 border-4 border-[#203F3A] border-t-transparent rounded-full"
             />
           </div>
         ) : (
@@ -116,17 +116,17 @@ export function Home() {
                 </Link>
                 
                 <div className="flex gap-12 items-center text-[11px] uppercase tracking-widest font-semibold hidden lg:flex">
-                  <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>About</Link>
-                  <Link to="/meet-hosts" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Meet Your Hosts</Link>
-                  <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Guest Info</Link>
-                  <Link to="/blog" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}>Journal</Link>
+                  <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>About</Link>
+                  <Link to="/meet-hosts" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Meet Your Hosts</Link>
+                  <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Guest Info</Link>
+                  <Link to="/blog" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Journal</Link>
                   <Link
                     to="/owner-login"
-                    className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#9DA07E] transition-colors`}
+                    className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}
                   >
                     Owner Portal
                   </Link>
-                  <Link to="/book" className="bg-[#9DA07E] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#9DA07E]/20">
+                  <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#203F3A]/20">
                     Book Now
                   </Link>
                 </div>
@@ -172,7 +172,7 @@ export function Home() {
                     />
                   </video>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#fdfcf8]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#F4F1EA]" />
               </motion.div>
 
               <motion.button
@@ -232,7 +232,7 @@ export function Home() {
                       <motion.div 
                         animate={{ y: [0, 48] }} 
                         transition={{ repeat: Infinity, duration: 2 }}
-                        className="w-full h-full bg-[#9DA07E]" 
+                        className="w-full h-full bg-[#203F3A]" 
                       />
                     </div>
                     <span className="text-[10px] uppercase tracking-widest font-bold">Discover</span>
@@ -254,7 +254,7 @@ export function Home() {
                       <img src={wellnessAreaImg} className="w-full h-full object-cover" alt="Luxury wellness area with heated pool, spa, and outdoor sauna at One Eleven Taupo accommodation" />
                     </div>
                     <div className="absolute -bottom-12 -right-12 bg-white p-10 rounded-3xl shadow-2xl max-w-[280px] hidden md:block border border-slate-100">
-                      <Thermometer className="text-[#9DA07E] mb-4" size={32} />
+                      <Thermometer className="text-[#203F3A] mb-4" size={32} />
                       <h4 className="font-serif text-2xl mb-2">Wellness Oasis</h4>
                       <p className="text-sm text-slate-500 leading-relaxed font-light">Relax in our heated pool, outdoor sauna, and spa, designed for ultimate rejuvenation.</p>
                     </div>
@@ -266,10 +266,10 @@ export function Home() {
                     viewport={{ once: true }}
                     className="space-y-10"
                   >
-                    <span className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#9DA07E]">Luxury Taupō Accommodation</span>
+                    <span className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#203F3A]">Luxury Taupō Accommodation</span>
                     <h2 className="text-5xl md:text-7xl font-serif text-slate-900 leading-[1.1]">
                       Redefining the <br />
-                      <span className="italic text-[#9DA07E]">Holiday Stay</span>
+                      <span className="italic text-[#203F3A]">Holiday Stay</span>
                     </h2>
                     <p className="text-xl text-slate-600 leading-relaxed font-light">
                       Discover the finest luxury accommodation in Taupō at One Eleven on the Mile, where contemporary design meets unrivalled lake and mountain views. Our five-bedroom, four-bathroom property offers an exclusive retreat for up to 10 guests with panoramic vistas.
@@ -292,7 +292,7 @@ export function Home() {
                     <div className="pt-6">
                       <Link
                         to="/book"
-                        className="inline-block bg-[#9DA07E] text-white px-10 py-4 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#9DA07E]/20"
+                        className="inline-block bg-[#203F3A] text-white px-10 py-4 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#203F3A]/20"
                       >
                         Check Availability
                       </Link>
@@ -302,7 +302,7 @@ export function Home() {
               </div>
             </section>
 
-            <section className="py-16 px-6 bg-gradient-to-b from-[#fdfcf8] to-white">
+            <section className="py-16 px-6 bg-gradient-to-b from-[#F4F1EA] to-white">
               <div className="max-w-4xl mx-auto text-center">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -311,7 +311,7 @@ export function Home() {
                   transition={{ duration: 0.8 }}
                 >
                   <p className="text-lg md:text-xl text-slate-700 leading-relaxed font-light">
-                    Ideally located just <span className="font-serif text-[#9DA07E] italic">five minutes from Taupō town center</span>, offering easy access to geothermal wonders, lake activities, and award-winning restaurants
+                    Ideally located just <span className="font-serif text-[#203F3A] italic">five minutes from Taupō town center</span>, offering easy access to geothermal wonders, lake activities, and award-winning restaurants
                   </p>
                 </motion.div>
               </div>
@@ -319,7 +319,7 @@ export function Home() {
 
             <Testimonials />
 
-            <section id="amenities" className="bg-[#9DA07E] py-40 overflow-hidden relative">
+            <section id="amenities" className="bg-[#203F3A] py-40 overflow-hidden relative">
               <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                 <div className="absolute top-20 left-10 text-[20vw] font-serif text-white whitespace-nowrap select-none">AMENITIES LUXURY RELAX</div>
               </div>
@@ -365,7 +365,7 @@ export function Home() {
                   className="text-center mb-16"
                 >
                   <h2 className="text-4xl md:text-5xl font-serif text-slate-900 mb-4">
-                    Why Book <span className="italic text-[#9DA07E]">Direct?</span>
+                    Why Book <span className="italic text-[#203F3A]">Direct?</span>
                   </h2>
                   <p className="text-slate-600 max-w-2xl mx-auto font-light">
                     Experience the best of Taupō with exclusive benefits when you book directly with Carlson Properties
@@ -387,7 +387,7 @@ export function Home() {
                       transition={{ delay: 0.1 * i }}
                       className="text-center"
                     >
-                      <div className="w-3 h-3 rounded-full bg-[#9DA07E] mx-auto mb-4" />
+                      <div className="w-3 h-3 rounded-full bg-[#203F3A] mx-auto mb-4" />
                       <h4 className="font-serif text-lg text-slate-900 mb-2">{benefit.title}</h4>
                       <p className="text-sm text-slate-600 font-light">{benefit.desc}</p>
                     </motion.div>
