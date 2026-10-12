@@ -47,7 +47,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               </Link>
               <button 
                 onClick={onClose}
-                className="p-2 bg-slate-100 rounded-full text-slate-900 hover:bg-[#9DA07E] hover:text-white transition-all"
+                className="p-2 bg-slate-100 rounded-full text-slate-900 hover:bg-[#203F3A] hover:text-white transition-all"
               >
                 <X size={24} />
               </button>
@@ -61,11 +61,11 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   onClick={onClose}
                   className={`flex items-center gap-4 p-5 rounded-2xl transition-all ${
                     item.primary 
-                    ? "bg-[#9DA07E] text-white shadow-lg shadow-[#9DA07E]/20" 
+                    ? "bg-[#203F3A] text-white shadow-lg shadow-[#203F3A]/20" 
                     : "bg-slate-50 text-slate-700 hover:bg-slate-100"
                   }`}
                 >
-                  <div className={`${item.primary ? "text-white" : "text-[#9DA07E]"}`}>
+                  <div className={`${item.primary ? "text-white" : "text-[#203F3A]"}`}>
                     {item.icon}
                   </div>
                   <span className="text-sm font-bold uppercase tracking-widest">{item.name}</span>
@@ -80,7 +80,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   href="https://www.instagram.com/oneelevenonthemile" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-[#9DA07E] hover:text-white hover:border-[#9DA07E] transition-all"
+                  className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-[#203F3A] hover:text-white hover:border-[#203F3A] transition-all"
                 >
                   <Instagram size={20} />
                 </a>
@@ -88,7 +88,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   href="https://www.facebook.com/p/One-Eleven-On-The-Mile-61563014557673/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-[#9DA07E] hover:text-white hover:border-[#9DA07E] transition-all"
+                  className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-[#203F3A] hover:text-white hover:border-[#203F3A] transition-all"
                 >
                   <Facebook size={20} />
                 </a>

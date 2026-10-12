@@ -83,13 +83,13 @@ export function BlogPost() {
         schemaData={schemaData}
       />
 
-      <div className="min-h-screen bg-[#fdfcf8]">
+      <div className="min-h-screen bg-[#F4F1EA]">
         {/* Header */}
         <div className="pt-32 pb-12 px-6">
           <div className="max-w-4xl mx-auto">
             <Link
               to="/blog"
-              className="inline-flex items-center gap-2 text-sm text-[#9DA07E] hover:text-[#2D2D2D] transition-colors mb-8"
+              className="inline-flex items-center gap-2 text-sm text-[#203F3A] hover:text-[#203F3A] transition-colors mb-8"
             >
               <ArrowLeft className="w-4 h-4" />
               All Stories
@@ -100,10 +100,10 @@ export function BlogPost() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#9DA07E] mb-4 block">
+              <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#203F3A] mb-4 block">
                 {post.category}
               </span>
-              <h1 className="text-4xl md:text-6xl font-serif text-[#2D2D2D] mb-6 leading-tight max-w-[800px]">
+              <h1 className="text-4xl md:text-6xl font-serif text-[#203F3A] mb-6 leading-tight max-w-[800px]">
                 {post.title}
               </h1>
               <div className="text-sm text-[#AFAFAF] flex items-center gap-2 mb-8">
@@ -144,22 +144,22 @@ export function BlogPost() {
             <ReactMarkdown
               components={{
                 h2: ({ children }) => (
-                  <h2 className="text-3xl font-serif text-[#9DA07E] mt-12 mb-6 leading-tight">
+                  <h2 className="text-3xl font-serif text-[#203F3A] mt-12 mb-6 leading-tight">
                     {children}
                   </h2>
                 ),
                 h3: ({ children }) => (
-                  <h3 className="text-2xl font-serif italic text-[#2D2D2D] mt-8 mb-4 leading-tight">
+                  <h3 className="text-2xl font-serif italic text-[#203F3A] mt-8 mb-4 leading-tight">
                     {children}
                   </h3>
                 ),
                 p: ({ children }) => (
-                  <p className="text-[17px] leading-[1.7] text-[#2D2D2D] mb-6">
+                  <p className="text-[17px] leading-[1.7] text-[#203F3A] mb-6">
                     {children}
                   </p>
                 ),
                 blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-[#9DA07E] pl-6 my-8 italic text-[#666]">
+                  <blockquote className="border-l-4 border-[#203F3A] pl-6 my-8 italic text-[#666]">
                     {children}
                   </blockquote>
                 ),
@@ -168,23 +168,23 @@ export function BlogPost() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#9DA07E] underline-offset-4 hover:underline transition-all"
+                    className="text-[#203F3A] underline-offset-4 hover:underline transition-all"
                   >
                     {children}
                   </a>
                 ),
                 ul: ({ children }) => (
-                  <ul className="list-disc list-inside space-y-2 mb-6 text-[#2D2D2D]">
+                  <ul className="list-disc list-inside space-y-2 mb-6 text-[#203F3A]">
                     {children}
                   </ul>
                 ),
                 ol: ({ children }) => (
-                  <ol className="list-decimal list-inside space-y-2 mb-6 text-[#2D2D2D]">
+                  <ol className="list-decimal list-inside space-y-2 mb-6 text-[#203F3A]">
                     {children}
                   </ol>
                 ),
                 strong: ({ children }) => (
-                  <strong className="font-bold text-[#2D2D2D]">
+                  <strong className="font-bold text-[#203F3A]">
                     {children}
                   </strong>
                 ),
@@ -217,22 +217,22 @@ export function BlogPost() {
               <ReactMarkdown
                 components={{
                   h2: ({ children }) => (
-                    <h2 className="text-3xl font-serif text-[#9DA07E] mt-12 mb-6 leading-tight">
+                    <h2 className="text-3xl font-serif text-[#203F3A] mt-12 mb-6 leading-tight">
                       {children}
                     </h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="text-2xl font-serif italic text-[#2D2D2D] mt-8 mb-4 leading-tight">
+                    <h3 className="text-2xl font-serif italic text-[#203F3A] mt-8 mb-4 leading-tight">
                       {children}
                     </h3>
                   ),
                   p: ({ children }) => (
-                    <p className="text-[17px] leading-[1.7] text-[#2D2D2D] mb-6">
+                    <p className="text-[17px] leading-[1.7] text-[#203F3A] mb-6">
                       {children}
                     </p>
                   ),
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-[#9DA07E] pl-6 my-8 italic text-[#666]">
+                    <blockquote className="border-l-4 border-[#203F3A] pl-6 my-8 italic text-[#666]">
                       {children}
                     </blockquote>
                   ),
@@ -241,23 +241,23 @@ export function BlogPost() {
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#9DA07E] underline-offset-4 hover:underline transition-all"
+                      className="text-[#203F3A] underline-offset-4 hover:underline transition-all"
                     >
                       {children}
                     </a>
                   ),
                   ul: ({ children }) => (
-                    <ul className="list-disc list-inside space-y-2 mb-6 text-[#2D2D2D]">
+                    <ul className="list-disc list-inside space-y-2 mb-6 text-[#203F3A]">
                       {children}
                     </ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className="list-decimal list-inside space-y-2 mb-6 text-[#2D2D2D]">
+                    <ol className="list-decimal list-inside space-y-2 mb-6 text-[#203F3A]">
                       {children}
                     </ol>
                   ),
                   strong: ({ children }) => (
-                    <strong className="font-bold text-[#2D2D2D]">
+                    <strong className="font-bold text-[#203F3A]">
                       {children}
                     </strong>
                   ),
@@ -280,7 +280,7 @@ export function BlogPost() {
           >
             <Link
               to={post.ctaUrl}
-              className="inline-block bg-[#9DA07E] text-white px-12 py-4 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#9DA07E]/20"
+              className="inline-block bg-[#203F3A] text-white px-12 py-4 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#203F3A]/20"
             >
               {post.ctaLabel}
             </Link>
@@ -300,7 +300,7 @@ export function BlogPost() {
               {post.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-4 py-2 rounded-full bg-[#9DA07E]/10 text-[#9DA07E] text-xs font-medium"
+                  className="px-4 py-2 rounded-full bg-[#203F3A]/10 text-[#203F3A] text-xs font-medium"
                 >
                   {tag}
                 </span>
@@ -319,8 +319,8 @@ export function BlogPost() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl md:text-4xl font-serif text-[#2D2D2D] mb-12 text-center">
-                  More from <span className="italic text-[#9DA07E]">the Journal</span>
+                <h2 className="text-3xl md:text-4xl font-serif text-[#203F3A] mb-12 text-center">
+                  More from <span className="italic text-[#203F3A]">the Journal</span>
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {relatedPosts.map((relatedPost, index) => (

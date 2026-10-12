@@ -80,7 +80,7 @@ export function Testimonials() {
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
           <div className="max-w-2xl">
-            <span className="text-[10px] md:text-[12px] uppercase tracking-[0.4em] font-bold text-[#9DA07E] block mb-4">Guest Experience</span>
+            <span className="text-[10px] md:text-[12px] uppercase tracking-[0.4em] font-bold text-[#203F3A] block mb-4">Guest Experience</span>
             <h2 className="text-4xl md:text-7xl font-serif text-slate-900 leading-tight">
               A Stay Worth <br />
               <span className="italic">Remembering</span>
@@ -89,7 +89,7 @@ export function Testimonials() {
           <div className="flex flex-col items-start md:items-end">
             <div className="flex items-center gap-1 mb-2">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={18} fill="#9DA07E" className="text-[#9DA07E]" />
+                <Star key={i} size={18} fill="#203F3A" className="text-[#203F3A]" />
               ))}
             </div>
             <div className="flex items-center gap-2 mb-4">
@@ -100,7 +100,7 @@ export function Testimonials() {
               href={googleMapsUrl} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-slate-900 font-bold text-[10px] md:text-xs uppercase tracking-widest hover:text-[#9DA07E] transition-colors"
+              className="group flex items-center gap-2 text-slate-900 font-bold text-[10px] md:text-xs uppercase tracking-widest hover:text-[#203F3A] transition-colors"
             >
               View all Google Reviews <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </a>
@@ -115,19 +115,19 @@ export function Testimonials() {
                   className="bg-slate-50 p-8 md:p-16 rounded-[40px] border border-slate-100 relative group flex flex-col items-center text-center"
                 >
                   <div className="mb-10 opacity-10">
-                    <Quote size={60} fill="#9DA07E" />
+                    <Quote size={60} fill="#203F3A" />
                   </div>
                   
                   <div className="flex items-center justify-center gap-1 mb-8">
                     {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} size={16} fill="#9DA07E" className="text-[#9DA07E]" />
+                      <Star key={i} size={16} fill="#203F3A" className="text-[#203F3A]" />
                     ))}
                   </div>
                   
                   <p className="text-slate-700 text-lg md:text-2xl font-light leading-relaxed mb-12 italic max-w-2xl">"{review.text}"</p>
                   
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-14 h-14 rounded-full bg-[#9DA07E]/10 flex items-center justify-center text-[#9DA07E] font-bold text-lg border-2 border-white shadow-sm">
+                    <div className="w-14 h-14 rounded-full bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A] font-bold text-lg border-2 border-white shadow-sm">
                       {review.author.charAt(0)}
                     </div>
                     <div>
@@ -141,7 +141,7 @@ export function Testimonials() {
           </Slider>
           <style>{`
             .testimonial-carousel-container .slick-dots { bottom: -20px; }
-            .testimonial-carousel-container .slick-dots li button:before { color: #9DA07E; font-size: 8px; }
+            .testimonial-carousel-container .slick-dots li button:before { color: #203F3A; font-size: 8px; }
             .testimonial-carousel-container .slick-dots li.slick-active button:before { color: #1a1c16; }
             .testimonial-carousel-container .slick-list { overflow: visible; }
           `}</style>

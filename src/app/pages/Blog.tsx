@@ -31,7 +31,7 @@ export function Blog() {
         canonicalUrl="https://carlsonproperties.co.nz/blog"
       />
 
-      <div className="min-h-screen bg-[#fdfcf8]">
+      <div className="min-h-screen bg-[#F4F1EA]">
         {/* Hero Section */}
         <section className="pt-32 pb-16 px-6 text-center">
           <motion.div
@@ -39,17 +39,17 @@ export function Blog() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-6xl md:text-8xl font-serif text-[#2D2D2D] mb-4">
+            <h1 className="text-6xl md:text-8xl font-serif text-[#203F3A] mb-4">
               Journal
             </h1>
-            <p className="text-xl md:text-2xl font-serif italic text-[#9DA07E]">
+            <p className="text-xl md:text-2xl font-serif italic text-[#203F3A]">
               Stories from Taupō
             </p>
           </motion.div>
         </section>
 
         {/* Category Tabs - Sticky */}
-        <div className="sticky top-0 z-40 bg-[#fdfcf8]/95 backdrop-blur-sm border-b border-[#F1F1EE] mb-12">
+        <div className="sticky top-0 z-40 bg-[#F4F1EA]/95 backdrop-blur-sm border-b border-[#F1F1EE] mb-12">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex gap-8 overflow-x-auto py-6 scrollbar-hide">
               {categories.map((category) => (
@@ -58,15 +58,15 @@ export function Blog() {
                   onClick={() => setActiveCategory(category)}
                   className={`text-sm uppercase tracking-widest font-bold whitespace-nowrap pb-2 transition-colors relative ${
                     activeCategory === category
-                      ? 'text-[#9DA07E]'
-                      : 'text-[#AFAFAF] hover:text-[#2D2D2D]'
+                      ? 'text-[#203F3A]'
+                      : 'text-[#AFAFAF] hover:text-[#203F3A]'
                   }`}
                 >
                   {category}
                   {activeCategory === category && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DA07E]"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#203F3A]"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}

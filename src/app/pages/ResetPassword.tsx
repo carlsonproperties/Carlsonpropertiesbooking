@@ -94,7 +94,7 @@ export function ResetPassword() {
         <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-10 shadow-2xl">
           {/* Logo/Header */}
           <div className="text-center mb-10">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#9DA07E] to-[#7A7E5F] rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-[#9DA07E]/20">
+            <div className="w-20 h-20 bg-gradient-to-br from-[#203F3A] to-[#16302B] rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-[#203F3A]/20">
               <KeyRound className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">Reset Password</h1>
@@ -116,7 +116,7 @@ export function ResetPassword() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={8}
-                    className="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#9DA07E] transition-colors"
+                    className="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#D7C8B4] transition-colors"
                     placeholder="Enter new password"
                   />
                 </div>
@@ -135,7 +135,7 @@ export function ResetPassword() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     minLength={8}
-                    className="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#9DA07E] transition-colors"
+                    className="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#D7C8B4] transition-colors"
                     placeholder="Confirm new password"
                   />
                 </div>
@@ -145,7 +145,7 @@ export function ResetPassword() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-[#9DA07E] to-[#7A7E5F] text-white py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#9DA07E]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-[#D7C8B4] to-[#9B7955] text-[#16211E] py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#203F3A]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>

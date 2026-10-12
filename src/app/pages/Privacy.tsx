@@ -62,7 +62,7 @@ export function PrivacyPolicy() {
   ];
 
   return (
-    <div className="bg-[#fdfcf8] min-h-screen selection:bg-[#9DA07E] selection:text-white font-sans">
+    <div className="bg-[#F4F1EA] min-h-screen selection:bg-[#203F3A] selection:text-white font-sans">
       <SEO 
         title="Privacy Policy"
         description="Privacy policy for Carlson Properties. Learn how we collect, use, and protect your personal information."
@@ -78,12 +78,12 @@ export function PrivacyPolicy() {
           </Link>
           
           <div className="hidden md:flex items-center gap-10">
-            <Link to="/about" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#9DA07E] transition-all">Property</Link>
-            <Link to="/meet-hosts" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#9DA07E] transition-all">Meet Hosts</Link>
-            <Link to="/guest-info" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#9DA07E] transition-all">Guest Info</Link>
+            <Link to="/about" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#203F3A] transition-all">Property</Link>
+            <Link to="/meet-hosts" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#203F3A] transition-all">Meet Hosts</Link>
+            <Link to="/guest-info" className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-500 hover:text-[#203F3A] transition-all">Guest Info</Link>
             <Link 
               to="/book" 
-              className="bg-slate-900 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#9DA07E] hover:shadow-xl hover:shadow-[#9DA07E]/20 transition-all"
+              className="bg-slate-900 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#203F3A] hover:shadow-xl hover:shadow-[#203F3A]/20 transition-all"
             >
               Book Now
             </Link>
@@ -109,11 +109,11 @@ export function PrivacyPolicy() {
             className="mb-20"
           >
             <div className="flex items-center gap-4 mb-6">
-              <span className="h-[1px] w-12 bg-[#9DA07E]" />
-              <span className="text-[#9DA07E] text-[10px] font-black uppercase tracking-[0.6em]">Privacy & Security</span>
+              <span className="h-[1px] w-12 bg-[#203F3A]" />
+              <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.6em]">Privacy & Security</span>
             </div>
             <h1 className="text-6xl md:text-8xl font-serif text-slate-900 leading-[0.9] tracking-tighter mb-8">
-              Privacy <span className="italic text-[#9DA07E]">Policy.</span>
+              Privacy <span className="italic text-[#203F3A]">Policy.</span>
             </h1>
             <p className="text-xl text-slate-500 font-light max-w-2xl leading-relaxed italic">
               "We are committed to protecting your privacy and ensuring your personal information is handled safely."
@@ -132,11 +132,11 @@ export function PrivacyPolicy() {
                 className="group"
               >
                 <div className="flex items-start gap-8">
-                  <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-2xl bg-[#9DA07E]/10 text-[#9DA07E] flex-shrink-0 group-hover:bg-[#9DA07E] group-hover:text-white transition-all duration-500">
+                  <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-2xl bg-[#203F3A]/10 text-[#203F3A] flex-shrink-0 group-hover:bg-[#203F3A] group-hover:text-white transition-all duration-500">
                     {section.icon}
                   </div>
                   <div className="space-y-6">
-                    <h2 className="text-2xl md:text-3xl font-serif text-slate-900 group-hover:text-[#9DA07E] transition-colors duration-500">
+                    <h2 className="text-2xl md:text-3xl font-serif text-slate-900 group-hover:text-[#203F3A] transition-colors duration-500">
                       {section.title}
                     </h2>
                     <div className="text-slate-600 leading-relaxed space-y-4 whitespace-pre-wrap font-light">
@@ -150,21 +150,21 @@ export function PrivacyPolicy() {
 
           <div className="mt-32 pt-20 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#9DA07E]">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#203F3A]">
                 <Mail size={18} />
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mb-1">Email Support</p>
-                <a href="mailto:bookings@carlsonproperties.co.nz" className="text-sm font-bold text-slate-900 hover:text-[#9DA07E] transition-colors">bookings@carlsonproperties.co.nz</a>
+                <a href="mailto:bookings@carlsonproperties.co.nz" className="text-sm font-bold text-slate-900 hover:text-[#203F3A] transition-colors">bookings@carlsonproperties.co.nz</a>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#9DA07E]">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#203F3A]">
                 <Phone size={18} />
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mb-1">Direct Line</p>
-                <a href="tel:0276977961" className="text-sm font-bold text-slate-900 hover:text-[#9DA07E] transition-colors">027 697 7961</a>
+                <a href="tel:0276977961" className="text-sm font-bold text-slate-900 hover:text-[#203F3A] transition-colors">027 697 7961</a>
               </div>
             </div>
           </div>

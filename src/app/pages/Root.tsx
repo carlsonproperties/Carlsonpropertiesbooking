@@ -12,7 +12,7 @@ export function Root() {
   }, [location]);
 
   return (
-    <div className="min-h-screen bg-[#fdfcf8]">
+    <div className="min-h-screen bg-[#F4F1EA]">
       <ScrollToTop />
       <Outlet />
     </div>

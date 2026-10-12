@@ -536,31 +536,31 @@ export function DashboardComplete() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fdfcf8] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#F4F1EA] flex items-center justify-center p-4">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 text-[#9DA07E] animate-spin mx-auto mb-4" />
-          <p className="text-[#2D2D2D] opacity-60">Loading dashboard...</p>
+          <Loader2 className="w-12 h-12 text-[#203F3A] animate-spin mx-auto mb-4" />
+          <p className="text-[#203F3A] opacity-60">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#fdfcf8]">
+    <div className="min-h-screen bg-[#F4F1EA]">
       {/* Header */}
-      <div className="bg-white border-b border-[#9DA07E]/20 sticky top-0 z-50 shadow-sm">
+      <div className="bg-white border-b border-[#203F3A]/20 sticky top-0 z-50 shadow-sm">
         <div className="max-w-[1600px] mx-auto px-4 md:px-6 py-4 md:py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 md:gap-4">
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 hover:bg-[#9DA07E]/10 rounded-xl transition-colors"
+                className="lg:hidden p-2 hover:bg-[#203F3A]/10 rounded-xl transition-colors"
               >
                 {mobileMenuOpen ? (
-                  <X className="w-6 h-6 text-[#9DA07E]" />
+                  <X className="w-6 h-6 text-[#203F3A]" />
                 ) : (
-                  <Menu className="w-6 h-6 text-[#9DA07E]" />
+                  <Menu className="w-6 h-6 text-[#203F3A]" />
                 )}
               </button>
 
@@ -568,8 +568,8 @@ export function DashboardComplete() {
                 <CarlsonLogo />
               </div>
               <div>
-                <h1 className="text-lg md:text-2xl font-serif text-[#2D2D2D]">Owner Dashboard</h1>
-                <p className="text-xs md:text-sm text-[#9DA07E] font-medium hidden md:block">{user?.email}</p>
+                <h1 className="text-lg md:text-2xl font-serif text-[#203F3A]">Owner Dashboard</h1>
+                <p className="text-xs md:text-sm text-[#203F3A] font-medium hidden md:block">{user?.email}</p>
               </div>
             </div>
 
@@ -579,8 +579,8 @@ export function DashboardComplete() {
                 onClick={() => setActiveTab('overview')}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all text-sm font-medium ${
                   activeTab === 'overview'
-                    ? 'bg-[#9DA07E] text-white'
-                    : 'border border-[#9DA07E]/30 text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                    ? 'bg-[#203F3A] text-white'
+                    : 'border border-[#203F3A]/30 text-[#203F3A] hover:bg-[#203F3A]/10'
                 }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
@@ -590,8 +590,8 @@ export function DashboardComplete() {
                 onClick={() => setActiveTab('directory')}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all text-sm font-medium ${
                   activeTab === 'directory'
-                    ? 'bg-[#9DA07E] text-white'
-                    : 'border border-[#9DA07E]/30 text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                    ? 'bg-[#203F3A] text-white'
+                    : 'border border-[#203F3A]/30 text-[#203F3A] hover:bg-[#203F3A]/10'
                 }`}
               >
                 <FolderOpen className="w-4 h-4" />
@@ -601,8 +601,8 @@ export function DashboardComplete() {
                 onClick={() => setActiveTab('payments')}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all text-sm font-medium ${
                   activeTab === 'payments'
-                    ? 'bg-[#9DA07E] text-white'
-                    : 'border border-[#9DA07E]/30 text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                    ? 'bg-[#203F3A] text-white'
+                    : 'border border-[#203F3A]/30 text-[#203F3A] hover:bg-[#203F3A]/10'
                 }`}
               >
                 <CreditCard className="w-4 h-4" />
@@ -612,8 +612,8 @@ export function DashboardComplete() {
                 onClick={() => setActiveTab('templates')}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all text-sm font-medium ${
                   activeTab === 'templates'
-                    ? 'bg-[#9DA07E] text-white'
-                    : 'border border-[#9DA07E]/30 text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                    ? 'bg-[#203F3A] text-white'
+                    : 'border border-[#203F3A]/30 text-[#203F3A] hover:bg-[#203F3A]/10'
                 }`}
               >
                 <MailIcon className="w-4 h-4" />
@@ -625,14 +625,14 @@ export function DashboardComplete() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => navigate("/")}
-                className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-full border border-[#9DA07E]/30 hover:bg-[#9DA07E]/10 text-[#2D2D2D] transition-all text-sm"
+                className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-full border border-[#203F3A]/30 hover:bg-[#203F3A]/10 text-[#203F3A] transition-all text-sm"
               >
                 <Home className="w-4 h-4" />
                 Website
               </button>
               <button
                 onClick={fetchDashboardData}
-                className="flex items-center gap-2 px-3 md:px-4 py-2.5 rounded-full bg-[#9DA07E]/10 hover:bg-[#9DA07E]/20 text-[#9DA07E] transition-all text-sm font-medium"
+                className="flex items-center gap-2 px-3 md:px-4 py-2.5 rounded-full bg-[#203F3A]/10 hover:bg-[#203F3A]/20 text-[#203F3A] transition-all text-sm font-medium"
               >
                 <TrendingUp className="w-4 h-4" />
                 <span className="hidden md:inline">Refresh</span>
@@ -667,8 +667,8 @@ export function DashboardComplete() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-8">
-                <h2 className="text-xl font-serif text-[#2D2D2D] mb-2">Navigation</h2>
-                <p className="text-sm text-[#9DA07E]">{user?.email}</p>
+                <h2 className="text-xl font-serif text-[#203F3A] mb-2">Navigation</h2>
+                <p className="text-sm text-[#203F3A]">{user?.email}</p>
               </div>
 
               <div className="space-y-2">
@@ -679,8 +679,8 @@ export function DashboardComplete() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all text-left ${
                     activeTab === 'overview'
-                      ? 'bg-[#9DA07E] text-white'
-                      : 'bg-[#fdfcf8] text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                      ? 'bg-[#203F3A] text-white'
+                      : 'bg-[#F4F1EA] text-[#203F3A] hover:bg-[#203F3A]/10'
                   }`}
                 >
                   <LayoutDashboard className="w-5 h-5" />
@@ -694,8 +694,8 @@ export function DashboardComplete() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all text-left ${
                     activeTab === 'directory'
-                      ? 'bg-[#9DA07E] text-white'
-                      : 'bg-[#fdfcf8] text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                      ? 'bg-[#203F3A] text-white'
+                      : 'bg-[#F4F1EA] text-[#203F3A] hover:bg-[#203F3A]/10'
                   }`}
                 >
                   <FolderOpen className="w-5 h-5" />
@@ -709,8 +709,8 @@ export function DashboardComplete() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all text-left ${
                     activeTab === 'payments'
-                      ? 'bg-[#9DA07E] text-white'
-                      : 'bg-[#fdfcf8] text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                      ? 'bg-[#203F3A] text-white'
+                      : 'bg-[#F4F1EA] text-[#203F3A] hover:bg-[#203F3A]/10'
                   }`}
                 >
                   <CreditCard className="w-5 h-5" />
@@ -724,21 +724,21 @@ export function DashboardComplete() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all text-left ${
                     activeTab === 'templates'
-                      ? 'bg-[#9DA07E] text-white'
-                      : 'bg-[#fdfcf8] text-[#2D2D2D] hover:bg-[#9DA07E]/10'
+                      ? 'bg-[#203F3A] text-white'
+                      : 'bg-[#F4F1EA] text-[#203F3A] hover:bg-[#203F3A]/10'
                   }`}
                 >
                   <MailIcon className="w-5 h-5" />
                   <span className="font-medium">Email Templates</span>
                 </button>
 
-                <div className="pt-4 mt-4 border-t border-[#9DA07E]/20">
+                <div className="pt-4 mt-4 border-t border-[#203F3A]/20">
                   <button
                     onClick={() => {
                       navigate("/");
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl bg-[#fdfcf8] text-[#2D2D2D] hover:bg-[#9DA07E]/10 transition-all text-left"
+                    className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl bg-[#F4F1EA] text-[#203F3A] hover:bg-[#203F3A]/10 transition-all text-left"
                   >
                     <Home className="w-5 h-5" />
                     <span className="font-medium">Back to Website</span>
@@ -769,15 +769,15 @@ export function DashboardComplete() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 shadow-sm"
+                className="bg-white border border-[#203F3A]/20 rounded-3xl p-6 shadow-sm"
               >
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-[#9DA07E]/10 rounded-2xl flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-[#9DA07E]" />
+                  <div className="w-12 h-12 bg-[#203F3A]/10 rounded-2xl flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-[#203F3A]" />
                   </div>
                   <div>
-                    <p className="text-[#9DA07E] text-xs font-bold uppercase tracking-widest mb-1">Total Revenue</p>
-                    <p className="text-[#2D2D2D] text-2xl font-bold">
+                    <p className="text-[#203F3A] text-xs font-bold uppercase tracking-widest mb-1">Total Revenue</p>
+                    <p className="text-[#203F3A] text-2xl font-bold">
                       ${stats?.totalRevenue.toLocaleString() || 0}
                     </p>
                   </div>
@@ -789,20 +789,20 @@ export function DashboardComplete() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 onClick={() => setShowChannelBreakdown(!showChannelBreakdown)}
-                className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 shadow-sm cursor-pointer hover:shadow-md transition-all"
+                className="bg-white border border-[#203F3A]/20 rounded-3xl p-6 shadow-sm cursor-pointer hover:shadow-md transition-all"
               >
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-[#9DA07E]/10 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#203F3A]/10 rounded-2xl flex items-center justify-center">
                     {showChannelBreakdown ? (
-                      <PieChartIcon className="w-6 h-6 text-[#9DA07E]" />
+                      <PieChartIcon className="w-6 h-6 text-[#203F3A]" />
                     ) : (
-                      <Calendar className="w-6 h-6 text-[#9DA07E]" />
+                      <Calendar className="w-6 h-6 text-[#203F3A]" />
                     )}
                   </div>
                   <div className="flex-1">
-                    <p className="text-[#9DA07E] text-xs font-bold uppercase tracking-widest mb-1">Total Bookings</p>
+                    <p className="text-[#203F3A] text-xs font-bold uppercase tracking-widest mb-1">Total Bookings</p>
                     {!showChannelBreakdown ? (
-                      <p className="text-[#2D2D2D] text-2xl font-bold">
+                      <p className="text-[#203F3A] text-2xl font-bold">
                         {stats?.totalBookings || 0}
                       </p>
                     ) : (
@@ -815,8 +815,8 @@ export function DashboardComplete() {
                               : 0;
                             return (
                               <div key={channel} className="flex items-center justify-between text-sm">
-                                <span className="text-[#2D2D2D]/70 font-medium">{channel}:</span>
-                                <span className="text-[#9DA07E] font-bold">{percentage}%</span>
+                                <span className="text-[#203F3A]/70 font-medium">{channel}:</span>
+                                <span className="text-[#203F3A] font-bold">{percentage}%</span>
                               </div>
                             );
                           })}
@@ -830,15 +830,15 @@ export function DashboardComplete() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 shadow-sm"
+                className="bg-white border border-[#203F3A]/20 rounded-3xl p-6 shadow-sm"
               >
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-[#9DA07E]/10 rounded-2xl flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-[#9DA07E]" />
+                  <div className="w-12 h-12 bg-[#203F3A]/10 rounded-2xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-[#203F3A]" />
                   </div>
                   <div>
-                    <p className="text-[#9DA07E] text-xs font-bold uppercase tracking-widest mb-1">Occupancy Rate</p>
-                    <p className="text-[#2D2D2D] text-2xl font-bold">
+                    <p className="text-[#203F3A] text-xs font-bold uppercase tracking-widest mb-1">Occupancy Rate</p>
+                    <p className="text-[#203F3A] text-2xl font-bold">
                       {stats?.occupancyRate ? Number(stats.occupancyRate).toFixed(1) : '0.0'}%
                     </p>
                   </div>
@@ -849,15 +849,15 @@ export function DashboardComplete() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 shadow-sm"
+                className="bg-white border border-[#203F3A]/20 rounded-3xl p-6 shadow-sm"
               >
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-[#9DA07E]/10 rounded-2xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-[#9DA07E]" />
+                  <div className="w-12 h-12 bg-[#203F3A]/10 rounded-2xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-[#203F3A]" />
                   </div>
                   <div>
-                    <p className="text-[#9DA07E] text-xs font-bold uppercase tracking-widest mb-1">Avg Booking</p>
-                    <p className="text-[#2D2D2D] text-2xl font-bold">
+                    <p className="text-[#203F3A] text-xs font-bold uppercase tracking-widest mb-1">Avg Booking</p>
+                    <p className="text-[#203F3A] text-2xl font-bold">
                       ${stats?.avgBookingValue ? Number(stats.avgBookingValue).toFixed(0) : '0'}
                     </p>
                   </div>
@@ -871,17 +871,17 @@ export function DashboardComplete() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-white border border-[#9DA07E]/20 rounded-3xl p-8 shadow-sm mb-6"
+                className="bg-white border border-[#203F3A]/20 rounded-3xl p-8 shadow-sm mb-6"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h2 className="text-2xl font-serif text-[#2D2D2D] mb-1">Financial Performance</h2>
-                    <p className="text-sm text-[#9DA07E] font-medium">Revenue vs Expenses by Month</p>
+                    <h2 className="text-2xl font-serif text-[#203F3A] mb-1">Financial Performance</h2>
+                    <p className="text-sm text-[#203F3A] font-medium">Revenue vs Expenses by Month</p>
                   </div>
                   <select
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(e.target.value)}
-                    className="px-4 py-2.5 rounded-full border border-[#9DA07E]/30 bg-white text-[#2D2D2D] text-sm font-medium focus:outline-none focus:border-[#9DA07E] hover:bg-[#9DA07E]/5 transition-all"
+                    className="px-4 py-2.5 rounded-full border border-[#203F3A]/30 bg-white text-[#203F3A] text-sm font-medium focus:outline-none focus:border-[#203F3A] hover:bg-[#203F3A]/5 transition-all"
                   >
                     {availableYears.map(year => (
                       <option key={year} value={year}>{year}</option>
@@ -893,25 +893,25 @@ export function DashboardComplete() {
                   <AreaChart data={currentYearData}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#9DA07E" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#9DA07E" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#203F3A" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#203F3A" stopOpacity={0}/>
                       </linearGradient>
                       <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
                         <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#9DA07E" opacity={0.1} />
-                    <XAxis dataKey="name" stroke="#9DA07E" style={{ fontSize: '12px' }} />
-                    <YAxis stroke="#9DA07E" style={{ fontSize: '12px' }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#203F3A" opacity={0.1} />
+                    <XAxis dataKey="name" stroke="#203F3A" style={{ fontSize: '12px' }} />
+                    <YAxis stroke="#203F3A" style={{ fontSize: '12px' }} />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: 'white',
-                        border: '1px solid #9DA07E',
+                        border: '1px solid #203F3A',
                         borderRadius: '12px',
                         padding: '12px'
                       }}
-                      labelStyle={{ color: '#2D2D2D', fontWeight: 'bold', marginBottom: '8px' }}
+                      labelStyle={{ color: '#203F3A', fontWeight: 'bold', marginBottom: '8px' }}
                     />
                     <Legend
                       wrapperStyle={{
@@ -921,7 +921,7 @@ export function DashboardComplete() {
                     <Area
                       type="monotone"
                       dataKey="earnings"
-                      stroke="#9DA07E"
+                      stroke="#203F3A"
                       strokeWidth={2}
                       fillOpacity={1}
                       fill="url(#colorRevenue)"
@@ -940,8 +940,8 @@ export function DashboardComplete() {
                 </ResponsiveContainer>
 
                 {stats?.totalAirtableExpenses && (
-                  <div className="mt-6 pt-6 border-t border-[#9DA07E]/20 text-center">
-                    <p className="text-sm text-[#2D2D2D]/60">
+                  <div className="mt-6 pt-6 border-t border-[#203F3A]/20 text-center">
+                    <p className="text-sm text-[#203F3A]/60">
                       Total Expenses: <span className="font-bold text-red-600">${stats.totalAirtableExpenses.toLocaleString()}</span>
                     </p>
                   </div>
@@ -954,15 +954,15 @@ export function DashboardComplete() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="bg-white border border-[#9DA07E]/20 rounded-3xl p-8 shadow-sm"
+              className="bg-white border border-[#203F3A]/20 rounded-3xl p-8 shadow-sm"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#9DA07E]/10 rounded-xl flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-[#9DA07E]" />
+                <div className="w-10 h-10 bg-[#203F3A]/10 rounded-xl flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-[#203F3A]" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-serif text-[#2D2D2D]">Latest Direct Bookings</h2>
-                  <p className="text-sm text-[#9DA07E] font-medium">Website payments</p>
+                  <h2 className="text-2xl font-serif text-[#203F3A]">Latest Direct Bookings</h2>
+                  <p className="text-sm text-[#203F3A] font-medium">Website payments</p>
                 </div>
               </div>
 
@@ -973,25 +973,25 @@ export function DashboardComplete() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 + index * 0.05 }}
-                    className="border border-[#9DA07E]/20 rounded-2xl p-5 bg-[#fdfcf8] hover:bg-white transition-all"
+                    className="border border-[#203F3A]/20 rounded-2xl p-5 bg-[#F4F1EA] hover:bg-white transition-all"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-[#2D2D2D] font-semibold truncate mb-1">
+                        <h4 className="text-[#203F3A] font-semibold truncate mb-1">
                           {booking.guest}
                         </h4>
-                        <p className="text-xs text-[#2D2D2D]/60">
+                        <p className="text-xs text-[#203F3A]/60">
                           {formatNZDate(booking.checkIn)} → {formatNZDate(booking.checkOut)}
                         </p>
                       </div>
                       <div className="text-right ml-2">
-                        <p className="text-[#9DA07E] font-bold text-lg">
+                        <p className="text-[#203F3A] font-bold text-lg">
                           ${booking.total.toLocaleString()}
                         </p>
                       </div>
                     </div>
                     {booking.createdAt && (
-                      <div className="flex items-center gap-2 text-xs text-[#2D2D2D]/50 mb-2">
+                      <div className="flex items-center gap-2 text-xs text-[#203F3A]/50 mb-2">
                         <Clock className="w-3 h-3" />
                         <span>
                           {formatNZDateTime(booking.createdAt)}
@@ -1000,7 +1000,7 @@ export function DashboardComplete() {
                     )}
                     <a
                       href={`mailto:${booking.email}`}
-                      className="text-xs text-[#9DA07E] hover:underline flex items-center gap-1"
+                      className="text-xs text-[#203F3A] hover:underline flex items-center gap-1"
                     >
                       <Mail className="w-3 h-3" />
                       {booking.email}
@@ -1011,8 +1011,8 @@ export function DashboardComplete() {
 
               {directBookings.length === 0 && (
                 <div className="text-center py-8">
-                  <ShoppingBag className="w-12 h-12 text-[#9DA07E]/30 mx-auto mb-3" />
-                  <p className="text-sm text-[#2D2D2D]/60">No direct bookings yet</p>
+                  <ShoppingBag className="w-12 h-12 text-[#203F3A]/30 mx-auto mb-3" />
+                  <p className="text-sm text-[#203F3A]/60">No direct bookings yet</p>
                 </div>
               )}
             </motion.div>
@@ -1025,22 +1025,22 @@ export function DashboardComplete() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="lg:col-span-2 bg-white border border-[#9DA07E]/20 rounded-3xl p-6 md:p-8 shadow-sm"
+              className="lg:col-span-2 bg-white border border-[#203F3A]/20 rounded-3xl p-6 md:p-8 shadow-sm"
             >
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-serif text-[#2D2D2D] mb-1">Guest Directory</h2>
-                  <p className="text-sm text-[#9DA07E] font-medium">All bookings and reservations</p>
+                  <h2 className="text-2xl font-serif text-[#203F3A] mb-1">Guest Directory</h2>
+                  <p className="text-sm text-[#203F3A] font-medium">All bookings and reservations</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="bg-[#9DA07E]/10 px-4 py-2 rounded-full">
-                    <span className="text-[#9DA07E] font-bold text-sm">
+                  <div className="bg-[#203F3A]/10 px-4 py-2 rounded-full">
+                    <span className="text-[#203F3A] font-bold text-sm">
                       {allGuestsSorted.length} Total
                     </span>
                   </div>
                   <button
                     onClick={() => setShowAddBooking(true)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#9DA07E] hover:bg-[#8a8d6e] text-white text-sm font-medium transition-all"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#203F3A] hover:bg-[#16302B] text-white text-sm font-medium transition-all"
                   >
                     <Pencil className="w-4 h-4" />
                     Add Booking
@@ -1055,8 +1055,8 @@ export function DashboardComplete() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.02 }}
-                    className={`border border-[#9DA07E]/20 rounded-2xl overflow-hidden transition-all ${
-                      expandedGuest === guest.id ? 'bg-[#9DA07E]/5' : 'bg-white hover:bg-[#fdfcf8]'
+                    className={`border border-[#203F3A]/20 rounded-2xl overflow-hidden transition-all ${
+                      expandedGuest === guest.id ? 'bg-[#203F3A]/5' : 'bg-white hover:bg-[#F4F1EA]'
                     }`}
                   >
                     <div
@@ -1066,8 +1066,8 @@ export function DashboardComplete() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
-                            <Users className="w-5 h-5 text-[#9DA07E] flex-shrink-0" />
-                            <h3 className="text-[#2D2D2D] font-semibold text-lg truncate">
+                            <Users className="w-5 h-5 text-[#203F3A] flex-shrink-0" />
+                            <h3 className="text-[#203F3A] font-semibold text-lg truncate">
                               {guest.guest}
                             </h3>
                             <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex-shrink-0 ${
@@ -1082,12 +1082,12 @@ export function DashboardComplete() {
                               {guest.status === 'pending_payment' ? 'Pending' : guest.status}
                             </span>
                           </div>
-                          <div className="flex flex-wrap items-center gap-2 text-sm text-[#2D2D2D]/60">
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-[#203F3A]/60">
                             <span className="font-medium">{formatNZDate(guest.checkIn)}</span>
                             <span>→</span>
                             <span className="font-medium">{formatNZDate(guest.checkOut)}</span>
                             <span className="mx-2">•</span>
-                            <span className="text-xs px-2 py-1 bg-[#9DA07E]/10 text-[#9DA07E] rounded-full font-medium">
+                            <span className="text-xs px-2 py-1 bg-[#203F3A]/10 text-[#203F3A] rounded-full font-medium">
                               {guest.channel}
                             </span>
                             <span className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded-full font-medium">
@@ -1102,14 +1102,14 @@ export function DashboardComplete() {
                         </div>
                         <div className="flex items-center gap-3 ml-4">
                           <div className="text-right">
-                            <p className="text-[#9DA07E] font-bold text-xl">
+                            <p className="text-[#203F3A] font-bold text-xl">
                               ${guest.total.toLocaleString()}
                             </p>
                           </div>
                           {expandedGuest === guest.id ? (
-                            <ChevronUp className="w-5 h-5 text-[#9DA07E]" />
+                            <ChevronUp className="w-5 h-5 text-[#203F3A]" />
                           ) : (
-                            <ChevronDown className="w-5 h-5 text-[#9DA07E]" />
+                            <ChevronDown className="w-5 h-5 text-[#203F3A]" />
                           )}
                         </div>
                       </div>
@@ -1121,48 +1121,48 @@ export function DashboardComplete() {
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
-                          className="border-t border-[#9DA07E]/20 bg-white/50"
+                          className="border-t border-[#203F3A]/20 bg-white/50"
                         >
                           <div className="p-5 space-y-4">
 
                             {/* Edit Form (shown when editing) */}
                             {editingGuest === guest.id ? (
                               <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
-                                <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest">Edit Booking Details</p>
+                                <p className="text-xs text-[#203F3A] font-bold uppercase tracking-widest">Edit Booking Details</p>
                                 <div className="grid md:grid-cols-2 gap-3">
                                   <div>
-                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Guest Name</label>
+                                    <label className="block text-xs text-[#203F3A]/60 mb-1">Guest Name</label>
                                     <input
                                       type="text"
                                       value={editForm.guest || ''}
                                       onChange={(e) => setEditForm(f => ({ ...f, guest: e.target.value }))}
-                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                                     />
                                   </div>
                                   <div>
-                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Email</label>
+                                    <label className="block text-xs text-[#203F3A]/60 mb-1">Email</label>
                                     <input
                                       type="email"
                                       value={editForm.email || ''}
                                       onChange={(e) => setEditForm(f => ({ ...f, email: e.target.value }))}
-                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                                     />
                                   </div>
                                   <div>
-                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Phone</label>
+                                    <label className="block text-xs text-[#203F3A]/60 mb-1">Phone</label>
                                     <input
                                       type="tel"
                                       value={editForm.phone || ''}
                                       onChange={(e) => setEditForm(f => ({ ...f, phone: e.target.value }))}
-                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                                     />
                                   </div>
                                   <div>
-                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Status</label>
+                                    <label className="block text-xs text-[#203F3A]/60 mb-1">Status</label>
                                     <select
                                       value={editForm.status || ''}
                                       onChange={(e) => setEditForm(f => ({ ...f, status: e.target.value }))}
-                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                                     >
                                       <option value="upcoming">Upcoming</option>
                                       <option value="pending_payment">Pending Payment</option>
@@ -1171,38 +1171,38 @@ export function DashboardComplete() {
                                     </select>
                                   </div>
                                   <div>
-                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Check-In</label>
+                                    <label className="block text-xs text-[#203F3A]/60 mb-1">Check-In</label>
                                     <input
                                       type="date"
                                       value={editForm.checkIn || ''}
                                       onChange={(e) => setEditForm(f => ({ ...f, checkIn: e.target.value }))}
-                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                                     />
                                   </div>
                                   <div>
-                                    <label className="block text-xs text-[#2D2D2D]/60 mb-1">Check-Out</label>
+                                    <label className="block text-xs text-[#203F3A]/60 mb-1">Check-Out</label>
                                     <input
                                       type="date"
                                       value={editForm.checkOut || ''}
                                       onChange={(e) => setEditForm(f => ({ ...f, checkOut: e.target.value }))}
-                                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                                     />
                                   </div>
                                 </div>
                                 <div>
-                                  <label className="block text-xs text-[#2D2D2D]/60 mb-1">Notes</label>
+                                  <label className="block text-xs text-[#203F3A]/60 mb-1">Notes</label>
                                   <textarea
                                     value={editForm.notes || ''}
                                     onChange={(e) => setEditForm(f => ({ ...f, notes: e.target.value }))}
                                     rows={2}
-                                    className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40 resize-none"
+                                    className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40 resize-none"
                                   />
                                 </div>
                                 <div className="flex gap-3 pt-2">
                                   <button
                                     onClick={(e) => handleSaveEdit(guest.id, e)}
                                     disabled={actionLoading === guest.id}
-                                    className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#9DA07E] hover:bg-[#8a8d6e] text-white transition-all text-sm font-medium disabled:opacity-50"
+                                    className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#203F3A] hover:bg-[#16302B] text-white transition-all text-sm font-medium disabled:opacity-50"
                                   >
                                     {actionLoading === guest.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                                     Save Changes
@@ -1220,37 +1220,37 @@ export function DashboardComplete() {
                               <>
                                 <div className="grid md:grid-cols-2 gap-4">
                                   <div>
-                                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Contact</p>
+                                    <p className="text-xs text-[#203F3A] font-bold uppercase tracking-widest mb-2">Contact</p>
                                     <div className="space-y-2">
                                       <div className="flex items-center gap-2">
-                                        <Mail className="w-4 h-4 text-[#9DA07E]" />
+                                        <Mail className="w-4 h-4 text-[#203F3A]" />
                                         <a
                                           href={`mailto:${guest.email}`}
-                                          className="text-[#2D2D2D] hover:text-[#9DA07E] transition-colors text-sm underline"
+                                          className="text-[#203F3A] hover:text-[#203F3A] transition-colors text-sm underline"
                                           onClick={(e) => e.stopPropagation()}
                                         >
-                                          {guest.email || <span className="text-[#2D2D2D]/40 italic">No email</span>}
+                                          {guest.email || <span className="text-[#203F3A]/40 italic">No email</span>}
                                         </a>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        <Phone className="w-4 h-4 text-[#9DA07E]" />
+                                        <Phone className="w-4 h-4 text-[#203F3A]" />
                                         {guest.phone ? (
                                           <a
                                             href={`tel:${guest.phone}`}
-                                            className="text-[#2D2D2D] hover:text-[#9DA07E] transition-colors text-sm"
+                                            className="text-[#203F3A] hover:text-[#203F3A] transition-colors text-sm"
                                             onClick={(e) => e.stopPropagation()}
                                           >
                                             {guest.phone}
                                           </a>
                                         ) : (
-                                          <span className="text-[#2D2D2D]/40 text-sm italic">No phone</span>
+                                          <span className="text-[#203F3A]/40 text-sm italic">No phone</span>
                                         )}
                                       </div>
                                     </div>
                                   </div>
                                   <div>
-                                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Details</p>
-                                    <div className="space-y-1 text-sm text-[#2D2D2D]/80">
+                                    <p className="text-xs text-[#203F3A] font-bold uppercase tracking-widest mb-2">Details</p>
+                                    <div className="space-y-1 text-sm text-[#203F3A]/80">
                                       <p><strong>Guests:</strong> {guest.guests}</p>
                                       <p><strong>Source:</strong> {guest.source === 'direct' ? 'Direct Website' : 'Airtable'}</p>
                                     </div>
@@ -1258,14 +1258,14 @@ export function DashboardComplete() {
                                 </div>
                                 {guest.notes && (
                                   <div>
-                                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-2">Guest Notes</p>
-                                    <p className="text-sm text-[#2D2D2D]/80 leading-relaxed bg-[#9DA07E]/5 p-3 rounded-xl">
+                                    <p className="text-xs text-[#203F3A] font-bold uppercase tracking-widest mb-2">Guest Notes</p>
+                                    <p className="text-sm text-[#203F3A]/80 leading-relaxed bg-[#203F3A]/5 p-3 rounded-xl">
                                       {guest.notes}
                                     </p>
                                   </div>
                                 )}
                                 {guest.createdAt && (
-                                  <div className="flex items-center gap-2 text-xs text-[#2D2D2D]/50">
+                                  <div className="flex items-center gap-2 text-xs text-[#203F3A]/50">
                                     <Clock className="w-3 h-3" />
                                     <span>Booked on {formatNZDateTime(guest.createdAt)}</span>
                                   </div>
@@ -1275,10 +1275,10 @@ export function DashboardComplete() {
 
                             {/* Action Buttons */}
                             {guest.source === 'direct' && editingGuest !== guest.id && (
-                              <div className="flex gap-3 pt-4 border-t border-[#9DA07E]/20">
+                              <div className="flex gap-3 pt-4 border-t border-[#203F3A]/20">
                                 <button
                                   onClick={(e) => handleStartEdit(guest, e)}
-                                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#9DA07E]/10 hover:bg-[#9DA07E]/20 text-[#9DA07E] transition-all text-sm font-medium"
+                                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#203F3A]/10 hover:bg-[#203F3A]/20 text-[#203F3A] transition-all text-sm font-medium"
                                 >
                                   <Pencil className="w-4 h-4" />
                                   Edit Details
@@ -1351,8 +1351,8 @@ export function DashboardComplete() {
 
                 {allGuestsSorted.length === 0 && (
                   <div className="text-center py-16">
-                    <Users className="w-16 h-16 text-[#9DA07E]/30 mx-auto mb-4" />
-                    <p className="text-[#2D2D2D]/60">No bookings yet</p>
+                    <Users className="w-16 h-16 text-[#203F3A]/30 mx-auto mb-4" />
+                    <p className="text-[#203F3A]/60">No bookings yet</p>
                   </div>
                 )}
               </div>
@@ -1363,15 +1363,15 @@ export function DashboardComplete() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 shadow-sm h-fit"
+              className="bg-white border border-[#203F3A]/20 rounded-3xl p-6 shadow-sm h-fit"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#9DA07E]/10 rounded-xl flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-[#9DA07E]" />
+                <div className="w-10 h-10 bg-[#203F3A]/10 rounded-xl flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-[#203F3A]" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-serif text-[#2D2D2D]">Latest Direct Bookings</h2>
-                  <p className="text-xs text-[#9DA07E] font-medium">Website payments</p>
+                  <h2 className="text-xl font-serif text-[#203F3A]">Latest Direct Bookings</h2>
+                  <p className="text-xs text-[#203F3A] font-medium">Website payments</p>
                 </div>
               </div>
 
@@ -1382,25 +1382,25 @@ export function DashboardComplete() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 + index * 0.05 }}
-                    className="border border-[#9DA07E]/20 rounded-2xl p-4 bg-[#fdfcf8] hover:bg-white transition-all"
+                    className="border border-[#203F3A]/20 rounded-2xl p-4 bg-[#F4F1EA] hover:bg-white transition-all"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-[#2D2D2D] font-semibold truncate mb-1">
+                        <h4 className="text-[#203F3A] font-semibold truncate mb-1">
                           {booking.guest}
                         </h4>
-                        <p className="text-xs text-[#2D2D2D]/60">
+                        <p className="text-xs text-[#203F3A]/60">
                           {formatNZDate(booking.checkIn)} → {formatNZDate(booking.checkOut)}
                         </p>
                       </div>
                       <div className="text-right ml-2">
-                        <p className="text-[#9DA07E] font-bold">
+                        <p className="text-[#203F3A] font-bold">
                           ${booking.total.toLocaleString()}
                         </p>
                       </div>
                     </div>
                     {booking.createdAt && (
-                      <div className="flex items-center gap-2 text-xs text-[#2D2D2D]/50 mb-2">
+                      <div className="flex items-center gap-2 text-xs text-[#203F3A]/50 mb-2">
                         <Clock className="w-3 h-3" />
                         <span>
                           {formatNZDateTime(booking.createdAt)}
@@ -1409,7 +1409,7 @@ export function DashboardComplete() {
                     )}
                     <a
                       href={`mailto:${booking.email}`}
-                      className="text-xs text-[#9DA07E] hover:underline flex items-center gap-1"
+                      className="text-xs text-[#203F3A] hover:underline flex items-center gap-1"
                     >
                       <Mail className="w-3 h-3" />
                       {booking.email}
@@ -1419,8 +1419,8 @@ export function DashboardComplete() {
 
                 {directBookings.length === 0 && (
                   <div className="text-center py-8">
-                    <ShoppingBag className="w-12 h-12 text-[#9DA07E]/30 mx-auto mb-3" />
-                    <p className="text-sm text-[#2D2D2D]/60">No direct bookings yet</p>
+                    <ShoppingBag className="w-12 h-12 text-[#203F3A]/30 mx-auto mb-3" />
+                    <p className="text-sm text-[#203F3A]/60">No direct bookings yet</p>
                   </div>
                 )}
               </div>
@@ -1445,16 +1445,16 @@ export function DashboardComplete() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-[#9DA07E]/20 rounded-3xl p-6 md:p-8 shadow-sm"
+              className="bg-white border border-[#203F3A]/20 rounded-3xl p-6 md:p-8 shadow-sm"
             >
               <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
                 <div>
-                  <h2 className="text-2xl font-serif text-[#2D2D2D] mb-1">Payments</h2>
-                  <p className="text-sm text-[#9DA07E] font-medium">How each booking was paid, and what's outstanding</p>
+                  <h2 className="text-2xl font-serif text-[#203F3A] mb-1">Payments</h2>
+                  <p className="text-sm text-[#203F3A] font-medium">How each booking was paid, and what's outstanding</p>
                 </div>
                 <button
                   onClick={fetchDashboardData}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#9DA07E]/10 hover:bg-[#9DA07E]/20 text-[#9DA07E] text-sm font-medium transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#203F3A]/10 hover:bg-[#203F3A]/20 text-[#203F3A] text-sm font-medium transition-all"
                 >
                   <TrendingUp className="w-4 h-4" />
                   Refresh
@@ -1465,57 +1465,57 @@ export function DashboardComplete() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 <div className="bg-green-50 border border-green-100 rounded-2xl p-5">
                   <p className="text-green-700 text-xs font-bold uppercase tracking-widest mb-1">Paid</p>
-                  <p className="text-2xl font-serif text-[#2D2D2D]">${sum(paidRows).toLocaleString()}</p>
-                  <p className="text-sm text-[#2D2D2D]/60">{paidRows.length} booking{paidRows.length === 1 ? '' : 's'}</p>
+                  <p className="text-2xl font-serif text-[#203F3A]">${sum(paidRows).toLocaleString()}</p>
+                  <p className="text-sm text-[#203F3A]/60">{paidRows.length} booking{paidRows.length === 1 ? '' : 's'}</p>
                 </div>
                 <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5">
                   <p className="text-amber-700 text-xs font-bold uppercase tracking-widest mb-1">Awaiting / balance due</p>
-                  <p className="text-2xl font-serif text-[#2D2D2D]">${sum(awaitingRows).toLocaleString()}</p>
-                  <p className="text-sm text-[#2D2D2D]/60">{awaitingRows.length} booking{awaitingRows.length === 1 ? '' : 's'}</p>
+                  <p className="text-2xl font-serif text-[#203F3A]">${sum(awaitingRows).toLocaleString()}</p>
+                  <p className="text-sm text-[#203F3A]/60">{awaitingRows.length} booking{awaitingRows.length === 1 ? '' : 's'}</p>
                 </div>
-                <div className="bg-[#9DA07E]/10 border border-[#9DA07E]/20 rounded-2xl p-5">
-                  <p className="text-[#9DA07E] text-xs font-bold uppercase tracking-widest mb-1">Paid by Stripe card</p>
-                  <p className="text-2xl font-serif text-[#2D2D2D]">${sum(stripeRows).toLocaleString()}</p>
-                  <p className="text-sm text-[#2D2D2D]/60">{stripeRows.length} card payment{stripeRows.length === 1 ? '' : 's'}</p>
+                <div className="bg-[#203F3A]/10 border border-[#203F3A]/20 rounded-2xl p-5">
+                  <p className="text-[#203F3A] text-xs font-bold uppercase tracking-widest mb-1">Paid by Stripe card</p>
+                  <p className="text-2xl font-serif text-[#203F3A]">${sum(stripeRows).toLocaleString()}</p>
+                  <p className="text-sm text-[#203F3A]/60">{stripeRows.length} card payment{stripeRows.length === 1 ? '' : 's'}</p>
                 </div>
               </div>
 
               {/* Payment rows */}
               <div className="space-y-3">
                 {rows.length === 0 && (
-                  <p className="text-sm text-[#2D2D2D]/60 py-8 text-center">No bookings to show.</p>
+                  <p className="text-sm text-[#203F3A]/60 py-8 text-center">No bookings to show.</p>
                 )}
                 {rows.map(({ g, pay }, index) => (
                   <div
                     key={g.id || `${g.guest}-${g.checkIn}-${index}`}
-                    className="border border-[#9DA07E]/20 rounded-2xl p-4 md:p-5 flex flex-wrap items-center justify-between gap-3 hover:bg-[#fdfcf8] transition-all"
+                    className="border border-[#203F3A]/20 rounded-2xl p-4 md:p-5 flex flex-wrap items-center justify-between gap-3 hover:bg-[#F4F1EA] transition-all"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-[#2D2D2D] font-semibold truncate">{g.guest}</h3>
+                        <h3 className="text-[#203F3A] font-semibold truncate">{g.guest}</h3>
                         <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${PAYMENT_TONE_CLASS[pay.tone]}`}>
                           {pay.status}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-[#2D2D2D]/60">
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-[#203F3A]/60">
                         <span className="font-medium">{formatNZDate(g.checkIn)} → {formatNZDate(g.checkOut)}</span>
                         <span className="mx-1">•</span>
                         <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full font-medium">{pay.method}</span>
                         {g.stripeSessionId && (
-                          <span className="px-2 py-0.5 bg-[#9DA07E]/10 text-[#9DA07E] rounded-full font-mono">
+                          <span className="px-2 py-0.5 bg-[#203F3A]/10 text-[#203F3A] rounded-full font-mono">
                             {String(g.stripeSessionId).slice(0, 14)}…
                           </span>
                         )}
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-[#9DA07E] font-bold text-lg">${Number(g.total || 0).toLocaleString()}</p>
+                      <p className="text-[#203F3A] font-bold text-lg">${Number(g.total || 0).toLocaleString()}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-6 text-xs text-[#2D2D2D]/50 leading-relaxed">
+              <p className="mt-6 text-xs text-[#203F3A]/50 leading-relaxed">
                 "Stripe card" = paid online by card (has a Stripe reference). "Manual / bank transfer" = entered by hand or awaiting a transfer.
                 Channel bookings (e.g. AirBnB) show a balance only if one is recorded in Airtable. Payment capture is automatic — this site does not use Stripe's manual-capture (authorise-then-capture) mode.
               </p>
@@ -1528,11 +1528,11 @@ export function DashboardComplete() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white border border-[#9DA07E]/20 rounded-3xl p-8 shadow-sm"
+            className="bg-white border border-[#203F3A]/20 rounded-3xl p-8 shadow-sm"
           >
             <div className="mb-8">
-              <h2 className="text-2xl font-serif text-[#2D2D2D] mb-2">Email Templates</h2>
-              <p className="text-sm text-[#9DA07E] font-medium">
+              <h2 className="text-2xl font-serif text-[#203F3A] mb-2">Email Templates</h2>
+              <p className="text-sm text-[#203F3A] font-medium">
                 Automated email communications sent to guests
               </p>
             </div>
@@ -1544,22 +1544,22 @@ export function DashboardComplete() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="border border-[#9DA07E]/20 rounded-2xl overflow-hidden"
+                  className="border border-[#203F3A]/20 rounded-2xl overflow-hidden"
                 >
-                  <div className="bg-[#9DA07E]/5 p-5 border-b border-[#9DA07E]/20">
+                  <div className="bg-[#203F3A]/5 p-5 border-b border-[#203F3A]/20">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h3 className="text-lg font-semibold text-[#2D2D2D] mb-1">
+                        <h3 className="text-lg font-semibold text-[#203F3A] mb-1">
                           {template.name}
                         </h3>
-                        <div className="flex items-center gap-2 text-sm text-[#9DA07E]">
+                        <div className="flex items-center gap-2 text-sm text-[#203F3A]">
                           <Send className="w-4 h-4" />
                           <span className="font-medium">{template.trigger}</span>
                         </div>
                       </div>
                       <button
                         onClick={() => copyTemplate(template.body)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#9DA07E]/30 hover:bg-[#9DA07E]/10 text-[#9DA07E] transition-all text-sm font-medium"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#203F3A]/30 hover:bg-[#203F3A]/10 text-[#203F3A] transition-all text-sm font-medium"
                       >
                         <Copy className="w-4 h-4" />
                         Copy
@@ -1567,17 +1567,17 @@ export function DashboardComplete() {
                     </div>
                   </div>
                   <div className="p-5 bg-white">
-                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-3">
+                    <p className="text-xs text-[#203F3A] font-bold uppercase tracking-widest mb-3">
                       Subject Line
                     </p>
-                    <p className="text-sm text-[#2D2D2D] font-medium mb-4 pb-4 border-b border-[#9DA07E]/10">
+                    <p className="text-sm text-[#203F3A] font-medium mb-4 pb-4 border-b border-[#203F3A]/10">
                       {template.subject}
                     </p>
-                    <p className="text-xs text-[#9DA07E] font-bold uppercase tracking-widest mb-3">
+                    <p className="text-xs text-[#203F3A] font-bold uppercase tracking-widest mb-3">
                       Email Body
                     </p>
-                    <div className="bg-[#fdfcf8] rounded-xl p-5">
-                      <pre className="text-sm text-[#2D2D2D] whitespace-pre-wrap font-sans leading-relaxed">
+                    <div className="bg-[#F4F1EA] rounded-xl p-5">
+                      <pre className="text-sm text-[#203F3A] whitespace-pre-wrap font-sans leading-relaxed">
                         {template.body}
                       </pre>
                     </div>
@@ -1607,7 +1607,7 @@ export function DashboardComplete() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-serif text-[#2D2D2D]">Add Booking</h2>
+                <h2 className="text-2xl font-serif text-[#203F3A]">Add Booking</h2>
                 <button onClick={() => setShowAddBooking(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                   <X className="w-5 h-5 text-gray-500" />
                 </button>
@@ -1615,82 +1615,82 @@ export function DashboardComplete() {
               <form onSubmit={handleAddBooking} className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Guest Name *</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Guest Name *</label>
                     <input
                       type="text"
                       required
                       placeholder="Alice Grey"
                       value={addBookingForm.guest}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, guest: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Email</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Email</label>
                     <input
                       type="email"
                       placeholder="alice@example.com"
                       value={addBookingForm.email}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, email: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Phone</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Phone</label>
                     <input
                       type="tel"
                       placeholder="021 234 5678"
                       value={addBookingForm.phone}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, phone: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Check-In *</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Check-In *</label>
                     <input
                       type="date"
                       required
                       value={addBookingForm.checkIn}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, checkIn: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Check-Out *</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Check-Out *</label>
                     <input
                       type="date"
                       required
                       value={addBookingForm.checkOut}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, checkOut: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Guests</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Guests</label>
                     <input
                       type="number"
                       min="1"
                       value={addBookingForm.guests}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, guests: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Total (NZD)</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Total (NZD)</label>
                     <input
                       type="number"
                       min="0"
                       value={addBookingForm.total}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, total: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Status</label>
+                    <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Status</label>
                     <select
                       value={addBookingForm.status}
                       onChange={(e) => setAddBookingForm(f => ({ ...f, status: e.target.value }))}
-                      className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40"
+                      className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
                     >
                       <option value="upcoming">Upcoming</option>
                       <option value="pending_payment">Pending Payment</option>
@@ -1700,12 +1700,12 @@ export function DashboardComplete() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-[#2D2D2D]/60 mb-1 font-medium">Notes</label>
+                  <label className="block text-xs text-[#203F3A]/60 mb-1 font-medium">Notes</label>
                   <textarea
                     rows={2}
                     value={addBookingForm.notes}
                     onChange={(e) => setAddBookingForm(f => ({ ...f, notes: e.target.value }))}
-                    className="w-full border border-[#9DA07E]/30 rounded-xl px-3 py-2.5 text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#9DA07E]/40 resize-none"
+                    className="w-full border border-[#203F3A]/30 rounded-xl px-3 py-2.5 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40 resize-none"
                   />
                 </div>
                 <label className="flex items-center gap-3 cursor-pointer">
@@ -1713,15 +1713,15 @@ export function DashboardComplete() {
                     type="checkbox"
                     checked={addBookingForm.sendEmails}
                     onChange={(e) => setAddBookingForm(f => ({ ...f, sendEmails: e.target.checked }))}
-                    className="w-4 h-4 accent-[#9DA07E]"
+                    className="w-4 h-4 accent-[#203F3A]"
                   />
-                  <span className="text-sm text-[#2D2D2D]/70">Send confirmation emails to guest & owner</span>
+                  <span className="text-sm text-[#203F3A]/70">Send confirmation emails to guest & owner</span>
                 </label>
                 <div className="flex gap-3 pt-2">
                   <button
                     type="submit"
                     disabled={addBookingLoading}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#9DA07E] hover:bg-[#8a8d6e] text-white font-medium transition-all disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#203F3A] hover:bg-[#16302B] text-white font-medium transition-all disabled:opacity-50"
                   >
                     {addBookingLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                     Add Booking

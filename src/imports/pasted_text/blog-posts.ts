@@ -3,8 +3,8 @@ Build a blog system for the One Eleven Taupō website at carlsonproperties.co.nz
   existing routes.
 
   BRAND (already established in the site)
-  - Sage primary: #9DA07E
-  - Cream background: #FDFCF8
+  - Sage primary: #203F3A
+  - Cream background: #F4F1EA
   - Ink: #1A1A1A · Body grey: #666 · Muted: #AFAFAF · Hairline: #F1F1EE
   - Serif: Cormorant Garamond (for h1, h2, eyebrows over hero)
   - Sans: Inter (for body, buttons, meta)
@@ -53,7 +53,7 @@ Build a blog system for the One Eleven Taupō website at carlsonproperties.co.nz
   - Body: max 720px width, centered. Render bodyMarkdown using react-markdown. Style:
     - h2 in serif, 32px, sage colour
     - h3 in serif italic, 24px
-    - body in Inter 17px, line-height 1.7, colour #2D2D2D
+    - body in Inter 17px, line-height 1.7, colour #203F3A
     - blockquotes with 4px sage left border
     - links sage, underlined on hover
   - After body: CTA button (post.ctaLabel → post.ctaUrl)

@@ -187,7 +187,7 @@ export function CheckoutPage() {
   const nights = checkIn && checkOut ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-[#2D2D2D] font-sans pb-20 relative">
+    <div className="min-h-screen bg-[#FDFCFB] text-[#203F3A] font-sans pb-20 relative">
       <SEO 
         title="Checkout - Complete Your Booking"
         description="Complete your booking for One Eleven Taupo luxury accommodation. Secure payment processing with Stripe."
@@ -255,7 +255,7 @@ export function CheckoutPage() {
                     onClick={() => setPaymentMethod('card')}
                     className={`p-6 rounded-2xl border-2 flex flex-col items-start gap-3 transition-all ${
                       paymentMethod === 'card' 
-                      ? "border-[#9DA07E] bg-[#9DA07E]/5" 
+                      ? "border-[#203F3A] bg-[#203F3A]/5" 
                       : "border-stone-100 hover:border-stone-200"
                     }`}
                   >
@@ -273,7 +273,7 @@ export function CheckoutPage() {
                     onClick={() => setPaymentMethod('bank')}
                     className={`p-6 rounded-2xl border-2 flex flex-col items-start gap-3 transition-all ${
                       paymentMethod === 'bank' 
-                      ? "border-[#9DA07E] bg-[#9DA07E]/5" 
+                      ? "border-[#203F3A] bg-[#203F3A]/5" 
                       : "border-stone-100 hover:border-stone-200"
                     }`}
                   >
@@ -291,9 +291,9 @@ export function CheckoutPage() {
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-6 bg-[#9DA07E]/10 border border-[#9DA07E]/20 rounded-2xl space-y-4"
+                    className="p-6 bg-[#203F3A]/10 border border-[#203F3A]/20 rounded-2xl space-y-4"
                   >
-                    <h3 className="font-bold text-sm uppercase tracking-wider text-[#9DA07E]">Bank Transfer Details</h3>
+                    <h3 className="font-bold text-sm uppercase tracking-wider text-[#203F3A]">Bank Transfer Details</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-stone-500">Account Name:</span>
@@ -308,7 +308,7 @@ export function CheckoutPage() {
                         <span className="font-bold">ANZ New Zealand</span>
                       </div>
                     </div>
-                    <p className="text-[10px] text-stone-500 leading-relaxed italic border-t border-[#9DA07E]/20 pt-4">
+                    <p className="text-[10px] text-stone-500 leading-relaxed italic border-t border-[#203F3A]/20 pt-4">
                       * Please use your Name as reference. Your booking will be confirmed once payment is received.
                     </p>
                   </motion.div>
@@ -326,7 +326,7 @@ export function CheckoutPage() {
                       value={formData.firstName}
                       onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                       placeholder="e.g. John"
-                      className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all"
+                      className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#203F3A] outline-none transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -337,7 +337,7 @@ export function CheckoutPage() {
                       value={formData.lastName}
                       onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                       placeholder="e.g. Smith"
-                      className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all"
+                      className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#203F3A] outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -349,7 +349,7 @@ export function CheckoutPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="john.smith@example.com"
-                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all"
+                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#203F3A] outline-none transition-all"
                   />
                   <p className="text-[10px] text-stone-400">We'll send your booking confirmation and check-in details here.</p>
                 </div>
@@ -361,7 +361,7 @@ export function CheckoutPage() {
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     placeholder="+64 00 000 0000"
-                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all"
+                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#203F3A] outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-2">
@@ -371,7 +371,7 @@ export function CheckoutPage() {
                     value={formData.couponCode}
                     onChange={(e) => setFormData({...formData, couponCode: e.target.value.toUpperCase()})}
                     placeholder="Enter code (e.g. TEST100)"
-                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all uppercase"
+                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#203F3A] outline-none transition-all uppercase"
                   />
                   <p className="text-[10px] text-stone-400">Have a promo code? Enter it here for a discount.</p>
                 </div>
@@ -382,7 +382,7 @@ export function CheckoutPage() {
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
                     placeholder="Tell us about your trip or any special requirements..."
                     rows={3}
-                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#9DA07E] outline-none transition-all resize-none"
+                    className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#203F3A] outline-none transition-all resize-none"
                   />
                 </div>
               </section>
@@ -449,7 +449,7 @@ export function CheckoutPage() {
                   <h3 className="font-serif text-lg leading-tight">One Eleven | On The Mile</h3>
                   <div className="flex items-center gap-1 mt-1">
                     {[1,2,3,4,5].map(i => (
-                      <span key={i} className="text-[#9DA07E] text-xs">★</span>
+                      <span key={i} className="text-[#203F3A] text-xs">★</span>
                     ))}
                     <span className="text-xs text-stone-400 ml-1">5.0 Luxury Experience</span>
                   </div>
@@ -463,14 +463,14 @@ export function CheckoutPage() {
                   <span>${subtotal ? Number(subtotal).toLocaleString() : '0'}</span>
                 </div>
                 {discountAmount > 0 && (
-                  <div className="flex justify-between text-[#9DA07E] font-bold">
+                  <div className="flex justify-between text-[#203F3A] font-bold">
                     <span>Direct booking discount (10%)</span>
                     <span>-${Number(discountAmount).toLocaleString()}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-stone-600">
                   <span>Cleaning & Service Fee</span>
-                  <span className="text-[#9DA07E] font-bold">Included</span>
+                  <span className="text-[#203F3A] font-bold">Included</span>
                 </div>
               </div>
 

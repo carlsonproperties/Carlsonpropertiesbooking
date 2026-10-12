@@ -23,7 +23,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
         <motion.article
           whileHover={{ y: -4 }}
           transition={{ duration: 0.3 }}
-          className="grid md:grid-cols-2 gap-8 bg-white rounded-3xl overflow-hidden border border-[#9DA07E]/20 shadow-sm hover:shadow-lg transition-all"
+          className="grid md:grid-cols-2 gap-8 bg-white rounded-3xl overflow-hidden border border-[#203F3A]/20 shadow-sm hover:shadow-lg transition-all"
         >
           <div className="aspect-[16/9] md:aspect-auto overflow-hidden">
             <img
@@ -36,10 +36,10 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
             />
           </div>
           <div className="p-8 md:p-12 flex flex-col justify-center">
-            <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#9DA07E] mb-4">
+            <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#203F3A] mb-4">
               {post.category}
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif text-[#2D2D2D] mb-4 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-serif text-[#203F3A] mb-4 leading-tight">
               {post.title}
             </h2>
             <p className="text-[#666] leading-relaxed mb-6 line-clamp-3">
@@ -61,7 +61,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
       <motion.article
         whileHover={{ y: -4 }}
         transition={{ duration: 0.3 }}
-        className="bg-white rounded-3xl overflow-hidden border border-[#9DA07E]/20 shadow-sm hover:shadow-lg transition-all h-full flex flex-col"
+        className="bg-white rounded-3xl overflow-hidden border border-[#203F3A]/20 shadow-sm hover:shadow-lg transition-all h-full flex flex-col"
       >
         <div className="aspect-[16/9] overflow-hidden">
           <img
@@ -74,10 +74,10 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
           />
         </div>
         <div className="p-6 flex flex-col flex-grow">
-          <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#9DA07E] mb-3">
+          <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#203F3A] mb-3">
             {post.category}
           </span>
-          <h3 className="text-xl md:text-2xl font-serif text-[#2D2D2D] mb-3 leading-tight">
+          <h3 className="text-xl md:text-2xl font-serif text-[#203F3A] mb-3 leading-tight">
             {post.title}
           </h3>
           <p className="text-sm text-[#666] leading-relaxed mb-4 line-clamp-2 flex-grow">
