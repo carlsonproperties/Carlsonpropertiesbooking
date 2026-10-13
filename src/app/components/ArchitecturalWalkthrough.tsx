@@ -384,13 +384,6 @@ export function ArchitecturalWalkthrough() {
           />
         ))}
 
-        {/* Section label */}
-        <div className="pointer-events-none absolute left-6 top-28 z-20 md:left-10 md:top-32">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#D7C8B4]">
-            Architectural Walkthrough
-          </p>
-        </div>
-
         {/* Scrub pills — click to jump, stroke fills as you scroll */}
         <nav
           aria-label="Walkthrough chapters"

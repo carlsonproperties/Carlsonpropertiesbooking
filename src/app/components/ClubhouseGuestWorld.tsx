@@ -30,7 +30,7 @@ const RITUALS: Ritual[] = [
     desc: 'The espresso machine goes on, the mist lifts off the lake, and the deck takes the early sun. Nobody is anywhere they have to be.',
     icon: Coffee,
     badge: 'Barista Espresso Bar',
-    image: getImageUrl('outdoor lounge.png'),
+    image: getImageUrl('Coffee on the cedar deck.jpg'),
   },
   {
     time: '11:00',
@@ -38,7 +38,7 @@ const RITUALS: Ritual[] = [
     desc: 'The pool is heated the whole year round. Cold mountain air on your face, steam coming off the water, Mount Tauhara across the lake.',
     icon: Waves,
     badge: 'Heated Year-Round',
-    image: getImageUrl('pool featurephoto.png'),
+    image: getImageUrl('A swim, even in July.jpg'),
   },
   {
     time: '16:30',
@@ -46,7 +46,7 @@ const RITUALS: Ritual[] = [
     desc: 'The 4-person rectangular cedar sauna warms up in the courtyard and the hydrotherapy spa sits just steps away. Guests keep telling us this is the part that makes the house hard to leave.',
     icon: Thermometer,
     badge: '4-Person Sauna · Spa · Pool',
-    image: getImageUrl('sauanaspa.jpg'),
+    image: getImageUrl('Sauna, then the spa.jpg'),
   },
   {
     time: '20:00',
@@ -54,7 +54,7 @@ const RITUALS: Ritual[] = [
     desc: 'Ten seats gather around the dining table, the double-sided fireplace warms the living room, and the lake goes dark outside the glass. Town is five minutes away if you want it.',
     icon: Flame,
     badge: 'Double-Sided Fire · Seats 10',
-    image: getImageUrl('Open plan living.jpg'),
+    image: getImageUrl('The table and the fire.jpg'),
   },
 ];
 
@@ -113,7 +113,7 @@ export const ClubhouseGuestWorld: React.FC = () => {
         </div>
 
         {/* The four parts of the day */}
-        <ol className="grid grid-cols-1 gap-8 font-sans md:grid-cols-2 lg:grid-cols-4">
+        <ol className="grid grid-cols-2 gap-3 font-sans sm:gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {RITUALS.map((r, i) => (
             <motion.li
               key={r.time}
@@ -127,7 +127,7 @@ export const ClubhouseGuestWorld: React.FC = () => {
                 {/* Real property photography, not generated imagery. Full colour by
                     design — the greyscale-to-colour accent is reserved for the
                     hosts page so it stays a moment. */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#203F3A]/5">
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#203F3A]/5 sm:aspect-[4/3]">
                   <img
                     src={r.image}
                     alt={r.title}
@@ -136,24 +136,24 @@ export const ClubhouseGuestWorld: React.FC = () => {
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/25" />
-                  <div className="absolute top-4 left-4 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-3 py-1 backdrop-blur-md">
-                    <span className="font-serif text-sm font-light text-[#F4F1EA]">
+                  <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-2.5 py-0.5 backdrop-blur-md sm:left-4 sm:top-4 sm:px-3 sm:py-1">
+                    <span className="font-serif text-xs font-light text-[#F4F1EA] sm:text-sm">
                       {r.time}
                     </span>
                   </div>
-                  <div className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/50 text-[#F4F1EA] backdrop-blur-md transition-colors group-hover:bg-[#F4F1EA] group-hover:text-[#203F3A]">
+                  <div className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/50 text-[#F4F1EA] backdrop-blur-md transition-colors group-hover:bg-[#F4F1EA] group-hover:text-[#203F3A] sm:right-4 sm:top-4 sm:h-8 sm:w-8">
                     <r.icon size={15} />
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <h3 className="mb-2 font-serif text-xl leading-snug text-[#203F3A]">{r.title}</h3>
-                  <p className="text-xs font-light leading-relaxed text-[#203F3A]/75">{r.desc}</p>
+                <div className="p-4 sm:p-6">
+                  <h3 className="mb-1.5 font-serif text-base leading-snug text-[#203F3A] sm:mb-2 sm:text-xl">{r.title}</h3>
+                  <p className="line-clamp-3 text-[11px] font-light leading-relaxed text-[#203F3A]/75 sm:line-clamp-none sm:text-xs">{r.desc}</p>
                 </div>
               </div>
 
-              <div className="mx-6 mb-6 flex items-center justify-between border-t border-[#D7C8B4]/40 pt-4">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7A5E41]">
+              <div className="mx-4 mb-4 flex items-center justify-between border-t border-[#D7C8B4]/40 pt-3 sm:mx-6 sm:mb-6 sm:pt-4">
+                <span className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#7A5E41] sm:text-[10px] sm:tracking-[0.2em]">
                   {r.badge}
                 </span>
                 <Check size={14} className="text-[#203F3A]/40" />

@@ -14,9 +14,18 @@ const STORAGE_BUCKET = "Website Media"; // Bucket name (will be encoded in URL)
 // Helper function to build Supabase Storage URL.
 // A path may contain "/" for a folder (e.g. "email/banner.jpg"); each segment
 // is encoded separately so the slash survives.
+//
+// Commas are left literal. encodeURIComponent escapes them to %2C, but a comma
+// is a legal sub-delimiter inside a path segment and the storage URLs that are
+// known to work (e.g. "A swim, even in July.jpg") carry it unescaped. Percent-
+// encoding a reserved character is not guaranteed to be equivalent, so matching
+// the form that is known to resolve is the safe choice.
+const encodeSegment = (segment: string) =>
+  encodeURIComponent(segment).replace(/%2C/g, ",");
+
 export const getImageUrl = (path: string) => {
-  const encodedBucket = encodeURIComponent(STORAGE_BUCKET);
-  const encodedPath = path.split("/").map(encodeURIComponent).join("/");
+  const encodedBucket = encodeSegment(STORAGE_BUCKET);
+  const encodedPath = path.split("/").map(encodeSegment).join("/");
   return `https://${SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/${encodedBucket}/${encodedPath}`;
 };
 

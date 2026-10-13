@@ -15,7 +15,7 @@ import { ArchitecturalWalkthrough } from "../components/ArchitecturalWalkthrough
 import { ClubhouseGuestWorld } from "../components/ClubhouseGuestWorld";
 import { AmenityIcon } from "../components/AmenityIcon";
 import { OvalBadge, ClubRoundel, ScallopedSeal } from "../components/ClubMarks";
-import { HOME_IMAGES, DRONE_VIDEO } from "../lib/images";
+import { HOME_IMAGES, DRONE_VIDEO, getImageUrl } from "../lib/images";
 
 const heroImg = HOME_IMAGES.hero;
 const wellnessAreaImg = HOME_IMAGES.wellness;
@@ -451,27 +451,58 @@ export function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Bento rather than eight identical boxes: the two amenities
+                guests actually come for carry photography and take the space
+                to prove it, the rest stay compact. */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
               {[
-                { iconName: "pool", title: "Heated Pool & Spa", desc: "Heated year-round, swim even in July" },
+                { iconName: "pool", title: "Heated Pool & Spa", desc: "Heated year-round, swim even in July", image: "pool featurephoto.png", span: "col-span-2 lg:col-span-2 lg:row-span-2" },
                 { iconName: "sauna", title: "Outdoor Cedar Sauna", desc: "Private dry cedar sauna framed by native greenery" },
                 { iconName: "gym", title: "Private Fitness Gym", desc: "In-house weights and dedicated training equipment" },
                 { iconName: "coffee", title: "Barista Espresso", desc: "Fresh beans, grinder, and espresso bar ready on arrival" },
                 { iconName: "wifi", title: "High-Speed Wi-Fi", desc: "Fast coverage throughout indoor & outdoor living areas" },
+                { iconName: "views", title: "Lake & Mountain Views", desc: "Elevated vistas across Lake Taupō and Mt Ruapehu", image: "lake views.jpg", span: "col-span-2 lg:col-span-2" },
                 { iconName: "keyless", title: "Keyless Self Check-in", desc: "Effortless arrival with your personalized digital code" },
-                { iconName: "views", title: "Lake & Mountain Views", desc: "Elevated vistas across Lake Taupō and Mt Ruapehu" },
                 { iconName: "location", title: "Five Minutes to Town", desc: "Lakefront strolls, cafes, and Taupō town centre" },
               ].map((item, i) => (
-                <div
+                <motion.div
                   key={i}
-                  className="group bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-[#D7C8B4]/20 hover:border-[#D7C8B4]/60 hover:bg-white/10 transition-all text-left"
+                  initial={{ opacity: 0, y: 22 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.5, delay: (i % 4) * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  className={`group relative isolate overflow-hidden rounded-3xl border border-[#D7C8B4]/20 text-left transition-all duration-500 hover:border-[#D7C8B4]/60 ${
+                    item.image
+                      ? "min-h-[16rem] lg:min-h-0"
+                      : "bg-white/5 p-5 backdrop-blur-md hover:bg-white/10 sm:p-7"
+                  } ${item.span ?? ""}`}
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <AmenityIcon name={item.iconName} size={24} color="#D7C8B4" strokeWidth={2.3} />
+                  {item.image && (
+                    <>
+                      <img
+                        src={getImageUrl(item.image)}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#16302B] via-[#16302B]/70 to-[#16302B]/25" />
+                    </>
+                  )}
+
+                  <div className={item.image ? "flex h-full flex-col justify-end p-5 sm:p-7" : ""}>
+                    <div className={`flex items-center justify-center rounded-2xl bg-white/10 transition-transform duration-500 group-hover:scale-105 ${item.image ? "mb-4 h-11 w-11 backdrop-blur-md" : "mb-4 h-11 w-11 sm:mb-5 sm:h-12 sm:w-12"}`}>
+                      <AmenityIcon name={item.iconName} size={22} color="#D7C8B4" strokeWidth={2.3} />
+                    </div>
+                    <h4 className={`font-serif text-[#F4F1EA] ${item.image ? "text-xl sm:text-2xl" : "mb-2 text-base sm:text-lg"}`}>
+                      {item.title}
+                    </h4>
+                    <p className={`font-light leading-relaxed text-[#F4F1EA]/80 ${item.image ? "mt-2 max-w-sm text-xs sm:text-sm" : "text-[11px] sm:text-xs"}`}>
+                      {item.desc}
+                    </p>
                   </div>
-                  <h4 className="font-serif text-lg text-[#F4F1EA] mb-2">{item.title}</h4>
-                  <p className="text-xs text-[#F4F1EA]/70 font-light leading-relaxed">{item.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
