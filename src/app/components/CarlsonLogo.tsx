@@ -1,72 +1,97 @@
 import React from 'react';
+import { RouteBCarlsonWordmark } from './ClubMarks';
 
 interface CarlsonLogoProps {
   dark?: boolean;
   className?: string;
   showSubtitle?: boolean;
+  variant?: 'mark' | 'text' | 'vector';
 }
 
 /**
- * Carlson Properties — Coordinated Umbrella Brand Logo
- * Features an architectural threshold / portal symbol paired with warm, balanced typography.
- * Scales cleanly down to 24px and up to billboard sizes with crisp vector strokes.
+ * Carlson Properties — Umbrella Brand Logo
+ * Route B · Clubhouse (Fraunces Black, soft, with Figtree)
+ * Lake Green (#203F3A) & Warm Ivory (#F4F1EA) & Sandstone (#D7C8B4)
  */
 export const CarlsonLogo: React.FC<CarlsonLogoProps> = ({
   dark = false,
   className = "",
   showSubtitle = true,
+  variant = "mark",
 }) => {
-  // If dark mode or on dark header background, use Warm Ivory/Sandstone.
-  // Otherwise use Lake Green (#203F3A).
   const primaryColor = dark ? "#203F3A" : "#F4F1EA";
-  const accentColor = "#D7C8B4"; // Sandstone
+  const accentColor = "#D7C8B4";
+
+  if (variant === "vector") {
+    return (
+      <div className={`inline-flex items-center select-none group transition-opacity duration-300 hover:opacity-90 ${className}`}>
+        <RouteBCarlsonWordmark size={150} style={{ color: primaryColor }} />
+      </div>
+    );
+  }
 
   return (
     <div className={`inline-flex items-center gap-3 select-none group transition-opacity duration-300 hover:opacity-90 ${className}`}>
-      {/* Architectural Threshold Mark */}
+      {/* Clubhouse Portal & Three Pillars (111) Emblem */}
       <svg
-        width="34"
-        height="38"
-        viewBox="0 0 34 38"
+        width="32"
+        height="36"
+        viewBox="0 0 32 36"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="flex-shrink-0 transition-transform duration-500 group-hover:scale-105"
         aria-hidden="true"
       >
-        {/* Outer door frame / lintel */}
+        {/* Soft rounded arch / threshold */}
         <path
-          d="M4 36V6C4 3.79086 5.79086 2 8 2H26C28.2091 2 30 3.79086 30 6V36"
+          d="M3 34V13C3 6.92487 7.92487 2 14 2H18C24.0751 2 29 6.92487 29 13V34"
+          stroke={primaryColor}
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
+        {/* Three vertical strokes (111 house number) */}
+        <path
+          d="M10 14V34"
+          stroke={accentColor}
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M16 10V34"
           stroke={primaryColor}
           strokeWidth="2.2"
           strokeLinecap="round"
         />
-        {/* Inner threshold / lake horizon opening */}
         <path
-          d="M10 36V13C10 11.3431 11.3431 10 13 10H21C22.6569 10 24 11.3431 24 13V36"
+          d="M22 14V34"
           stroke={accentColor}
-          strokeWidth="1.8"
+          strokeWidth="2"
           strokeLinecap="round"
         />
-        {/* Warm welcoming hearth / floor datum line */}
+        {/* Base datum */}
         <path
-          d="M2 36H32"
+          d="M1 34H31"
           stroke={primaryColor}
           strokeWidth="2.2"
           strokeLinecap="round"
         />
       </svg>
 
-      {/* Typography */}
+      {/* Typography in Clubhouse Fraunces + Figtree */}
       <div className="flex flex-col justify-center text-left">
         <span
           className="font-serif tracking-tight text-lg md:text-xl font-normal leading-none"
-          style={{ color: primaryColor }}
+          style={{
+            color: primaryColor,
+            fontFamily: "'Fraunces', Georgia, serif",
+            fontVariationSettings: "'SOFT' 100, 'opsz' 72",
+          }}
         >
           Carlson Properties
         </span>
         {showSubtitle && (
           <span
-            className="font-sans text-[9px] uppercase tracking-[0.3em] font-medium mt-1 leading-none"
+            className="font-sans text-[9px] uppercase tracking-[0.28em] font-semibold mt-1 leading-none"
             style={{ color: accentColor }}
           >
             Taupō · New Zealand

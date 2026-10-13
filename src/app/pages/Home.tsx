@@ -12,6 +12,9 @@ import { SEO } from "../components/SEO";
 import { CustomCursor } from "../components/CustomCursor";
 import { EditorialPreloader } from "../components/EditorialPreloader";
 import { ArchitecturalWalkthrough } from "../components/ArchitecturalWalkthrough";
+import { ClubhouseGuestWorld } from "../components/ClubhouseGuestWorld";
+import { AmenityIcon } from "../components/AmenityIcon";
+import { OvalBadge, ClubRoundel, ScallopedSeal } from "../components/ClubMarks";
 import { HOME_IMAGES, DRONE_VIDEO } from "../lib/images";
 
 const heroImg = HOME_IMAGES.hero;
@@ -264,6 +267,51 @@ export function Home() {
         </section>
 
         {/* Architectural Walkthrough — Interactive Scrollytelling Section */}
+        {/* Board 4: The Website's Line of House Facts */}
+        <section className="bg-[#EBE6DC] border-y border-[#D7C8B4]/60 py-6 px-6 overflow-x-auto select-none">
+          <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[780px] gap-6 text-[#203F3A]">
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="bedrooms" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">5 Bedrooms</span>
+            </div>
+            <span className="text-[#D7C8B4] text-xs">/</span>
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="bathrooms" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">4 Bathrooms</span>
+            </div>
+            <span className="text-[#D7C8B4] text-xs">/</span>
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="sleeps" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">Sleeps 10</span>
+            </div>
+            <span className="text-[#D7C8B4] text-xs">/</span>
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="pool" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">Heated Pool</span>
+            </div>
+            <span className="text-[#D7C8B4] text-xs">/</span>
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="sauna" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">Cedar Sauna</span>
+            </div>
+            <span className="text-[#D7C8B4] text-xs">/</span>
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="spa" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">Spa Pool</span>
+            </div>
+            <span className="text-[#D7C8B4] text-xs">/</span>
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="coffee" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">Barista Espresso</span>
+            </div>
+            <span className="text-[#D7C8B4] text-xs">/</span>
+            <div className="flex items-center gap-2.5">
+              <AmenityIcon name="location" size={20} color="#203F3A" strokeWidth={2.2} />
+              <span className="text-xs font-semibold tracking-wider uppercase font-sans">5 Min to Town</span>
+            </div>
+          </div>
+        </section>
+
         <div id="walkthrough">
           <ArchitecturalWalkthrough />
         </div>
@@ -280,6 +328,10 @@ export function Home() {
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     alt="Heated pool and cedar outdoor sauna at One Eleven on the Mile"
                   />
+                  {/* Oval Badge from Good Company Board */}
+                  <div className="absolute top-6 right-6 z-20 hidden sm:block">
+                    <OvalBadge size={130} />
+                  </div>
                   <div className="absolute bottom-6 left-6 right-6 bg-[#203F3A]/90 backdrop-blur-md text-[#F4F1EA] p-6 rounded-2xl border border-[#D7C8B4]/30">
                     <span className="text-[10px] uppercase tracking-[0.28em] text-[#D7C8B4] font-semibold block mb-1">
                       Private Wellness
@@ -363,7 +415,11 @@ export function Home() {
         </section>
 
         {/* Real Guest Reviews Section */}
+        {/* Real Guest Reviews Section */}
         <Testimonials />
+
+        {/* Good Company / Clubhouse Guest World: Physical Objects & Rituals */}
+        <ClubhouseGuestWorld />
 
         {/* Amenities Grid in Lake Green */}
         <section id="amenities" className="bg-[#203F3A] py-32 md:py-40 text-[#F4F1EA] relative overflow-hidden">
@@ -382,22 +438,24 @@ export function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { icon: Waves, title: "Heated Pool & Spa", desc: "Heated year-round, swum even in July" },
-                { icon: Thermometer, title: "Outdoor Cedar Sauna", desc: "Private dry sauna next to the spa terrace" },
-                { icon: Dumbbell, title: "Private Fitness Gym", desc: "In-house weights and workout equipment" },
-                { icon: Coffee, title: "Barista Espresso", desc: "Quality beans, grinder, and coffee machine" },
-                { icon: Zap, title: "High-Speed Wi-Fi", desc: "Fast coverage throughout indoor & outdoor areas" },
-                { icon: Clock, title: "Keyless Door Entry", desc: "Smooth self check-in with your unique code" },
-                { icon: Shield, title: "Secure Grounds", desc: "Private off-street parking & tranquil gardens" },
-                { icon: MapPin, title: "Five Minutes to Town", desc: "Lake walks, cafes, and Taupō town centre" },
+                { iconName: "pool", title: "Heated Pool & Spa", desc: "Heated year-round, swum even in July" },
+                { iconName: "sauna", title: "Outdoor Cedar Sauna", desc: "Private dry cedar sauna framed by native greenery" },
+                { iconName: "gym", title: "Private Fitness Gym", desc: "In-house weights and dedicated training equipment" },
+                { iconName: "coffee", title: "Barista Espresso", desc: "Fresh beans, grinder, and espresso bar ready on arrival" },
+                { iconName: "wifi", title: "High-Speed Wi-Fi", desc: "Fast coverage throughout indoor & outdoor living areas" },
+                { iconName: "keyless", title: "Keyless Self Check-in", desc: "Effortless arrival with your personalized digital code" },
+                { iconName: "views", title: "Lake & Mountain Views", desc: "Elevated vistas across Lake Taupō and Mt Ruapehu" },
+                { iconName: "location", title: "Five Minutes to Town", desc: "Lakefront strolls, cafes, and Taupō town centre" },
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-[#D7C8B4]/20 hover:border-[#D7C8B4]/50 transition-all text-left"
+                  className="group bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-[#D7C8B4]/20 hover:border-[#D7C8B4]/60 hover:bg-white/10 transition-all text-left"
                 >
-                  <item.icon className="text-[#D7C8B4] mb-5" size={26} />
+                  <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                    <AmenityIcon name={item.iconName} size={24} color="#D7C8B4" strokeWidth={2.3} />
+                  </div>
                   <h4 className="font-serif text-lg text-[#F4F1EA] mb-2">{item.title}</h4>
-                  <p className="text-xs text-[#F4F1EA]/65 font-light leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-[#F4F1EA]/70 font-light leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>

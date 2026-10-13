@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { Star, Instagram, Facebook, ArrowUpRight, Phone, Mail, MapPin } from "lucide-react";
 import { CarlsonLogo } from "./CarlsonLogo";
 import { OneElevenLogo } from "./OneElevenLogo";
+import { ScallopedSeal, ClubRoundel } from "./ClubMarks";
 
 export function StatementFooter() {
   return (
@@ -31,15 +32,26 @@ export function StatementFooter() {
           </div>
         </div>
 
-        {/* Big Editorial Statement (Inspired by ACTL / Awwwards "Simply love to play") */}
-        <div className="py-20 md:py-28 border-b border-[#D7C8B4]/20">
-          <p className="text-[11px] md:text-xs uppercase tracking-[0.35em] text-[#D7C8B4] font-medium mb-4">
-            The Taupō Experience
-          </p>
-          <h2 className="text-6xl sm:text-7xl md:text-9xl lg:text-[10rem] font-serif font-light text-[#F4F1EA] tracking-tighter leading-[0.92] select-none">
-            Hard to <br />
-            <span className="italic font-normal text-[#D7C8B4]">leave.</span>
-          </h2>
+        {/* Big Editorial Statement with Good Company Scalloped Seal */}
+        <div className="py-20 md:py-28 border-b border-[#D7C8B4]/20 relative">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+            <div>
+              <p className="text-[11px] md:text-xs uppercase tracking-[0.35em] text-[#D7C8B4] font-medium mb-4">
+                The Taupō Experience
+              </p>
+              <h2 className="text-6xl sm:text-7xl md:text-9xl lg:text-[9.5rem] font-serif font-light text-[#F4F1EA] tracking-tighter leading-[0.92] select-none"
+                  style={{ fontFamily: "'Fraunces', Georgia, serif", fontVariationSettings: "'SOFT' 100, 'opsz' 144" }}>
+                Hard to <br />
+                <span className="italic font-normal text-[#D7C8B4]">leave.</span>
+              </h2>
+            </div>
+            {/* Scalloped Seal Badge from Good Company Board */}
+            <div className="flex-shrink-0 self-start lg:self-center pb-4">
+              <div className="hover:rotate-6 transition-transform duration-500 cursor-default">
+                <ScallopedSeal size={150} />
+              </div>
+            </div>
+          </div>
           <p className="mt-8 max-w-xl text-base md:text-lg text-[#F4F1EA]/80 font-light leading-relaxed">
             Five bedrooms, a heated pool, cedar sauna, and quiet lakefront mornings on Jarden Mile. Curated for family reunions, milestone gatherings, and unhurried time together.
           </p>

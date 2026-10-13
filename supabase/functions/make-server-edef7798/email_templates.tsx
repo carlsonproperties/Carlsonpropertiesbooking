@@ -275,7 +275,7 @@ export async function sendBookingConfirmation(booking: any) {
           </td>
         </tr>
 
-        ${bodyText(`Three days before your check-in, we will send our digital guidebook with your door code, Wi-Fi details, and house instructions.`, true)}
+        ${bodyText(`Four days before your check-in, we will send our digital guidebook with your door code, Wi-Fi details, and house instructions.`, true)}
 
         <!-- Spacer -->
         <tr><td style="height: 20px;"></td></tr>

@@ -1,28 +1,37 @@
 import React from 'react';
+import { RouteBOneElevenWordmark } from './ClubMarks';
 
 interface OneElevenLogoProps {
   dark?: boolean;
   className?: string;
   layout?: "horizontal" | "stacked";
   withEndorsement?: boolean;
+  variant?: "mark" | "vector";
 }
 
 /**
  * One Eleven on the Mile — Flagship Property Logo
- * Architectural mark drawing from the real property architecture:
- * - Shallow peaked roofline
- * - Distinctive tall entrance with 3 vertical pillar lines (echoing "111")
- * - Broad horizontal grounding base
+ * Route B · Clubhouse (Fraunces Black, softened, with Figtree)
+ * Lake Green (#203F3A) & Warm Ivory (#F4F1EA) & Sandstone (#D7C8B4)
  */
 export const OneElevenLogo: React.FC<OneElevenLogoProps> = ({
   dark = false,
   className = "",
   layout = "horizontal",
   withEndorsement = true,
+  variant = "mark",
 }) => {
   const primary = dark ? "#203F3A" : "#F4F1EA";
-  const bronze = "#9B7955";
   const sandstone = "#D7C8B4";
+  const bronze = "#9B7955";
+
+  if (variant === "vector") {
+    return (
+      <div className={`inline-flex items-center select-none group ${className}`}>
+        <RouteBOneElevenWordmark size={240} style={{ color: primary }} />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -30,63 +39,67 @@ export const OneElevenLogo: React.FC<OneElevenLogoProps> = ({
         layout === "stacked" ? "flex-col text-center" : "text-left"
       } ${className}`}
     >
-      {/* Architectural 111 Roofline Monogram */}
+      {/* 111 Architectural Roofline & Cedar Pillars */}
       <svg
-        width="40"
-        height="36"
-        viewBox="0 0 40 36"
+        width="38"
+        height="34"
+        viewBox="0 0 38 34"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="flex-shrink-0 transition-transform duration-500 group-hover:scale-105"
         aria-hidden="true"
       >
-        {/* Shallow peaked roofline */}
+        {/* Soft shallow peaked roofline */}
         <path
-          d="M3 13L20 4L37 13"
+          d="M2 13L19 4L36 13"
           stroke={primary}
-          strokeWidth="2.2"
+          strokeWidth="2.4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         {/* 111 Three Pillars (tall entrance and glazing cadence) */}
         <path
-          d="M13 13V30"
+          d="M12 13V28"
           stroke={sandstone}
-          strokeWidth="2"
+          strokeWidth="2.2"
           strokeLinecap="round"
         />
         <path
-          d="M20 10V30"
+          d="M19 10V28"
           stroke={primary}
           strokeWidth="2.4"
           strokeLinecap="round"
         />
         <path
-          d="M27 13V30"
+          d="M26 13V28"
           stroke={sandstone}
-          strokeWidth="2"
+          strokeWidth="2.2"
           strokeLinecap="round"
         />
-        {/* Foundation line */}
+        {/* Horizontal datum */}
         <path
-          d="M6 30H34"
+          d="M5 28H33"
           stroke={primary}
-          strokeWidth="1.8"
+          strokeWidth="2"
           strokeLinecap="round"
         />
       </svg>
 
-      {/* Typography */}
+      {/* Typography in Clubhouse Fraunces + Figtree */}
       <div className={`flex flex-col ${layout === "stacked" ? "items-center" : "items-start"}`}>
         <span
           className="font-serif tracking-tight text-xl md:text-2xl font-light leading-none"
-          style={{ color: primary }}
+          style={{
+            color: primary,
+            fontFamily: "'Fraunces', Georgia, serif",
+            fontVariationSettings: "'SOFT' 100, 'opsz' 72",
+          }}
         >
-          ONE ELEVEN
+          One Eleven
         </span>
         <div className="flex items-center gap-1.5 mt-1">
           <span
-            className="font-sans text-[9px] uppercase tracking-[0.32em] font-medium leading-none"
+            className="font-sans text-[9px] uppercase tracking-[0.3em] font-semibold leading-none"
             style={{ color: sandstone }}
           >
             On The Mile · Taupō
@@ -95,7 +108,7 @@ export const OneElevenLogo: React.FC<OneElevenLogoProps> = ({
             <>
               <span className="text-[9px] opacity-40" style={{ color: sandstone }}>·</span>
               <span
-                className="font-sans text-[8px] uppercase tracking-[0.2em] font-normal leading-none"
+                className="font-sans text-[8px] uppercase tracking-[0.22em] font-medium leading-none"
                 style={{ color: bronze }}
               >
                 By Carlson

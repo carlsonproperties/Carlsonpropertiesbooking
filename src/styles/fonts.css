@@ -1,18 +1,14 @@
 /* ─────────────────────────────────────────────────────────────
-   Lake & Stone — typefaces
-   Display: Playfair Display   UI / body: Inter
+   Good Company / Route B Clubhouse — typefaces
+   Display: Fraunces (soft, optical size 72, SOFT 100)
+   UI / body: Figtree (weights 300..900)
 
-   The webfonts are loaded by a <link> in index.html, NOT by an
-   @import here. A nested @import gets hoisted below Tailwind's
-   inlined rules, which is an invalid position, so the bundler drops
-   it silently — the family is declared but the font never downloads
-   and everything falls back to the system serif. That was the
-   original bug; don't reintroduce it.
+   The webfonts are loaded by a <link> in index.html.
    ───────────────────────────────────────────────────────────── */
 
 :root {
-  --brand-font-display: 'Playfair Display', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
-  --brand-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --brand-font-display: 'Fraunces', 'Playfair Display', 'Iowan Old Style', Georgia, serif;
+  --brand-font-body: 'Figtree', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
 
   /* kept so existing references keep resolving */
   --font-serif: var(--brand-font-display);
@@ -25,4 +21,23 @@ body {
 
 .font-serif {
   font-family: var(--brand-font-display);
+  font-variation-settings: 'SOFT' 100, 'opsz' 72;
+}
+
+.font-sans {
+  font-family: var(--brand-font-body);
+}
+
+/* Club typography utilities */
+.font-club-headline {
+  font-family: var(--brand-font-display);
+  font-variation-settings: 'SOFT' 100, 'opsz' 100;
+  letter-spacing: -0.02em;
+}
+
+.font-club-subhead {
+  font-family: var(--brand-font-body);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
