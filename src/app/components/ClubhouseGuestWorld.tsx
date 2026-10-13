@@ -8,8 +8,8 @@ import { Link } from 'react-router';
  * ClubhouseGuestWorld — how a day at One Eleven actually runs.
  *
  * Everything on this page has to be something a guest will really find when
- * they arrive: the espresso machine, the year-round heated pool, the cedar
- * barrel sauna and spa, the stone fireplace, the ten-seater table. There is
+ * they arrive: the espresso machine, the year-round heated pool, the 4-person
+ * rectangular cedar sauna and spa, the double-sided fireplace, the ten-seater table. There is
  * no merchandise and no branded kit, so nothing here may imply any.
  */
 
@@ -39,16 +39,16 @@ const RITUALS: Ritual[] = [
   {
     time: '16:30',
     title: 'Sauna, then the spa',
-    desc: 'The cedar barrel sauna warms up out in the garden and the hydrotherapy spa sits a few steps away. Guests keep telling us this is the part that makes the house hard to leave.',
+    desc: 'The 4-person rectangular cedar sauna warms up in the courtyard and the hydrotherapy spa sits just steps away. Guests keep telling us this is the part that makes the house hard to leave.',
     icon: Thermometer,
-    badge: 'Sauna · Spa · Pool',
+    badge: '4-Person Sauna · Spa · Pool',
   },
   {
     time: '20:00',
     title: 'The table and the fire',
-    desc: 'Ten seats fill up around one table, the stone fireplace gets going, and the lake goes dark outside the glass. Town is five minutes away if you want it.',
+    desc: 'Ten seats gather around the dining table, the double-sided fireplace warms the living room, and the lake goes dark outside the glass. Town is five minutes away if you want it.',
     icon: Flame,
-    badge: 'Stone Fireplace · Seats 10',
+    badge: 'Double-Sided Fire · Seats 10',
   },
 ];
 
