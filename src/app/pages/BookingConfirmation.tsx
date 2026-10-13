@@ -94,12 +94,8 @@ export function BookingConfirmation() {
         className="max-w-2xl w-full"
       >
         <div className="bg-white p-12 md:p-20 rounded-[60px] shadow-[0_40px_100px_rgba(0,0,0,0.05)] border border-slate-100 text-center relative overflow-hidden">
-          <div className="absolute top-10 right-10 w-24 h-24 opacity-20 hover:opacity-100 transition-opacity">
-            <img 
-               src="https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/Black%20White%20Minimalist%20Calligraphy%20Signature%20Logo.png" 
-               className="w-full h-full object-contain -rotate-12" 
-               alt="Brand Logo" 
-            />
+          <div className="absolute top-10 right-10 opacity-30 hover:opacity-100 transition-opacity">
+            <ScallopedSeal size={96} className="-rotate-12 text-[#203F3A]" />
           </div>
           
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-transparent via-[#203F3A] to-transparent" />

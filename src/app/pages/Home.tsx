@@ -353,7 +353,7 @@ export function Home() {
                     </span>
                     <h4 className="font-serif text-xl font-normal">Heated Pool, Spa &amp; Cedar Sauna</h4>
                     <p className="text-xs text-[#F4F1EA]/70 mt-1 font-light">
-                      Swum even in the depths of July. Designed for total privacy and effortless relaxation.
+                      Warm enough to swim in even in the depths of July. Designed for total privacy and effortless relaxation.
                     </p>
                   </div>
                 </div>
@@ -453,7 +453,7 @@ export function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { iconName: "pool", title: "Heated Pool & Spa", desc: "Heated year-round, swum even in July" },
+                { iconName: "pool", title: "Heated Pool & Spa", desc: "Heated year-round, swim even in July" },
                 { iconName: "sauna", title: "Outdoor Cedar Sauna", desc: "Private dry cedar sauna framed by native greenery" },
                 { iconName: "gym", title: "Private Fitness Gym", desc: "In-house weights and dedicated training equipment" },
                 { iconName: "coffee", title: "Barista Espresso", desc: "Fresh beans, grinder, and espresso bar ready on arrival" },

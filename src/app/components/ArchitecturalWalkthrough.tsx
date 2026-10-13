@@ -66,7 +66,7 @@ const CHAPTERS: Chapter[] = [
     id: "wellness",
     number: "03",
     eyebrow: "The Private Wellness Club",
-    title: "Heated year-round. Swum in July.",
+    title: "Heated year-round. Swim in July.",
     body: "A courtyard of its own: the heated pool, a cedar barrel sauna and the hydrotherapy spa, framed by gardens and clean Taupō air.",
     quote: "The pool, sauna and spa area made it really hard to leave.",
     mediaType: "image",
@@ -328,9 +328,9 @@ function ChapterLayer({
             className="pointer-events-none absolute right-8 top-24 h-24 w-24 opacity-90 md:right-14 md:h-32 md:w-32"
           />
           <div className="pointer-events-none absolute bottom-24 right-6 max-w-[16rem] rounded-2xl border border-[#D7C8B4]/30 bg-[#16302B]/70 p-4 backdrop-blur-md md:right-10">
-            <p className="font-display text-2xl text-[#F4F1EA]">38°C</p>
+            <p className="font-display text-2xl text-[#F4F1EA]">Heated year-round</p>
             <p className="mt-1 text-[11px] leading-relaxed text-[#F4F1EA]/80">
-              Heated year-round — swim in July, sauna at dusk.
+              Swim in July, sauna at dusk.
             </p>
           </div>
         </>

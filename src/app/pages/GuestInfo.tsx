@@ -47,7 +47,9 @@ import {
   Heart,
   Tag,
   MessageSquare,
-  Menu
+  Menu,
+  ArrowUpRight,
+  PlayCircle
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { MobileMenu } from "../components/MobileMenu";
@@ -55,8 +57,9 @@ import { Footer } from "../components/Footer";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
 import { guestInfoSchema } from "../lib/schemas";
+import { GUEST_INFO_IMAGES, HOWTO_MEDIA, EXPLORE_IMAGE, GUIDE_BOOK_PDF } from "../lib/images";
+import { GOOGLE_REVIEW_URL, PHONE_DISPLAY } from "../lib/links";
 
-const PDF_URL = "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/ONE_ELEVEN_ON_THE_MILE_DIGITAL_GUIDE_BOOK-compressed%20(1).pdf";
 const LAST_UPDATED = "February 26, 2026";
 
 const SECTIONS = [
@@ -68,7 +71,7 @@ const SECTIONS = [
       header: "A Warm Welcome",
       text: "We're thrilled to welcome you as our guest, our mission is to make you feel at home, even when you're away.\n\nWe're here to ensure your time in Taupō is nothing short of amazing. We look forward to welcoming you or answering any questions you may have prior to your stay.",
       signature: "Matt & Ash",
-      image: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/036_Open2view_ID584542-111_Jarden_Mile.jpg",
+      image: GUEST_INFO_IMAGES.welcome,
       contact: [
         { icon: <Phone size={18} />, value: "027 697 7961" },
         { icon: <Mail size={18} />, value: "bookings@carlsonproperties.co.nz" }
@@ -99,8 +102,8 @@ const SECTIONS = [
       tabs: ["Pool Cover", "Sauna", "Air Con & Fire", "Smart Lock"],
       data: {
         "Pool Cover": {
-          image: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/2_4d919f19-1ce7-4f1b-af30-a4a0ba91f92b_2.png",
-          video: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/Pool%20Cover%20How%20To.mp4", 
+          image: HOWTO_MEDIA.poolCover.image,
+          video: HOWTO_MEDIA.poolCover.video, 
           steps: [
             "Insert and Unlock: Insert the key into the control panel.",
             "Open the Cover: Turn the key one time towards the I (1).",
@@ -109,8 +112,8 @@ const SECTIONS = [
           ]
         },
         "Sauna": {
-          image: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/a61b55a1-648d-4f89-a5b7-ad1b4574a3f4%20(1).jpg",
-          video: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/Sauna%20How%20To.mp4", 
+          image: HOWTO_MEDIA.sauna.image,
+          video: HOWTO_MEDIA.sauna.video, 
           steps: [
             "Preheat the Sauna: Turn on the sauna heater and set the temperature dial. Allow 15 minutes for preheating.",
             "Enjoy Your Sauna session: Enter the sauna with a towel to sit on. Use the control panel for lights and bluetooth.",
@@ -118,8 +121,8 @@ const SECTIONS = [
           ]
         },
         "Air Con & Fire": {
-          image: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/91320ece-1cd2-4e0b-86a3-c54d5ec2637a.avif",
-          video: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/Air%20Con%20How%20To.mp4", 
+          image: HOWTO_MEDIA.airCon.image,
+          video: HOWTO_MEDIA.airCon.video, 
           steps: [
             "AC Panel: Located in the hallway. Select mode and temperature.",
             "Modes: Sunlight icon for heat, Snowflake icon for cooling.",
@@ -127,8 +130,8 @@ const SECTIONS = [
           ]
         },
         "Smart Lock": {
-          image: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/6502edca-88c7-447b-98b9-d4a39d843b61.jpg",
-          video: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/open%20door%20How%20To.mp4", 
+          image: HOWTO_MEDIA.frontDoor.image,
+          video: HOWTO_MEDIA.frontDoor.video, 
           steps: [
             "Wake Keypad: Touch the screen to illuminate the numbers.",
             "Enter Code: Key in your unique 4-digit PIN.",
@@ -272,7 +275,7 @@ const SECTIONS = [
     icon: <LogOut size={20} />,
     content: {
       header: "Departure Guide",
-      image: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/1314bd58-da8d-4483-b143-4633f11ee4e9%20(1).jpg",
+      image: EXPLORE_IMAGE,
       checklist: [
         "Load & start the dishwasher",
         "Turn off lights and appliances",
@@ -288,7 +291,7 @@ const SECTIONS = [
     icon: <Sparkles size={20} />,
     content: {
       header: "Thank You",
-      image: "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/032_Open2view_ID584542-111_Jarden_Mile.jpg",
+      image: GUEST_INFO_IMAGES.checkout,
       text: "Thank you for choosing to stay with us. We hope you have a wonderful time in Taupō and create memories that last a lifetime.",
       contact: [
         { icon: <Phone size={18} />, value: "027 697 7961" },
@@ -425,10 +428,11 @@ export function GuestInformation() {
                 Everything you need for a seamless stay at One Eleven, from check-in details to our hand-picked local favorites.
               </p>
             </div>
+            {GUIDE_BOOK_PDF && (
             <motion.a 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              href={PDF_URL} 
+              href={GUIDE_BOOK_PDF} 
               target="_blank" 
               rel="noopener noreferrer"
               className="group flex items-center gap-4 px-8 py-5 bg-white border border-slate-100 rounded-[32px] shadow-sm hover:shadow-xl transition-all duration-500 text-slate-700 font-black text-[11px] tracking-widest uppercase"
@@ -438,6 +442,7 @@ export function GuestInformation() {
               </div>
               Download PDF Guide
             </motion.a>
+            )}
           </motion.div>
         </header>
 
@@ -687,16 +692,30 @@ export function GuestInformation() {
                       <div className="space-y-8">
                         <div className="rounded-[48px] overflow-hidden shadow-2xl bg-slate-100 aspect-video relative group">
                           {activeSection.content.data[instructionSubTab].video ? (
-                            <video 
+                            <video
                               key={instructionSubTab}
-                              controls 
+                              controls
                               className="w-full h-full object-cover"
-                              poster={activeSection.content.data[instructionSubTab].image}
+                              poster={activeSection.content.data[instructionSubTab].image ?? undefined}
                             >
                               <source src={activeSection.content.data[instructionSubTab].video} type="video/mp4" />
                             </video>
-                          ) : (
+                          ) : activeSection.content.data[instructionSubTab].image ? (
                             <img src={activeSection.content.data[instructionSubTab].image} className="w-full h-full object-cover" alt="Guide" />
+                          ) : (
+                            /* No media for this step yet — show a calm placeholder
+                               rather than a broken image. The written steps beside
+                               it are the real instructions either way. */
+                            <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-3 text-center px-8">
+                              <div className="w-14 h-14 rounded-full bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A]">
+                                <PlayCircle size={26} />
+                              </div>
+                              <p className="text-sm font-bold text-slate-700">Video guide coming shortly</p>
+                              <p className="text-xs text-slate-400 max-w-[18rem] leading-relaxed">
+                                Follow the written steps, or call us on {PHONE_DISPLAY} and we&rsquo;ll
+                                talk you through it.
+                              </p>
+                            </div>
                           )}
                         </div>
                         <div className="p-8 bg-blue-50 rounded-[32px] border border-blue-100 flex gap-6">
@@ -877,6 +896,38 @@ export function GuestInformation() {
                       <h2 className="text-6xl font-serif text-slate-900 tracking-tighter">Thank you for <br /><span className="italic text-[#203F3A]">staying with us.</span></h2>
                       <p className="text-xl text-slate-500 font-light leading-relaxed">{activeSection.content.text}</p>
                     </div>
+                    {/* The ask. This page is open during and just after the
+                        stay, which is the one moment a guest is most likely to
+                        actually leave a review — so make it one tap. */}
+                    <div className="max-w-3xl mx-auto bg-[#16302B] text-[#F4F1EA] rounded-[48px] p-10 md:p-14 shadow-2xl">
+                      <div className="flex items-center justify-center gap-1.5 mb-6 text-[#D7C8B4]">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={22} fill="#D7C8B4" strokeWidth={0} />
+                        ))}
+                      </div>
+                      <h3 className="font-serif text-3xl md:text-4xl font-light leading-tight">
+                        Would you tell someone else about it?
+                      </h3>
+                      <p className="mt-5 text-base md:text-lg font-light leading-relaxed text-[#F4F1EA]/80">
+                        We&rsquo;re a family running one house, not a chain — a review on Google is
+                        genuinely the biggest thing you can do for us, and it helps the next guests
+                        know what they&rsquo;re booking. It takes about a minute.
+                      </p>
+                      <a
+                        href={GOOGLE_REVIEW_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-cursor="review"
+                        className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#F4F1EA] px-9 py-4 text-[11px] font-bold uppercase tracking-[0.22em] text-[#203F3A] shadow-lg transition-all hover:bg-[#D7C8B4]"
+                      >
+                        Leave a Google Review
+                        <ArrowUpRight size={16} />
+                      </a>
+                      <p className="mt-5 text-[11px] uppercase tracking-[0.2em] text-[#F4F1EA]/50">
+                        Something not right? Call or email us first — we&rsquo;d rather fix it.
+                      </p>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                       {activeSection.content.contact?.map((item: any, i: number) => (
                         <div key={i} className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-sm flex flex-col items-center gap-6">

@@ -32,7 +32,7 @@ const RITUALS: Ritual[] = [
   {
     time: '11:00',
     title: 'A swim, even in July',
-    desc: 'The pool is heated to 38°C the whole year round. Cold mountain air on your face, steam coming off the water, Mount Tauhara across the lake.',
+    desc: 'The pool is heated the whole year round. Cold mountain air on your face, steam coming off the water, Mount Tauhara across the lake.',
     icon: Waves,
     badge: 'Heated Year-Round',
   },

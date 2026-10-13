@@ -39,8 +39,7 @@ function TaupoClock() {
         Taupō <span className="font-mono tracking-normal tabular-nums">{time}</span>
       </span>
       <span className="inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/85">
-        Pool <span className="font-mono tracking-normal">38°C</span>
-        <span className="text-[#D7C8B4]/70">Heated year-round</span>
+        Pool <span className="text-[#D7C8B4]/80">Heated year-round</span>
       </span>
     </div>
   );
@@ -96,9 +95,26 @@ export function StatementFooter() {
               </div>
             </div>
           </div>
-          <p className="mt-8 max-w-xl text-base md:text-lg text-[#F4F1EA]/80 font-light leading-relaxed">
-            Five bedrooms, a heated pool, cedar sauna, and quiet lakefront mornings on Jarden Mile. Curated for family reunions, milestone gatherings, and unhurried time together.
-          </p>
+          <div className="mt-8 max-w-2xl">
+            <p className="text-base md:text-lg text-[#F4F1EA]/85 font-light leading-relaxed">
+              Guests keep telling us the same thing — they meant to head into town, and then didn&rsquo;t.
+              Five bedrooms and room for ten, a pool that stays warm through July, a cedar sauna out in
+              the garden, and the lake doing its thing through every window.
+            </p>
+            <p className="mt-4 text-base md:text-lg text-[#D7C8B4] font-light leading-relaxed italic">
+              Taupō is five minutes away, for whenever you finally want it.
+            </p>
+            <ul className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/70">
+              {['5 Bedrooms', 'Sleeps 10', 'Heated Pool', 'Cedar Sauna', '5 Min to Town'].map(
+                (fact, i) => (
+                  <li key={fact} className="flex items-center gap-3">
+                    {i > 0 && <span className="h-1 w-1 rounded-full bg-[#D7C8B4]/50" aria-hidden="true" />}
+                    <span>{fact}</span>
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
         </div>
 
         {/* Main Grid: Directory, Hosts, Details */}

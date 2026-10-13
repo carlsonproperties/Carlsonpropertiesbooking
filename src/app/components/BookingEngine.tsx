@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { Calendar as CalendarIcon, Users, ArrowRight, CheckCircle, Info } from "lucide-react";
 import { useNavigate } from "react-router";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
+import { ScallopedSeal } from './ClubMarks';
 
 interface BookingEngineProps {
   pricePerNight?: number;
@@ -141,12 +142,8 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white p-12 rounded-[40px] text-center shadow-xl border border-slate-100 relative overflow-hidden"
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full -z-10 opacity-[0.04] pointer-events-none flex items-center justify-center overflow-hidden">
-           <img 
-              src="https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/Black%20White%20Minimalist%20Calligraphy%20Signature%20Logo.png" 
-              className="w-full h-full object-contain rotate-6 scale-125" 
-              alt="" 
-           />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 opacity-[0.05] pointer-events-none flex items-center justify-center overflow-hidden">
+           <ScallopedSeal size={320} className="rotate-6 text-[#203F3A]" />
         </div>
         <div className="w-20 h-20 bg-[#203F3A]/10 text-[#203F3A] rounded-full flex items-center justify-center mx-auto mb-6 relative z-10">
           <CheckCircle size={40} />
@@ -282,42 +279,42 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
 
       {/* Booking Side */}
       <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-32">
-        <div className="bg-slate-900 text-white p-10 rounded-[48px] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#203F3A]/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="bg-[#16302B] text-[#F4F1EA] p-10 rounded-[48px] shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#D7C8B4]/10 rounded-full -mr-16 -mt-16 blur-3xl" />
           
           <div className="relative z-10">
             <div className="flex justify-between items-start mb-10">
               <div>
-                <span className="text-[#203F3A] text-[10px] font-bold uppercase tracking-[0.3em] block mb-2">Luxury Residence</span>
+                <span className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.3em] block mb-2">Luxury Residence</span>
                 <h4 className="text-3xl font-serif leading-tight">One Eleven <br /><span className="italic">On the Mile</span></h4>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-serif text-[#203F3A]">${actualPrice}</p>
-                <p className="text-[10px] text-white/40 uppercase tracking-widest">Per Night</p>
+                <p className="text-3xl font-serif text-[#D7C8B4]">${actualPrice}</p>
+                <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Per Night</p>
               </div>
             </div>
 
             <div className="space-y-4 mb-10">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <CalendarIcon size={18} className="text-[#203F3A]" />
+                  <CalendarIcon size={18} className="text-[#D7C8B4]" />
                   <div>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest">Check-In</p>
+                    <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Check-In</p>
                     <p className="text-sm font-bold">{range?.from ? format(range.from, 'MMM dd, yyyy') : 'Select date'}</p>
                   </div>
                 </div>
                 <ArrowRight size={16} className="text-white/20" />
                 <div className="text-right">
-                  <p className="text-[10px] text-white/40 uppercase tracking-widest">Check-Out</p>
+                  <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Check-Out</p>
                   <p className="text-sm font-bold">{range?.to ? format(range.to, 'MMM dd, yyyy') : 'Select date'}</p>
                 </div>
               </div>
 
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Users size={18} className="text-[#203F3A]" />
+                  <Users size={18} className="text-[#D7C8B4]" />
                   <div>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest">Guests</p>
+                    <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Guests</p>
                     <p className="text-sm font-bold">{guests} Guests</p>
                   </div>
                 </div>
@@ -335,23 +332,23 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
                 className="border-t border-white/10 pt-8 mt-8 space-y-4"
               >
                 <div className="flex justify-between text-sm">
-                  <span className="text-white/60 font-medium">${actualPrice} × {numberOfNights} nights</span>
+                  <span className="text-[#F4F1EA]/70 font-medium">${actualPrice} × {numberOfNights} nights</span>
                   <span className="font-bold">${subtotal.toLocaleString()}</span>
                 </div>
                 
                 <div className="flex justify-between text-sm items-center">
                   <div className="flex items-center gap-2">
-                    <span className="text-[#203F3A] font-bold uppercase tracking-widest text-[10px] bg-[#203F3A]/10 px-2 py-0.5 rounded">Direct Booking 10% Off</span>
+                    <span className="text-[#16302B] font-bold uppercase tracking-widest text-[10px] bg-[#D7C8B4] px-2 py-0.5 rounded">Direct Booking 10% Off</span>
                   </div>
-                  <span className="font-bold text-[#203F3A] flex items-center gap-1">
+                  <span className="font-bold text-[#D7C8B4] flex items-center gap-1">
                     <span className="text-[10px] uppercase font-bold">-</span>
                     ${discountAmount.toLocaleString()}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-white/60 font-medium">Cleaning & Service Fee</span>
-                  <span className="font-bold text-[#203F3A]">Included</span>
+                  <span className="text-[#F4F1EA]/70 font-medium">Cleaning & Service Fee</span>
+                  <span className="font-bold text-[#D7C8B4]">Included</span>
                 </div>
 
                 {isTooShort && (
@@ -364,11 +361,11 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
                 <div className="flex justify-between items-end pt-4 border-t border-white/10">
                   <div className="flex flex-col">
                     <span className="text-lg font-serif">Total amount</span>
-                    <span className="text-[10px] text-white/40 uppercase tracking-widest italic">Includes all taxes and fees</span>
+                    <span className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest italic">Includes all taxes and fees</span>
                   </div>
                   <div className="text-right">
                     <span className="text-white/30 text-xs line-through block font-medium decoration-white/20">${subtotal.toLocaleString()}</span>
-                    <span className="text-3xl font-serif text-[#203F3A]">${totalPrice.toLocaleString()}</span>
+                    <span className="text-3xl font-serif text-[#D7C8B4]">${totalPrice.toLocaleString()}</span>
                   </div>
                 </div>
               </motion.div>
@@ -390,8 +387,8 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
               onClick={handleBookNow}
               className={`w-full mt-10 py-6 rounded-2xl font-bold uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-3 shadow-2xl ${
                 range?.from && range?.to && !isTooShort
-                ? "bg-[#203F3A] text-white hover:bg-[#8A8D6D] scale-[1.02]" 
-                : "bg-white/5 text-white/20 cursor-not-allowed"
+                ? "bg-[#F4F1EA] text-[#203F3A] hover:bg-[#D7C8B4] scale-[1.02]" 
+                : "bg-[#F4F1EA]/10 text-[#F4F1EA]/30 cursor-not-allowed"
               }`}
             >
               Continue to Checkout <ArrowRight size={20} />
