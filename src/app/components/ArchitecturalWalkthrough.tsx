@@ -25,7 +25,9 @@ import { Volume2, VolumeX } from "lucide-react";
    ─────────────────────────────────────────────────────────────── */
 
 const IMG = "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media";
-const FALLBACK = `${IMG}/029_Open2view_ID584542-111_Jarden_Mile.jpg`;
+// Poster for the drone reel and the last-resort image source. Deliberately a
+// photograph confirmed to be in the bucket: a fallback that 404s is no fallback.
+const FALLBACK = `${IMG}/lake%20views.jpg`;
 
 interface Chapter {
   id: string;

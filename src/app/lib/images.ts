@@ -122,7 +122,7 @@ export const ALL_PROPERTY_IMAGES = [
 // ============================================
 // 🛒 BOOKING FLOW
 // ============================================
-export const PROPERTY_CARD_IMAGE = getImageUrl("032_Open2view_ID584542-111_Jarden_Mile.jpg");
+export const PROPERTY_CARD_IMAGE = getImageUrl("lake views.jpg");
 
 // ============================================
 // 📖 GUEST INFO / HOUSE MANUAL

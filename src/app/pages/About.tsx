@@ -29,13 +29,6 @@ import { GALLERY_IMAGES, BEDROOM_IMAGES } from "../lib/images";
 
 // Using your Supabase-hosted property images
 const heroImg = GALLERY_IMAGES.hero;
-const gallery1 = GALLERY_IMAGES.kitchen;
-const gallery2 = GALLERY_IMAGES.pool;
-const gallery4 = GALLERY_IMAGES.livingRoom;
-const galleryLivingRoom = GALLERY_IMAGES.livingRoom;
-const galleryExterior = GALLERY_IMAGES.exterior;
-const gallerySaunaSpa = GALLERY_IMAGES.sauna;
-const galleryBBQ = GALLERY_IMAGES.bbq;
 const bedroom1 = BEDROOM_IMAGES.bedroom1;
 const ensuite1 = BEDROOM_IMAGES.ensuite1;
 const bedroom2 = BEDROOM_IMAGES.bedroom2;
