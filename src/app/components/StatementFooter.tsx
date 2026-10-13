@@ -17,6 +17,7 @@ import {
 import { CarlsonLogo } from "./CarlsonLogo";
 import { OneElevenLogo } from "./OneElevenLogo";
 import { ScallopedSeal } from "./ClubMarks";
+import { FooterNavReveal } from "./FooterNavReveal";
 
 /** Live local time at the house. Taupō observes NZST/NZDT. */
 function TaupoClock() {
@@ -216,10 +217,15 @@ export function StatementFooter() {
           </div>
         </div>
 
+        {/* Oversized interactive navigation with cursor-tracked previews */}
+        <div className="border-b border-[#D7C8B4]/20">
+          <FooterNavReveal />
+        </div>
+
         {/* Main Grid: Directory, Hosts, Details */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 border-b border-[#D7C8B4]/20">
           {/* Col 1: Personal Host Note */}
-          <div className="md:col-span-4 space-y-4 text-left">
+          <div className="md:col-span-5 space-y-4 text-left">
             <h4 className="font-serif text-xl text-[#F4F1EA]">Local Hosting</h4>
             <p className="text-sm text-[#F4F1EA]/75 font-light leading-relaxed">
               We are Matt and Ashleigh Carlson. We live nearby in Taupō and look after every detail ourselves so your stay is effortless from arrival to check-out.
@@ -240,20 +246,8 @@ export function StatementFooter() {
             </div>
           </div>
 
-          {/* Col 2: Navigation */}
-          <div className="md:col-span-3 space-y-4 text-left">
-            <h4 className="font-serif text-xl text-[#F4F1EA]">Navigation</h4>
-            <ul className="space-y-2.5 text-xs uppercase tracking-[0.2em] font-medium text-[#D7C8B4]">
-              <li><Link to="/about" className="hover:text-[#F4F1EA] transition-colors">About One Eleven</Link></li>
-              <li><Link to="/meet-hosts" className="hover:text-[#F4F1EA] transition-colors">Meet Matt &amp; Ashleigh</Link></li>
-              <li><Link to="/guest-info" className="hover:text-[#F4F1EA] transition-colors">Guest Directory &amp; House Manual</Link></li>
-              <li><Link to="/blog" className="hover:text-[#F4F1EA] transition-colors">Taupō Journal</Link></li>
-              <li><Link to="/book" className="hover:text-[#F4F1EA] transition-colors">Check Availability</Link></li>
-            </ul>
-          </div>
-
           {/* Col 3: Policies & Owner Access */}
-          <div className="md:col-span-2 space-y-4 text-left">
+          <div className="md:col-span-3 space-y-4 text-left">
             <h4 className="font-serif text-xl text-[#F4F1EA]">Information</h4>
             <ul className="space-y-2.5 text-xs uppercase tracking-[0.2em] font-medium text-[#D7C8B4]">
               <li><Link to="/terms" className="hover:text-[#F4F1EA] transition-colors">Terms of Stay</Link></li>

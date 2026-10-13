@@ -123,13 +123,21 @@ export const ClubhouseGuestWorld: React.FC = () => {
               className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[#D7C8B4] bg-white text-left shadow-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
             >
               <div>
-                {/* Ritual Image Container with subtle grayscale to color and time chip */}
+                {/* Ritual image. Full colour by design — the greyscale-to-colour
+                    accent is reserved for the hosts page so it stays a moment. */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#203F3A]/5">
-                  <img
-                    src={r.image}
-                    alt={r.title}
-                    className="h-full w-full object-cover grayscale contrast-[1.05] transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0"
-                  />
+                  <picture>
+                    <source srcSet={r.image.replace(/\.jpg$/, ".webp")} type="image/webp" />
+                    <img
+                      src={r.image}
+                      alt={r.title}
+                      loading="lazy"
+                      decoding="async"
+                      width={1264}
+                      height={848}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/25" />
                   <div className="absolute top-4 left-4 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-3 py-1 backdrop-blur-md">
                     <span className="font-serif text-sm font-light text-[#F4F1EA]">

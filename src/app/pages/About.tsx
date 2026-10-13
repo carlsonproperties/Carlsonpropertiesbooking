@@ -74,7 +74,7 @@ const GalleryItem = ({ item, index }: { item: any; index: number }) => {
         <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-black/5">
           <img 
             src={item.img} 
-            className="w-full h-full object-cover grayscale contrast-[1.05] transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0" 
+            className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105" 
             alt={item.title} 
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -347,7 +347,7 @@ export function About() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.8, ease: "circOut" }}
                       src={showEnsuites ? room.ensuiteImg : room.img} 
-                      className="w-full h-full object-cover grayscale group-hover/img:grayscale-0 group-hover/img:scale-110 transition-all duration-700 ease-out" 
+                      className="w-full h-full object-cover group-hover/img:scale-110 transition-all duration-700 ease-out" 
                       alt={room.title} 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1a1c16] via-transparent to-transparent opacity-40" />
