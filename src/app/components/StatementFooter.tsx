@@ -152,18 +152,33 @@ export function StatementFooter() {
           </div>
         </div>
 
-        {/* Top Header Row: Coordinated Brand & Clock */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 py-16 border-b border-[#D7C8B4]/20">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-              <CarlsonLogo dark={false} />
-              <span className="hidden sm:inline text-[#D7C8B4]/40">|</span>
-              <OneElevenLogo dark={false} withEndorsement={false} />
+        {/* Brand lockup. One Eleven leads at full scale with Carlson as the
+            endorsement beneath it, which is the hierarchy the brand is built
+            on — the house is the name people book, the company signs it. */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 py-20 border-b border-[#D7C8B4]/20">
+          <div className="flex flex-col gap-8">
+            <Link to="/" aria-label="One Eleven on the Mile — home" className="inline-block">
+              {/* size sets an intrinsic width on the inner <img>, which would
+                  overflow a phone; the child selector lets it scale down. */}
+              <OneElevenLogo
+                dark={false}
+                withEndorsement={false}
+                size={560}
+                className="w-full max-w-[34rem] [&>img]:w-full [&>img]:h-auto"
+              />
+            </Link>
+
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#D7C8B4]/85">
+                by
+              </span>
+              <CarlsonLogo dark={false} size={200} />
             </div>
+
             <TaupoClock />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-shrink-0 items-center gap-4">
             <Link
               to="/book"
               data-cursor="book"
