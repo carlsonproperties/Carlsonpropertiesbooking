@@ -139,20 +139,49 @@ function ChapterLayer({
   const start = index * SPAN;
   const end = start + SPAN;
   const pad = SPAN * 0.22;
+  const isFirst = index === 0;
+  const isLast = index === CHAPTERS.length - 1;
+
+  /* Every stop below has to sit inside [0, 1] and strictly ascend.
+     When a useTransform reads a useScroll value and drives a property the
+     compositor can own (opacity, transform, filter, clipPath,
+     backgroundColor), Motion skips JS and hands the *input range* to
+     Element.animate() as WAAPI keyframe offsets — see
+     framer-motion/value/use-transform (`result.accelerate.times`) and
+     motion-dom/render/VisualElement (`bindToMotionValue`). WAAPI rejects
+     any offset outside [0, 1] with "Offsets must be null or in the range
+     [0,1]", which throws during mount and takes the whole route down.
+     So the outer chapters clip to the track instead of fading from -0.055
+     or out to 1.055: chapter 01 opens already visible, chapter 04 holds. */
 
   // Crossfade in and out at the chapter boundaries.
-  const opacity = useTransform(
-    progress,
-    [start - pad, start + pad * 0.5, end - pad * 0.5, end + pad],
-    [0, 1, 1, 0],
-  );
+  const fadeTimes: number[] = [];
+  const fadeOpacity: number[] = [];
+  if (isFirst) {
+    fadeTimes.push(0);
+    fadeOpacity.push(1);
+  } else {
+    fadeTimes.push(start - pad, start + pad * 0.5);
+    fadeOpacity.push(0, 1);
+  }
+  if (isLast) {
+    fadeTimes.push(1);
+    fadeOpacity.push(1);
+  } else {
+    fadeTimes.push(end - pad * 0.5, end + pad);
+    fadeOpacity.push(1, 0);
+  }
+  const opacity = useTransform(progress, fadeTimes, fadeOpacity);
+
+  // The push-in and the copy drift share the chapter's clipped window.
+  const from = isFirst ? 0 : start - pad;
+  const to = isLast ? 1 : end + pad;
   // Slow cinematic push-in across the chapter's own span.
-  const scale = useTransform(progress, [start - pad, end + pad], reduced ? [1, 1] : [1.1, 1]);
+  const scale = useTransform(progress, [from, to], reduced ? [1, 1] : [1.1, 1]);
   // Copy drifts a little slower than the media — depth without parallax jitter.
-  const textY = useTransform(progress, [start - pad, end + pad], reduced ? [0, 0] : [48, -48]);
+  const textY = useTransform(progress, [from, to], reduced ? [0, 0] : [48, -48]);
   const badgeSpin = useTransform(progress, [start, end], [0, 90]);
 
-  const isLast = index === CHAPTERS.length - 1;
   const ctaOpacity = useTransform(progress, [end - pad * 1.4, end - pad * 0.2], [0, 1]);
 
   return (
@@ -181,7 +210,14 @@ function ChapterLayer({
             className="h-full w-full object-cover"
             loading={index > 1 ? "lazy" : "eager"}
             onError={(e) => {
-              e.currentTarget.src = FALLBACK;
+              // Swap to the fallback once and only once. Assigning src
+              // re-requests even when the URL is unchanged, so if the
+              // fallback is unreachable too this handler would otherwise
+              // re-fire and hammer the bucket indefinitely.
+              const img = e.currentTarget;
+              if (img.dataset.fellBack) return;
+              img.dataset.fellBack = "1";
+              img.src = FALLBACK;
             }}
           />
         )}
