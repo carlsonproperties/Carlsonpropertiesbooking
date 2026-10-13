@@ -1,9 +1,19 @@
 import * as React from "react";
-import { Star, Quote, ExternalLink } from "lucide-react";
-import { motion } from "motion/react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { Star, ExternalLink } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { GOOGLE_REVIEW_URL } from "../lib/links";
+
+/**
+ * The Taupō Experience — the statement and the proof, together.
+ *
+ * "Guests keep telling us the same thing" only earns its place next to the
+ * reviews that say it, so the statement block lives here rather than in the
+ * footer. The reviews themselves run as two counter-scrolling rows: 56 of them
+ * exist, and a single rotating card never conveyed that. Motion is CSS-driven
+ * and transform-only so it composites on the GPU, pauses on hover/focus, and
+ * stops entirely under prefers-reduced-motion (where the rows become ordinary
+ * horizontally scrollable lists).
+ */
 
 interface Review {
   id: string;
@@ -21,7 +31,7 @@ const REVIEWS: Review[] = [
     rating: 5,
     text: "The house was incredible, the pool was the perfect temperature even for night swims on a cold evening. Would recommend this to all my friends and family.",
     date: "Verified Guest",
-    highlight: "Night swims in heated pool",
+    highlight: "Night swims in a heated pool",
   },
   {
     id: "sam",
@@ -29,7 +39,7 @@ const REVIEWS: Review[] = [
     rating: 5,
     text: "The house is spacious, clean, and incredibly well appointed. Zero complaints. We had ten guests and never felt on top of each other.",
     date: "Verified Guest",
-    highlight: "10 guests, never crowded",
+    highlight: "Ten guests, never crowded",
   },
   {
     id: "rajiv",
@@ -37,13 +47,13 @@ const REVIEWS: Review[] = [
     rating: 5,
     text: "The pool and sauna area made it really hard to leave. The mountain air, the quiet street, and having our own wellness sanctuary right outside the door was unforgettable.",
     date: "Verified Guest",
-    highlight: "Pool & sauna sanctuary",
+    highlight: "Hard to leave",
   },
   {
     id: "viv",
     author: "Viv Bunny",
     rating: 5,
-    text: "Stunning views and a beautifully designed home that made the most of the site. Our group loved the indoor outdoor flow, the heated pool and all the modern conveniences. Sited on a very quiet street—a great place to stay when visiting Taupō.",
+    text: "Stunning views and a beautifully designed home that made the most of the site. Our group loved the indoor outdoor flow, the heated pool and all the modern conveniences. Sited on a very quiet street — a great place to stay when visiting Taupō.",
     date: "Google Verified Review",
     highlight: "Indoor-outdoor flow",
   },
@@ -51,7 +61,7 @@ const REVIEWS: Review[] = [
     id: "nina",
     author: "Nina Pineaha",
     rating: 5,
-    text: "This home was absolutely breathtaking. It was the perfect place to celebrate my 40th birthday with my whānau. We loved our stay and wish we could've stayed longer. Heated pool, sauna, spa, lake view...",
+    text: "This home was absolutely breathtaking. It was the perfect place to celebrate my 40th birthday with my whānau. We loved our stay and wish we could've stayed longer. Heated pool, sauna, spa, lake view.",
     date: "Google Verified Review",
     highlight: "Celebrated with whānau",
   },
@@ -61,107 +71,208 @@ const REVIEWS: Review[] = [
     rating: 5,
     text: "This place is absolute perfection. Immaculately clean, modern, gorgeous decor, every single appliance you can think of. The views are breathtaking, neighbourhood is quiet, town is a 5 minute drive away.",
     date: "Google Verified Review",
-    highlight: "5 mins to town",
+    highlight: "Five minutes to town",
   },
 ];
 
-export function Testimonials() {
-  const googleMapsUrl = "https://g.page/r/CZuTLT-YqNStEAE/review";
+const FACTS = [
+  "5 Bedrooms",
+  "Sleeps 10",
+  "Heated Pool",
+  "4-Person Cedar Sauna",
+  "Double-Sided Fire",
+  "5 Min to Town",
+];
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 600,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5500,
-    arrows: false,
-    adaptiveHeight: true,
-    fade: true,
-    cssEase: "cubic-bezier(0.87, 0, 0.13, 1)",
-  };
+function Stars({ value, className = "" }: { value: number; className?: string }) {
+  return (
+    <span
+      className={`flex gap-0.5 ${className}`}
+      role="img"
+      aria-label={`${value} out of 5 stars`}
+    >
+      {Array.from({ length: 5 }, (_, i) => (
+        <Star key={i} size={13} fill="currentColor" strokeWidth={0} />
+      ))}
+    </span>
+  );
+}
+
+function ReviewCard({ r }: { r: Review }) {
+  return (
+    <figure className="flex w-[19rem] shrink-0 flex-col justify-between rounded-3xl border border-[#D7C8B4]/60 bg-white p-7 shadow-sm transition-shadow duration-500 hover:shadow-xl sm:w-[23rem]">
+      <div>
+        <div className="flex items-center justify-between">
+          <Stars value={r.rating} className="text-[#7A5E41]" />
+          {r.highlight && (
+            <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#7A5E41]">
+              {r.highlight}
+            </span>
+          )}
+        </div>
+        <blockquote className="mt-5 font-serif text-base italic leading-relaxed text-[#203F3A] sm:text-lg">
+          &ldquo;{r.text}&rdquo;
+        </blockquote>
+      </div>
+      <figcaption className="mt-6 flex items-center gap-3 border-t border-[#D7C8B4]/50 pt-5">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#203F3A] font-serif text-sm text-[#F4F1EA]">
+          {r.author.charAt(0)}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate font-serif text-sm text-[#203F3A]">{r.author}</span>
+          <span className="block text-[9px] uppercase tracking-[0.2em] text-[#203F3A]/60">
+            {r.date}
+          </span>
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
+
+/** One marquee lane. The track holds the list twice so the loop is seamless. */
+function Lane({
+  items,
+  reverse = false,
+  duration,
+  animate,
+}: {
+  items: Review[];
+  reverse?: boolean;
+  duration: number;
+  animate: boolean;
+}) {
+  return (
+    <div
+      className={
+        animate
+          ? "group flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+          : "flex gap-5 overflow-x-auto pb-2"
+      }
+    >
+      <div
+        className={animate ? "flex w-max gap-5 pr-5 oe-marquee" : "contents"}
+        style={
+          animate
+            ? {
+                animationDuration: `${duration}s`,
+                animationDirection: reverse ? "reverse" : "normal",
+              }
+            : undefined
+        }
+      >
+        {(animate ? [...items, ...items] : items).map((r, i) => (
+          <ReviewCard key={`${r.id}-${i}`} r={r} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function Testimonials() {
+  const reduced = useReducedMotion() ?? false;
+  const animate = !reduced;
+  const laneTwo = React.useMemo(() => [...REVIEWS].reverse(), []);
 
   return (
-    <section className="py-24 md:py-36 px-6 bg-[#F4F1EA] text-[#203F3A] overflow-hidden border-t border-[#D7C8B4]/50">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
-          <div className="max-w-2xl text-left">
-            <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#7A5E41] block mb-3">
-              56 Reviews · 5.0 Star Rating
-            </span>
-            <h2 className="text-4xl md:text-7xl font-serif font-light text-[#203F3A] leading-tight">
-              A Stay Worth <br />
-              <span className="italic font-normal text-[#7A5E41]">Remembering</span>
-            </h2>
-          </div>
-          <div className="flex flex-col items-start md:items-end">
-            <div className="flex items-center gap-1.5 mb-2">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={18} fill="#203F3A" className="text-[#203F3A]" />
-              ))}
-              <span className="text-sm font-mono font-bold ml-2">5.0 / 5.0</span>
-            </div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 rounded-full bg-[#203F3A]" />
-              <p className="text-[#203F3A]/85 font-semibold text-[10px] uppercase tracking-widest">
-                Airbnb Superhost &amp; Google Reviews
-              </p>
-            </div>
-            <a
-              href={googleMapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-[#203F3A] font-semibold text-xs uppercase tracking-widest hover:text-[#7A5E41] transition-colors"
-            >
-              <span>Read All Verified Reviews</span>
-              <ExternalLink size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </a>
-          </div>
-        </div>
+    <section
+      aria-label="Guest reviews"
+      className="relative overflow-hidden border-t border-[#D7C8B4]/50 bg-[#F4F1EA] py-24 md:py-32"
+    >
+      <div className="mx-auto max-w-7xl px-6">
+        {/* The statement — moved here from the footer so it sits with the
+            reviews that back it up. */}
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-3xl"
+        >
+          <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#7A5E41] md:text-xs">
+            The Taupō Experience
+          </p>
+          <h2
+            className="mt-5 font-serif text-6xl font-light leading-[0.92] tracking-tighter text-[#203F3A] sm:text-7xl md:text-8xl lg:text-9xl"
+            style={{
+              fontFamily: "'Fraunces', Georgia, serif",
+              fontVariationSettings: "'SOFT' 100, 'opsz' 144",
+            }}
+          >
+            Hard to <br />
+            <span className="font-normal italic text-[#7A5E41]">leave.</span>
+          </h2>
 
-        <div className="testimonial-carousel-container relative">
-          <Slider {...settings}>
-            {REVIEWS.map((review) => (
-              <div key={review.id} className="pb-12 outline-none">
-                <motion.div className="bg-white p-8 md:p-16 rounded-[40px] border border-[#D7C8B4]/70 shadow-lg relative flex flex-col items-center text-center">
-                  <div className="mb-6 text-[#D7C8B4]">
-                    <Quote size={48} fill="#D7C8B4" className="mx-auto" />
-                  </div>
+          <p className="mt-8 max-w-2xl text-base font-light leading-relaxed text-[#203F3A]/85 md:text-lg">
+            Guests keep telling us the same thing — they meant to head into town, and then
+            didn&rsquo;t. Five bedrooms and room for ten, a pool that stays warm through July, a
+            4-person cedar sauna out in the courtyard, and the lake doing its thing through every
+            window.
+          </p>
+          <p className="mt-4 max-w-2xl text-base font-light italic leading-relaxed text-[#7A5E41] md:text-lg">
+            Taupō is five minutes away, for whenever you finally want it.
+          </p>
 
-                  <div className="flex items-center justify-center gap-1 mb-6">
-                    {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} size={16} fill="#9B7955" className="text-[#7A5E41]" />
-                    ))}
-                  </div>
-
-                  <p className="text-[#203F3A] text-lg md:text-2xl font-light font-serif leading-relaxed mb-10 italic max-w-3xl">
-                    “{review.text}”
-                  </p>
-
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-[#203F3A] text-[#F4F1EA] flex items-center justify-center font-serif text-lg font-medium shadow-md">
-                      {review.author.charAt(0)}
-                    </div>
-                    <div>
-                      <h4 className="font-serif text-lg text-[#203F3A]">{review.author}</h4>
-                      <p className="text-[10px] text-[#7A5E41] uppercase tracking-widest font-semibold mt-0.5">
-                        {review.date}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
+          <ul className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#203F3A]/75">
+            {FACTS.map((fact, i) => (
+              <li key={fact} className="flex items-center gap-3">
+                {i > 0 && (
+                  <span className="h-1 w-1 rounded-full bg-[#7A5E41]/60" aria-hidden="true" />
+                )}
+                <span>{fact}</span>
+              </li>
             ))}
-          </Slider>
-          <style>{`
-            .testimonial-carousel-container .slick-dots { bottom: -20px; }
-            .testimonial-carousel-container .slick-dots li button:before { color: #203F3A; font-size: 8px; opacity: 0.3; }
-            .testimonial-carousel-container .slick-dots li.slick-active button:before { color: #203F3A; opacity: 1; }
-            .testimonial-carousel-container .slick-list { overflow: visible; }
-          `}</style>
+          </ul>
+        </motion.div>
+
+        {/* Aggregate */}
+        <div className="mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-[#D7C8B4] pt-10">
+          <div className="flex items-center gap-4">
+            <Stars value={5} className="text-[#7A5E41]" />
+            <span className="font-mono text-sm font-bold text-[#203F3A]">5.0 / 5.0</span>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-[#203F3A]/75">
+              56 reviews · Airbnb Superhost &amp; Google
+            </span>
+          </div>
+          <a
+            href={GOOGLE_REVIEW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="reviews"
+            className="group inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#203F3A] underline-offset-8 hover:underline"
+          >
+            Read all verified reviews
+            <ExternalLink
+              size={13}
+              className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </a>
         </div>
       </div>
+
+      {/* Two counter-scrolling lanes. Full-bleed on purpose — the rows should run
+          past the page gutters so the wall reads as longer than the viewport. */}
+      <div className="mt-12 space-y-5">
+        <Lane items={REVIEWS} duration={64} animate={animate} />
+        <Lane items={laneTwo} duration={78} reverse animate={animate} />
+      </div>
+
+      <style>{`
+        @keyframes oe-marquee-shift {
+          from { transform: translate3d(0, 0, 0); }
+          to   { transform: translate3d(-50%, 0, 0); }
+        }
+        .oe-marquee {
+          animation-name: oe-marquee-shift;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          will-change: transform;
+        }
+        .group:hover .oe-marquee,
+        .group:focus-within .oe-marquee { animation-play-state: paused; }
+        @media (prefers-reduced-motion: reduce) {
+          .oe-marquee { animation: none; }
+        }
+      `}</style>
     </section>
   );
 }

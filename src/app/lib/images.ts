@@ -14,9 +14,18 @@ const STORAGE_BUCKET = "Website Media"; // Bucket name (will be encoded in URL)
 // Helper function to build Supabase Storage URL.
 // A path may contain "/" for a folder (e.g. "email/banner.jpg"); each segment
 // is encoded separately so the slash survives.
+//
+// Commas are left literal. encodeURIComponent escapes them to %2C, but a comma
+// is a legal sub-delimiter inside a path segment and the storage URLs that are
+// known to work (e.g. "A swim, even in July.jpg") carry it unescaped. Percent-
+// encoding a reserved character is not guaranteed to be equivalent, so matching
+// the form that is known to resolve is the safe choice.
+const encodeSegment = (segment: string) =>
+  encodeURIComponent(segment).replace(/%2C/g, ",");
+
 export const getImageUrl = (path: string) => {
-  const encodedBucket = encodeURIComponent(STORAGE_BUCKET);
-  const encodedPath = path.split("/").map(encodeURIComponent).join("/");
+  const encodedBucket = encodeSegment(STORAGE_BUCKET);
+  const encodedPath = path.split("/").map(encodeSegment).join("/");
   return `https://${SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/${encodedBucket}/${encodedPath}`;
 };
 
@@ -113,49 +122,42 @@ export const ALL_PROPERTY_IMAGES = [
 // ============================================
 // 🛒 BOOKING FLOW
 // ============================================
-export const PROPERTY_CARD_IMAGE = getImageUrl("032_Open2view_ID584542-111_Jarden_Mile.jpg");
+export const PROPERTY_CARD_IMAGE = getImageUrl("lake views.jpg");
 
 // ============================================
 // 📖 GUEST INFO / HOUSE MANUAL
 // ============================================
 export const GUEST_INFO_IMAGES = {
-  welcome: getImageUrl("036_Open2view_ID584542-111_Jarden_Mile.jpg"),
-  checkout: getImageUrl("032_Open2view_ID584542-111_Jarden_Mile.jpg"),
+  welcome: getImageUrl("street facing jordanphotos.jpg"),
+  /** The circular mark used to close out the manual. */
+  checkout: getImageUrl("one eleven logo circle.png"),
 };
 
 /**
- * ⚠️ ASSETS STILL MISSING FROM THIS BUCKET
+ * How-to media, re-uploaded to this bucket after the retired
+ * `hlemnlibokutxjfaviaz` project went away.
  *
- * These lived in the retired project `hlemnlibokutxjfaviaz` (bucket "Media"),
- * which now answers every request with {"error":"DatabaseTimeout"} — so each
- * one is a broken link on the live site today.
- *
- * To restore one: upload the file to the "Website Media" bucket and swap the
- * `null` for `getImageUrl("<filename>")`. Everything that reads these already
- * degrades gracefully when the value is null, so a partial migration is safe
- * and nothing needs changing at the call sites.
- *
- * Four how-to videos:  Pool Cover How To.mp4, Sauna How To.mp4,
- *                      Air Con How To.mp4, open door How To.mp4
- * Four how-to stills:  2_4d919f19-1ce7-4f1b-af30-a4a0ba91f92b_2.png,
- *                      a61b55a1-648d-4f89-a5b7-ad1b4574a3f4 (1).jpg,
- *                      91320ece-1cd2-4e0b-86a3-c54d5ec2637a.avif,
- *                      6502edca-88c7-447b-98b9-d4a39d843b61.jpg
- * One explore still:   1314bd58-da8d-4483-b143-4633f11ee4e9 (1).jpg
- * The guide book PDF:  ONE_ELEVEN_ON_THE_MILE_DIGITAL_GUIDE_BOOK-compressed (1).pdf
+ * The stills are deliberately null: each video carries its own first frame, so
+ * a separate poster would only be a second file to keep in sync. The player
+ * falls back to a placeholder panel when both are null, so a missing entry
+ * never renders as a broken image.
  */
 export const HOWTO_MEDIA: Record<string, { image: string | null; video: string | null }> = {
-  poolCover: { image: null, video: null },
-  sauna: { image: null, video: null },
-  airCon: { image: null, video: null },
-  frontDoor: { image: null, video: null },
+  poolCover: { image: null, video: getImageUrl("pool cover.mp4") },
+  sauna: { image: null, video: getImageUrl("sauna-video.mp4") },
+  airCon: { image: null, video: getImageUrl("Air Conditioning.mp4") },
+  frontDoor: { image: null, video: getImageUrl("doorlock-video.mp4") },
 };
 
-/** Explore-Taupō card still. Null until re-uploaded (see note above). */
-export const EXPLORE_IMAGE: string | null = null;
+/** Explore-Taupō card still. */
+export const EXPLORE_IMAGE: string | null = getImageUrl("fairygardenwalk.jpg");
 
-/** The downloadable house manual. Null hides the download button entirely,
- *  which is better than handing a guest a link that times out. */
+/**
+ * The downloadable house manual. Still missing: it lived in the retired
+ * project and has not been re-uploaded. Null hides the download button
+ * entirely, which is better than handing a guest a link that times out —
+ * swap in getImageUrl("<filename>.pdf") once it is in the bucket.
+ */
 export const GUIDE_BOOK_PDF: string | null = null;
 
 /**

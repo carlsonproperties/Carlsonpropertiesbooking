@@ -25,7 +25,9 @@ import { Volume2, VolumeX } from "lucide-react";
    ─────────────────────────────────────────────────────────────── */
 
 const IMG = "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media";
-const FALLBACK = `${IMG}/029_Open2view_ID584542-111_Jarden_Mile.jpg`;
+// Poster for the drone reel and the last-resort image source. Deliberately a
+// photograph confirmed to be in the bucket: a fallback that 404s is no fallback.
+const FALLBACK = `${IMG}/lake%20views.jpg`;
 
 interface Chapter {
   id: string;
@@ -383,13 +385,6 @@ export function ArchitecturalWalkthrough() {
             onToggleMute={() => setMuted((m) => !m)}
           />
         ))}
-
-        {/* Section label */}
-        <div className="pointer-events-none absolute left-6 top-28 z-20 md:left-10 md:top-32">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#D7C8B4]">
-            Architectural Walkthrough
-          </p>
-        </div>
 
         {/* Scrub pills — click to jump, stroke fills as you scroll */}
         <nav

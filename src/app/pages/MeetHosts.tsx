@@ -130,7 +130,7 @@ export function MeetHosts() {
             
             <div className="relative group">
               <div className="absolute -inset-4 bg-[#D7C8B4]/15 rounded-[50px] blur-2xl group-hover:bg-[#D7C8B4]/25 transition-all" />
-              <img src={familyHighFive} className="relative rounded-[40px] shadow-2xl w-full" alt="Family High Five" />
+              <img src={familyHighFive} className="relative w-full rounded-[40px] shadow-2xl grayscale transition-all duration-1000 ease-out group-hover:grayscale-0" alt="Family High Five" />
             </div>
           </motion.div>
         </div>
@@ -181,7 +181,7 @@ export function MeetHosts() {
                 viewport={{ once: true }}
                 className="group rounded-[40px] overflow-hidden shadow-xl aspect-[3/4]"
               >
-                <img src={familyGroup} alt="The Carlson Group" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
+                <img src={familyGroup} alt="The Carlson Group" className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 100 }}
@@ -190,7 +190,7 @@ export function MeetHosts() {
                 transition={{ delay: 0.2 }}
                 className="group rounded-[40px] overflow-hidden shadow-xl aspect-[3/4] mt-12"
               >
-                <img src={familyPlaying} alt="Family Playing" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
+                <img src={familyPlaying} alt="Family Playing" className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
               </motion.div>
             </div>
           </div>

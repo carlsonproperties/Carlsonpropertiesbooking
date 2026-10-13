@@ -17,7 +17,8 @@ import {
 import { CarlsonLogo } from "./CarlsonLogo";
 import { OneElevenLogo } from "./OneElevenLogo";
 import { ScallopedSeal } from "./ClubMarks";
-import { FooterNavReveal } from "./FooterNavReveal";
+import { motion } from "motion/react";
+import { FooterSignOff } from "./FooterSignOff";
 
 /** Live local time at the house. Taupō observes NZST/NZDT. */
 function TaupoClock() {
@@ -115,23 +116,38 @@ export function StatementFooter() {
                 desc: "Direct handling of requests, early arrival, or late departure whenever property prep allows."
               }
             ].map((card, i) => (
-              <div 
+              <motion.div 
                 key={i}
-                className="group relative rounded-3xl border border-[#D7C8B4]/25 bg-white/[0.04] p-8 text-left backdrop-blur-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-[#D7C8B4] hover:bg-white/[0.08] hover:shadow-2xl"
+                initial={{ opacity: 0, y: 26 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-70px" }}
+                transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative overflow-hidden rounded-3xl border border-[#D7C8B4]/25 bg-white/[0.04] p-8 text-left backdrop-blur-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-[#D7C8B4] hover:bg-white/[0.08] hover:shadow-2xl"
               >
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#D7C8B4]/30 bg-[#203F3A] text-[#D7C8B4] shadow-md transition-all duration-300 group-hover:scale-110 group-hover:bg-[#F4F1EA] group-hover:text-[#203F3A]">
+                {/* warm wash that rises out of the card on hover */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-[#D7C8B4]/18 to-transparent transition-[height] duration-700 ease-out group-hover:h-2/3"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute right-7 top-7 font-mono text-[10px] tabular-nums text-[#D7C8B4]/45 transition-colors duration-500 group-hover:text-[#D7C8B4]"
+                >
+                  0{i + 1}
+                </span>
+                <div className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#D7C8B4]/30 bg-[#203F3A] text-[#D7C8B4] shadow-md transition-all duration-500 group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:bg-[#F4F1EA] group-hover:text-[#203F3A]">
                   <card.icon size={26} strokeWidth={1.75} />
                 </div>
-                <span className="block text-[9px] font-bold uppercase tracking-[0.25em] text-[#D7C8B4]/80 mb-2">
+                <span className="relative block text-[9px] font-bold uppercase tracking-[0.25em] text-[#D7C8B4]/90 mb-2">
                   {card.tag}
                 </span>
-                <h4 className="font-serif text-xl text-[#F4F1EA] mb-3 leading-snug">
+                <h4 className="relative font-serif text-xl text-[#F4F1EA] mb-3 leading-snug">
                   {card.title}
                 </h4>
-                <p className="font-sans text-xs font-light leading-relaxed text-[#F4F1EA]/75">
+                <p className="relative font-sans text-xs font-light leading-relaxed text-[#F4F1EA]/80">
                   {card.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -152,18 +168,33 @@ export function StatementFooter() {
           </div>
         </div>
 
-        {/* Top Header Row: Coordinated Brand & Clock */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 py-16 border-b border-[#D7C8B4]/20">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-              <CarlsonLogo dark={false} />
-              <span className="hidden sm:inline text-[#D7C8B4]/40">|</span>
-              <OneElevenLogo dark={false} withEndorsement={false} />
+        {/* Brand lockup. One Eleven leads at full scale with Carlson as the
+            endorsement beneath it, which is the hierarchy the brand is built
+            on — the house is the name people book, the company signs it. */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 py-20 border-b border-[#D7C8B4]/20">
+          <div className="flex flex-col gap-8">
+            <Link to="/" aria-label="One Eleven on the Mile — home" className="inline-block">
+              {/* size sets an intrinsic width on the inner <img>, which would
+                  overflow a phone; the child selector lets it scale down. */}
+              <OneElevenLogo
+                dark={false}
+                withEndorsement={false}
+                size={560}
+                className="w-full max-w-[34rem] [&>img]:w-full [&>img]:h-auto"
+              />
+            </Link>
+
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#D7C8B4]/85">
+                by
+              </span>
+              <CarlsonLogo dark={false} size={200} />
             </div>
+
             <TaupoClock />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-shrink-0 items-center gap-4">
             <Link
               to="/book"
               data-cursor="book"
@@ -173,53 +204,6 @@ export function StatementFooter() {
               <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </div>
-        </div>
-
-        {/* Big Editorial Statement with Good Company Scalloped Seal */}
-        <div className="py-20 md:py-28 border-b border-[#D7C8B4]/20 relative">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
-            <div>
-              <p className="text-[11px] md:text-xs uppercase tracking-[0.35em] text-[#D7C8B4] font-medium mb-4">
-                The Taupō Experience
-              </p>
-              <h2 className="text-6xl sm:text-7xl md:text-9xl lg:text-[9.5rem] font-serif font-light text-[#F4F1EA] tracking-tighter leading-[0.92] select-none"
-                  style={{ fontFamily: "'Fraunces', Georgia, serif", fontVariationSettings: "'SOFT' 100, 'opsz' 144" }}>
-                Hard to <br />
-                <span className="italic font-normal text-[#D7C8B4]">leave.</span>
-              </h2>
-            </div>
-            {/* Scalloped Seal Badge from Good Company Board */}
-            <div className="flex-shrink-0 self-start lg:self-center pb-4">
-              <div className="hover:rotate-6 transition-transform duration-500 cursor-default">
-                <ScallopedSeal size={150} />
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 max-w-2xl text-left">
-            <p className="text-base md:text-lg text-[#F4F1EA]/85 font-light leading-relaxed">
-              Guests keep telling us the same thing — they meant to head into town, and then didn&rsquo;t.
-              Five bedrooms and room for ten, a pool that stays warm through July, a 4-person rectangular cedar sauna out in
-              the courtyard, and the lake doing its thing through every window.
-            </p>
-            <p className="mt-4 text-base md:text-lg text-[#D7C8B4] font-light leading-relaxed italic">
-              Taupō is five minutes away, for whenever you finally want it.
-            </p>
-            <ul className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/70">
-              {['5 Bedrooms', 'Sleeps 10', 'Heated Pool', '4-Person Cedar Sauna', 'Double-Sided Fire', '5 Min to Town'].map(
-                (fact, i) => (
-                  <li key={fact} className="flex items-center gap-3">
-                    {i > 0 && <span className="h-1 w-1 rounded-full bg-[#D7C8B4]/50" aria-hidden="true" />}
-                    <span>{fact}</span>
-                  </li>
-                ),
-              )}
-            </ul>
-          </div>
-        </div>
-
-        {/* Oversized interactive navigation with cursor-tracked previews */}
-        <div className="border-b border-[#D7C8B4]/20">
-          <FooterNavReveal />
         </div>
 
         {/* Main Grid: Directory, Hosts, Details */}
@@ -299,10 +283,14 @@ export function StatementFooter() {
           </div>
         </div>
 
-        {/* Bottom Banner Wordmark: CARLSON PROPERTIES */}
-        <div className="pt-12 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] uppercase tracking-[0.25em] text-[#D7C8B4]/85 font-medium">
+        {/* Closing wordmark — the page ends on the name, not on legal text. */}
+        <div className="pt-12">
+          <FooterSignOff />
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[#D7C8B4]/20 pt-8 text-[10px] uppercase tracking-[0.25em] text-[#D7C8B4]/85 font-medium md:flex-row">
           <span>© {new Date().getFullYear()} Carlson Properties Ltd · Taupō, NZ</span>
-          <span className="font-serif tracking-widest text-sm text-[#D7C8B4]/80">CARLSON PROPERTIES</span>
+          <span>111 Jarden Mile · Taupō 3330 · New Zealand</span>
           <span>Designed with Lake &amp; Stone</span>
         </div>
       </div>
