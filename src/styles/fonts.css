@@ -2,36 +2,56 @@
    Good Company / Route B Clubhouse — typefaces
    Display: Fraunces (soft, optical size 72, SOFT 100)
    UI / body: Figtree (weights 300..900)
-
-   The webfonts are loaded by a <link> in index.html.
+   Font faces are loaded via /fonts/fonts.css in index.html
    ───────────────────────────────────────────────────────────── */
 
 :root {
-  --brand-font-display: 'Fraunces', 'Playfair Display', 'Iowan Old Style', Georgia, serif;
-  --brand-font-body: 'Figtree', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --brand-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --brand-font-body: 'Figtree', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
 
   /* kept so existing references keep resolving */
   --font-serif: var(--brand-font-display);
   --font-sans: var(--brand-font-body);
+  --font-display: var(--brand-font-display);
+
+  --lake: #203F3A;
+  --cream: #F4F1EA;
+  --sandstone: #D7C8B4;
+  --bronze: #9B7955;      /* decorative only: never text, never a button */
+  --lake-deep: #16302B;
 }
 
 body {
   font-family: var(--brand-font-body);
+  color: var(--lake);
+  background-color: var(--cream);
 }
 
-.font-serif {
+.font-serif, .font-display {
   font-family: var(--brand-font-display);
-  font-variation-settings: 'SOFT' 100, 'opsz' 72;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
 }
 
 .font-sans {
   font-family: var(--brand-font-body);
 }
 
-/* Club typography utilities */
+/* Clubhouse display: Fraunces, softened. Weight 900 for the wordmark voice, 700 for section heads. */
+h1, h2 {
+  font-family: var(--brand-font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-weight: 900; }
+h2 { font-weight: 700; }
+
 .font-club-headline {
   font-family: var(--brand-font-display);
-  font-variation-settings: 'SOFT' 100, 'opsz' 100;
+  font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 100;
   letter-spacing: -0.02em;
 }
 

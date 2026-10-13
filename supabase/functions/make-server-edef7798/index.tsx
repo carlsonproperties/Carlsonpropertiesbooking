@@ -180,14 +180,14 @@ async function sendAutomationEmails(booking: any) {
     console.log(`📧 Sending owner notification...`);
     await sendOwnerNotification(booking);
     
-    // 3. Schedule pre-arrival email (4 days before check-in)
+    // 3. Schedule pre-arrival email (3 days before check-in)
     const checkInDate = new Date(booking.checkIn);
-    const fourDaysBefore = new Date(checkInDate);
-    fourDaysBefore.setDate(fourDaysBefore.getDate() - 4);
-    fourDaysBefore.setHours(10, 0, 0, 0);
+    const threeDaysBefore = new Date(checkInDate);
+    threeDaysBefore.setDate(threeDaysBefore.getDate() - 3);
+    threeDaysBefore.setHours(9, 0, 0, 0);
     
-    if (fourDaysBefore > new Date()) {
-      console.log(`⏰ Pre-arrival email will be sent on ${fourDaysBefore.toISOString()}`);
+    if (threeDaysBefore > new Date()) {
+      console.log(`⏰ Pre-arrival email will be sent on ${threeDaysBefore.toISOString()}`);
       // Note: This will need to be triggered by a cron job or scheduled task
       // For now, we'll just log it. The email template is ready in email_templates.tsx
     }
@@ -1214,8 +1214,8 @@ registerRoute('get', '/process-scheduled-emails', async (c: any) => {
       const daysUntilCheckIn = Math.floor((checkInDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
       const daysSinceCheckOut = Math.floor((today.getTime() - checkOutDate.getTime()) / (1000 * 60 * 60 * 24));
       
-      // Email 3: Pre-Arrival (4 days before check-in)
-      if (daysUntilCheckIn === 4 && !booking.preArrivalSent) {
+      // Email 3: Pre-Arrival (3 days before check-in)
+      if (daysUntilCheckIn === 3 && !booking.preArrivalSent) {
         console.log(`📧 Sending pre-arrival email to ${booking.email}...`);
         await sendPreArrivalEmail(booking);
         booking.preArrivalSent = true;
