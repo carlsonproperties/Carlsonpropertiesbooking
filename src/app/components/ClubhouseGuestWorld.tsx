@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Coffee, Waves, Thermometer, Flame, Check } from 'lucide-react';
 import { ScallopedSeal, OvalBadge } from './ClubMarks';
 import { Link } from 'react-router';
+import { getImageUrl } from '../lib/images';
 
 /**
  * ClubhouseGuestWorld — how a day at One Eleven actually runs.
@@ -29,7 +30,7 @@ const RITUALS: Ritual[] = [
     desc: 'The espresso machine goes on, the mist lifts off the lake, and the deck takes the early sun. Nobody is anywhere they have to be.',
     icon: Coffee,
     badge: 'Barista Espresso Bar',
-    image: '/images/rituals/ritual-01-coffee.jpg',
+    image: getImageUrl('outdoor lounge.png'),
   },
   {
     time: '11:00',
@@ -37,7 +38,7 @@ const RITUALS: Ritual[] = [
     desc: 'The pool is heated the whole year round. Cold mountain air on your face, steam coming off the water, Mount Tauhara across the lake.',
     icon: Waves,
     badge: 'Heated Year-Round',
-    image: '/images/rituals/ritual-02-swim.jpg',
+    image: getImageUrl('pool featurephoto.png'),
   },
   {
     time: '16:30',
@@ -45,7 +46,7 @@ const RITUALS: Ritual[] = [
     desc: 'The 4-person rectangular cedar sauna warms up in the courtyard and the hydrotherapy spa sits just steps away. Guests keep telling us this is the part that makes the house hard to leave.',
     icon: Thermometer,
     badge: '4-Person Sauna · Spa · Pool',
-    image: '/images/rituals/ritual-03-sauna.jpg',
+    image: getImageUrl('sauanaspa.jpg'),
   },
   {
     time: '20:00',
@@ -53,7 +54,7 @@ const RITUALS: Ritual[] = [
     desc: 'Ten seats gather around the dining table, the double-sided fireplace warms the living room, and the lake goes dark outside the glass. Town is five minutes away if you want it.',
     icon: Flame,
     badge: 'Double-Sided Fire · Seats 10',
-    image: '/images/rituals/ritual-04-dining.jpg',
+    image: getImageUrl('Open plan living.jpg'),
   },
 ];
 
@@ -123,21 +124,17 @@ export const ClubhouseGuestWorld: React.FC = () => {
               className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[#D7C8B4] bg-white text-left shadow-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
             >
               <div>
-                {/* Ritual image. Full colour by design — the greyscale-to-colour
-                    accent is reserved for the hosts page so it stays a moment. */}
+                {/* Real property photography, not generated imagery. Full colour by
+                    design — the greyscale-to-colour accent is reserved for the
+                    hosts page so it stays a moment. */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#203F3A]/5">
-                  <picture>
-                    <source srcSet={r.image.replace(/\.jpg$/, ".webp")} type="image/webp" />
-                    <img
-                      src={r.image}
-                      alt={r.title}
-                      loading="lazy"
-                      decoding="async"
-                      width={1264}
-                      height={848}
-                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
-                  </picture>
+                  <img
+                    src={r.image}
+                    alt={r.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/25" />
                   <div className="absolute top-4 left-4 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-3 py-1 backdrop-blur-md">
                     <span className="font-serif text-sm font-light text-[#F4F1EA]">
