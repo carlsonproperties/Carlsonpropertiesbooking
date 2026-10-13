@@ -87,12 +87,12 @@ export function Testimonials() {
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
           <div className="max-w-2xl text-left">
-            <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#9B7955] block mb-3">
+            <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#7A5E41] block mb-3">
               56 Reviews · 5.0 Star Rating
             </span>
             <h2 className="text-4xl md:text-7xl font-serif font-light text-[#203F3A] leading-tight">
               A Stay Worth <br />
-              <span className="italic font-normal text-[#9B7955]">Remembering</span>
+              <span className="italic font-normal text-[#7A5E41]">Remembering</span>
             </h2>
           </div>
           <div className="flex flex-col items-start md:items-end">
@@ -104,7 +104,7 @@ export function Testimonials() {
             </div>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-2 h-2 rounded-full bg-[#203F3A]" />
-              <p className="text-[#203F3A]/70 font-semibold text-[10px] uppercase tracking-widest">
+              <p className="text-[#203F3A]/85 font-semibold text-[10px] uppercase tracking-widest">
                 Airbnb Superhost &amp; Google Reviews
               </p>
             </div>
@@ -112,7 +112,7 @@ export function Testimonials() {
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-[#203F3A] font-semibold text-xs uppercase tracking-widest hover:text-[#9B7955] transition-colors"
+              className="group flex items-center gap-2 text-[#203F3A] font-semibold text-xs uppercase tracking-widest hover:text-[#7A5E41] transition-colors"
             >
               <span>Read All Verified Reviews</span>
               <ExternalLink size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -131,7 +131,7 @@ export function Testimonials() {
 
                   <div className="flex items-center justify-center gap-1 mb-6">
                     {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} size={16} fill="#9B7955" className="text-[#9B7955]" />
+                      <Star key={i} size={16} fill="#9B7955" className="text-[#7A5E41]" />
                     ))}
                   </div>
 
@@ -145,7 +145,7 @@ export function Testimonials() {
                     </div>
                     <div>
                       <h4 className="font-serif text-lg text-[#203F3A]">{review.author}</h4>
-                      <p className="text-[10px] text-[#9B7955] uppercase tracking-widest font-semibold mt-0.5">
+                      <p className="text-[10px] text-[#7A5E41] uppercase tracking-widest font-semibold mt-0.5">
                         {review.date}
                       </p>
                     </div>

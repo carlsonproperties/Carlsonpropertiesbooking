@@ -388,7 +388,7 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
               className={`w-full mt-10 py-6 rounded-2xl font-bold uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-3 shadow-2xl ${
                 range?.from && range?.to && !isTooShort
                 ? "bg-[#F4F1EA] text-[#203F3A] hover:bg-[#D7C8B4] scale-[1.02]" 
-                : "bg-[#F4F1EA]/10 text-[#F4F1EA]/30 cursor-not-allowed"
+                : "bg-[#F4F1EA]/10 text-[#F4F1EA]/55 cursor-not-allowed"
               }`}
             >
               Continue to Checkout <ArrowRight size={20} />

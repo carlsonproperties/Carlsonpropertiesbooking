@@ -102,10 +102,10 @@ export const ClubhouseGuestWorld: React.FC = () => {
 
           <div className="flex items-center gap-6 self-start md:self-end">
             <div className="hidden text-right sm:block">
-              <span className="block font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#9B7955]">
+              <span className="block font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#7A5E41]">
                 Taupō · New Zealand
               </span>
-              <span className="font-sans text-xs text-[#203F3A]/70">5 Bedrooms · Sleeps 10</span>
+              <span className="font-sans text-xs text-[#203F3A]/85">5 Bedrooms · Sleeps 10</span>
             </div>
             <ScallopedSeal size={105} className="flex-shrink-0 text-[#203F3A]" />
           </div>
@@ -156,7 +156,7 @@ export const ClubhouseGuestWorld: React.FC = () => {
               </div>
 
               <div className="mx-6 mb-6 flex items-center justify-between border-t border-[#D7C8B4]/40 pt-4">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9B7955]">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7A5E41]">
                   {r.badge}
                 </span>
                 <Check size={14} className="text-[#203F3A]/40" />

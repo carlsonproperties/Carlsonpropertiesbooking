@@ -88,7 +88,7 @@ const GalleryItem = ({ item, index, onOpen }: { item: any; index: number; onOpen
           </div>
 
           <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-left">
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#D7C8B4] block">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white block drop-shadow">
               Click to view fullscreen
             </span>
           </div>
@@ -97,10 +97,10 @@ const GalleryItem = ({ item, index, onOpen }: { item: any; index: number; onOpen
       
       <div className="mt-5 px-3 text-left flex items-baseline justify-between">
         <div>
-          <span className="text-[10px] text-[#9B7955] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1} //</span>
+          <span className="text-[10px] text-[#7A5E41] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1} //</span>
           <h5 className="font-serif text-xl text-[#203F3A] uppercase tracking-wide">{item.title}</h5>
         </div>
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#203F3A]/40">Explore</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#203F3A]/85">Explore</span>
       </div>
     </motion.div>
   );
@@ -358,7 +358,7 @@ export function About() {
                   transition={{ delay: i * 0.1, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
                   className="relative group text-left"
                 >
-                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-[#D7C8B4]/20 italic pointer-events-none group-hover:text-[#D7C8B4]/40 transition-colors duration-500">
+                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-[#D7C8B4]/55 italic pointer-events-none group-hover:text-[#D7C8B4]/80 transition-colors duration-500">
                     0{i + 1}
                   </div>
 
@@ -419,7 +419,7 @@ export function About() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="text-[#203F3A] text-[10px] font-bold uppercase tracking-[0.5em] block"
+                    className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.5em] block"
                   >
                     The Distinction
                   </motion.span>
@@ -513,11 +513,11 @@ export function About() {
 
                 <motion.div 
                   whileHover={{ y: -5 }}
-                  className="bg-[#1a1c16] rounded-[32px] p-8 text-white flex items-center justify-between group cursor-pointer"
+                  className="bg-[#16302B] rounded-[32px] p-8 text-white flex items-center justify-between group cursor-pointer"
                   onClick={() => navigate('/book')}
                 >
                   <div className="space-y-1">
-                    <span className="text-[9px] text-[#203F3A] font-bold uppercase tracking-[0.3em]">Ready to visit?</span>
+                    <span className="text-[9px] text-[#D7C8B4] font-bold uppercase tracking-[0.3em]">Ready to visit?</span>
                     <h4 className="font-serif text-xl">Reserve Your Dates</h4>
                   </div>
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#203F3A] transition-colors">

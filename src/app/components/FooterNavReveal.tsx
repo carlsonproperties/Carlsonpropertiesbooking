@@ -123,7 +123,7 @@ export function FooterNavReveal() {
                 style={{ opacity: dimmed ? 0.35 : 1 }}
               >
                 <span className="flex items-baseline gap-4 md:gap-7 min-w-0">
-                  <span className="font-mono text-[10px] text-[#D7C8B4]/70 tabular-nums shrink-0">
+                  <span className="font-mono text-[10px] text-[#D7C8B4]/90 tabular-nums shrink-0">
                     0{i + 1}
                   </span>
                   <span
@@ -134,7 +134,7 @@ export function FooterNavReveal() {
                   </span>
                 </span>
                 <span className="flex items-center gap-4 shrink-0">
-                  <span className="hidden text-[10px] uppercase tracking-[0.2em] text-[#F4F1EA]/55 sm:inline">
+                  <span className="hidden text-[10px] uppercase tracking-[0.2em] text-[#F4F1EA]/75 sm:inline">
                     {item.meta}
                   </span>
                   <ArrowUpRight

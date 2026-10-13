@@ -256,7 +256,7 @@ export function StatementFooter() {
               <li className="pt-2">
                 <Link
                   to="/owner-login"
-                  className="inline-block text-[10px] text-[#D7C8B4]/60 hover:text-[#F4F1EA] border border-[#D7C8B4]/20 px-3 py-1 rounded transition-colors"
+                  className="inline-block text-[10px] text-[#D7C8B4]/85 hover:text-[#F4F1EA] border border-[#D7C8B4]/30 px-3 py-1 rounded transition-colors"
                 >
                   Owner Portal &rarr;
                 </Link>
@@ -300,7 +300,7 @@ export function StatementFooter() {
         </div>
 
         {/* Bottom Banner Wordmark: CARLSON PROPERTIES */}
-        <div className="pt-12 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] uppercase tracking-[0.25em] text-[#D7C8B4]/60 font-medium">
+        <div className="pt-12 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] uppercase tracking-[0.25em] text-[#D7C8B4]/85 font-medium">
           <span>© {new Date().getFullYear()} Carlson Properties Ltd · Taupō, NZ</span>
           <span className="font-serif tracking-widest text-sm text-[#D7C8B4]/80">CARLSON PROPERTIES</span>
           <span>Designed with Lake &amp; Stone</span>
