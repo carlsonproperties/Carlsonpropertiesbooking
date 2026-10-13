@@ -2,6 +2,7 @@ import * as React from "react";
 import { Star, ExternalLink } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { GOOGLE_REVIEW_URL } from "../lib/links";
+import { REVIEWS, REVIEW_AGGREGATE, type GuestReview } from "../lib/reviews";
 
 /**
  * The Taupō Experience — the statement and the proof, together.
@@ -14,66 +15,6 @@ import { GOOGLE_REVIEW_URL } from "../lib/links";
  * stops entirely under prefers-reduced-motion (where the rows become ordinary
  * horizontally scrollable lists).
  */
-
-interface Review {
-  id: string;
-  author: string;
-  rating: number;
-  text: string;
-  date: string;
-  highlight?: string;
-}
-
-const REVIEWS: Review[] = [
-  {
-    id: "charles",
-    author: "Charles",
-    rating: 5,
-    text: "The house was incredible, the pool was the perfect temperature even for night swims on a cold evening. Would recommend this to all my friends and family.",
-    date: "Verified Guest",
-    highlight: "Night swims in a heated pool",
-  },
-  {
-    id: "sam",
-    author: "Sam",
-    rating: 5,
-    text: "The house is spacious, clean, and incredibly well appointed. Zero complaints. We had ten guests and never felt on top of each other.",
-    date: "Verified Guest",
-    highlight: "Ten guests, never crowded",
-  },
-  {
-    id: "rajiv",
-    author: "Rajiv",
-    rating: 5,
-    text: "The pool and sauna area made it really hard to leave. The mountain air, the quiet street, and having our own wellness sanctuary right outside the door was unforgettable.",
-    date: "Verified Guest",
-    highlight: "Hard to leave",
-  },
-  {
-    id: "viv",
-    author: "Viv Bunny",
-    rating: 5,
-    text: "Stunning views and a beautifully designed home that made the most of the site. Our group loved the indoor outdoor flow, the heated pool and all the modern conveniences. Sited on a very quiet street — a great place to stay when visiting Taupō.",
-    date: "Google Verified Review",
-    highlight: "Indoor-outdoor flow",
-  },
-  {
-    id: "nina",
-    author: "Nina Pineaha",
-    rating: 5,
-    text: "This home was absolutely breathtaking. It was the perfect place to celebrate my 40th birthday with my whānau. We loved our stay and wish we could've stayed longer. Heated pool, sauna, spa, lake view.",
-    date: "Google Verified Review",
-    highlight: "Celebrated with whānau",
-  },
-  {
-    id: "luke",
-    author: "Luke and Krissy Shadbolt",
-    rating: 5,
-    text: "This place is absolute perfection. Immaculately clean, modern, gorgeous decor, every single appliance you can think of. The views are breathtaking, neighbourhood is quiet, town is a 5 minute drive away.",
-    date: "Google Verified Review",
-    highlight: "Five minutes to town",
-  },
-];
 
 const FACTS = [
   "5 Bedrooms",
@@ -98,7 +39,7 @@ function Stars({ value, className = "" }: { value: number; className?: string })
   );
 }
 
-function ReviewCard({ r }: { r: Review }) {
+function ReviewCard({ r }: { r: GuestReview }) {
   return (
     <figure className="flex w-[19rem] shrink-0 flex-col justify-between rounded-3xl border border-[#D7C8B4]/60 bg-white p-7 shadow-sm transition-shadow duration-500 hover:shadow-xl sm:w-[23rem]">
       <div>
@@ -121,7 +62,7 @@ function ReviewCard({ r }: { r: Review }) {
         <span className="min-w-0">
           <span className="block truncate font-serif text-sm text-[#203F3A]">{r.author}</span>
           <span className="block text-[9px] uppercase tracking-[0.2em] text-[#203F3A]/60">
-            {r.date}
+            {r.source === 'Google' ? 'Google Review' : 'Verified Airbnb Guest'}
           </span>
         </span>
       </figcaption>
@@ -136,7 +77,7 @@ function Lane({
   duration,
   animate,
 }: {
-  items: Review[];
+  items: GuestReview[];
   reverse?: boolean;
   duration: number;
   animate: boolean;
@@ -171,7 +112,10 @@ function Lane({
 export function Testimonials() {
   const reduced = useReducedMotion() ?? false;
   const animate = !reduced;
-  const laneTwo = React.useMemo(() => [...REVIEWS].reverse(), []);
+  const laneTwo = React.useMemo(
+    () => [...REVIEWS.slice(6), ...REVIEWS.slice(0, 6)],
+    [],
+  );
 
   return (
     <section
@@ -228,9 +172,11 @@ export function Testimonials() {
         <div className="mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-[#D7C8B4] pt-10">
           <div className="flex items-center gap-4">
             <Stars value={5} className="text-[#7A5E41]" />
-            <span className="font-mono text-sm font-bold text-[#203F3A]">5.0 / 5.0</span>
+            <span className="font-mono text-sm font-bold text-[#203F3A]">
+              {REVIEW_AGGREGATE.ratingValue} / 5.0
+            </span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-[#203F3A]/75">
-              56 reviews · Airbnb Superhost &amp; Google
+              {REVIEW_AGGREGATE.reviewCount} reviews · Airbnb Superhost &amp; Google
             </span>
           </div>
           <a

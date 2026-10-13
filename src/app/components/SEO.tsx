@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { faqSchema } from '../lib/schemas';
+import { REVIEWS, REVIEW_AGGREGATE } from '../lib/reviews';
 
 interface SEOProps {
   title?: string;
@@ -62,16 +63,16 @@ export function SEO({
     'lake views.jpg', 'frontdeck.jpg', 'looking into kitchen.png', 'Dining Room.jpg',
   ].map((f) => `https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/${encodeURIComponent(f)}`);
 
-  const reviews = [
-    { author: 'Tom', date: '2026-01-10', body: 'Stunning place to stay. Well appointed, very spacious and comfortable. Kids loved the pool area. Perfect for extended families or groups.' },
-    { author: 'Rachael', date: '2025-03-17', body: 'Amazing, stunning, everything was thought of! Will definitely be back!' },
-    { author: 'Guest', date: '2024-10-24', body: 'House was awesome — plenty of space to relax. The indoor-outdoor flow is great along with BBQ, pool, spa and sauna. Top-level customer service.' },
-  ].map((r) => ({
+  // Review markup is built from the same twelve reviews the page renders, so
+  // the structured data cannot drift from what a visitor actually sees —
+  // Google's policy requires the two to match.
+  const reviews = REVIEWS.map((r) => ({
     '@type': 'Review',
     'author': { '@type': 'Person', 'name': r.author },
     'datePublished': r.date,
-    'reviewBody': r.body,
-    'reviewRating': { '@type': 'Rating', 'ratingValue': '5' },
+    'reviewBody': r.text,
+    'reviewRating': { '@type': 'Rating', 'ratingValue': String(r.rating), 'bestRating': '5' },
+    'publisher': { '@type': 'Organization', 'name': r.source },
   }));
 
   const amenityFeature = [
@@ -143,8 +144,10 @@ export function SEO({
         'paymentAccepted': 'Credit Card, Debit Card, Bank Transfer',
         'aggregateRating': {
           '@type': 'AggregateRating',
-          'ratingValue': '5.0',
-          'reviewCount': '47',
+          'ratingValue': REVIEW_AGGREGATE.ratingValue,
+          'reviewCount': String(REVIEW_AGGREGATE.reviewCount),
+          'bestRating': '5',
+          'worstRating': '1',
         },
         'sameAs': sameAs,
         'potentialAction': {

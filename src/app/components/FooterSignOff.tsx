@@ -1,20 +1,18 @@
 import * as React from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion } from "motion/react";
-import { ArrowUp } from "lucide-react";
 
 /**
- * The closing wordmark — One Eleven set as large as the viewport allows and
- * bled to the edges, so the page ends on the name rather than on legal text.
+ * The floor of the site: One Eleven set edge to edge and cropped at the
+ * baseline, so the page ends on the name the way a book ends on a colophon.
  *
- * A warm light tracks the cursor across the letterforms: the base type sits at
- * low contrast and a second, identical copy is painted with a radial gradient
- * clipped to the glyphs, so only the part under the pointer lifts. It reads as
- * low sun moving across the house, which is the brand's own idea.
+ * A warm light tracks the cursor across the letterforms — the base type sits
+ * at low contrast and a second identical copy is painted with a radial
+ * gradient clipped to the glyphs, so only the part under the pointer lifts. It
+ * reads as low sun moving across the house, which is the brand's own idea.
  *
- * Both copies carry the same text, so the accessible name would be announced
- * twice — the lit copy is aria-hidden and the base one carries the heading.
- * On touch and under prefers-reduced-motion the light is simply not mounted
- * and the wordmark renders as static type.
+ * Both copies carry the same words, so the lit one is aria-hidden and the base
+ * one is the readable text. On touch and under prefers-reduced-motion the lit
+ * copy is never mounted and this is simply very large static type.
  */
 export function FooterSignOff() {
   const reduced = useReducedMotion() ?? false;
@@ -38,6 +36,10 @@ export function FooterSignOff() {
   const sx = useSpring(x, { stiffness: 220, damping: 30, mass: 0.4 });
   const sy = useSpring(y, { stiffness: 220, damping: 30, mass: 0.4 });
 
+  // Called unconditionally — the lit copy renders conditionally, so a hook
+  // inside that branch would break the rules of hooks.
+  const radial = useRadial(sx, sy);
+
   const onMove = (e: React.MouseEvent) => {
     if (!enabled) return;
     const r = ref.current?.getBoundingClientRect();
@@ -46,69 +48,49 @@ export function FooterSignOff() {
     y.set(e.clientY - r.top);
   };
 
-  // Called unconditionally — the lit copy is rendered conditionally, so a hook
-  // inside that branch would break the rules of hooks.
-  const radial = useRadial(sx, sy);
-
-  const toTop = () =>
-    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
-
-  const WORD = "One Eleven";
+  // 10 glyphs of Fraunces at ~0.52em average: ~19vw fills the viewport with a
+  // small gutter at every width.
+  const type: React.CSSProperties = {
+    fontFamily: "'Fraunces', Georgia, serif",
+    fontVariationSettings: "'SOFT' 100, 'WONK' 0, 'opsz' 144",
+    fontSize: "clamp(3rem, 18.6vw, 17rem)",
+    lineHeight: 0.78,
+    letterSpacing: "-0.035em",
+  };
 
   return (
-    <div className="relative">
-      {/* Back to top — a long page deserves a way out of the bottom. */}
-      <div className="flex justify-end pb-10">
-        <button
-          type="button"
-          onClick={toTop}
-          data-cursor="TOP"
-          aria-label="Back to top"
-          className="group inline-flex items-center gap-3 rounded-full border border-[#D7C8B4]/35 px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#D7C8B4] transition-colors hover:border-[#D7C8B4] hover:bg-[#F4F1EA] hover:text-[#203F3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7C8B4]"
-        >
-          Back to top
-          <ArrowUp size={13} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
-        </button>
-      </div>
-
-      <div
-        ref={ref}
-        onMouseMove={onMove}
-        onMouseEnter={() => enabled && setLit(true)}
-        onMouseLeave={() => setLit(false)}
-        className="relative select-none"
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseEnter={() => enabled && setLit(true)}
+      onMouseLeave={() => setLit(false)}
+      className="relative select-none overflow-hidden px-4 pt-6"
+    >
+      <h2
+        className="whitespace-nowrap text-center font-serif font-light text-[#F4F1EA]/45"
+        style={type}
       >
-        <h2
-          className="whitespace-nowrap text-center font-serif font-light leading-[0.82] tracking-[-0.03em] text-[#F4F1EA]/22"
+        One Eleven
+      </h2>
+
+      {enabled && (
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-4 top-6 whitespace-nowrap text-center font-serif font-light"
           style={{
-            fontFamily: "'Fraunces', Georgia, serif",
-            fontVariationSettings: "'SOFT' 100, 'WONK' 0, 'opsz' 144",
-            fontSize: "clamp(3.5rem, 17.5vw, 15rem)",
+            ...type,
+            display: "block",
+            backgroundImage: radial,
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+            opacity: lit ? 1 : 0,
+            transition: "opacity 420ms ease",
           }}
         >
-          {WORD}
-        </h2>
-
-        {enabled && (
-          <motion.h2
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 whitespace-nowrap text-center font-serif font-light leading-[0.82] tracking-[-0.03em]"
-            style={{
-              fontFamily: "'Fraunces', Georgia, serif",
-              fontVariationSettings: "'SOFT' 100, 'WONK' 0, 'opsz' 144",
-              fontSize: "clamp(3.5rem, 17.5vw, 15rem)",
-              backgroundImage: radial,
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              color: "transparent",
-              opacity: lit ? 1 : 0,
-              transition: "opacity 420ms ease",
-            }}
-          >
-            {WORD}
-          </motion.h2>
-        )}
-      </div>
+          One Eleven
+        </motion.span>
+      )}
     </div>
   );
 }
@@ -116,12 +98,12 @@ export function FooterSignOff() {
 /** Radial wash centred on the pointer, clipped to the glyphs above. */
 function useRadial(sx: ReturnType<typeof useSpring>, sy: ReturnType<typeof useSpring>) {
   const [bg, setBg] = React.useState(
-    "radial-gradient(circle 200px at 50% 50%, #F4F1EA 0%, #D7C8B4 45%, transparent 72%)",
+    "radial-gradient(circle 240px at 50% 50%, #FFFDF8 0%, #D7C8B4 42%, transparent 70%)",
   );
   React.useEffect(() => {
     const paint = () =>
       setBg(
-        `radial-gradient(circle 260px at ${sx.get()}px ${sy.get()}px, #FFFDF8 0%, #D7C8B4 42%, transparent 70%)`,
+        `radial-gradient(circle 300px at ${sx.get()}px ${sy.get()}px, #FFFDF8 0%, #D7C8B4 42%, transparent 70%)`,
       );
     const un1 = sx.on("change", paint);
     const un2 = sy.on("change", paint);
