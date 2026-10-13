@@ -57,8 +57,8 @@ import { StatementFooter as Footer } from "../components/StatementFooter";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
 import { guestInfoSchema } from "../lib/schemas";
-import { GUEST_INFO_IMAGES, HOWTO_MEDIA, EXPLORE_IMAGE, GUIDE_BOOK_PDF } from "../lib/images";
-import { GOOGLE_REVIEW_URL, PHONE_DISPLAY } from "../lib/links";
+import { GUEST_INFO_IMAGES, HOWTO_MEDIA, EXPLORE_IMAGE, GUIDE_BOOK_PDF, getImageUrl } from "../lib/images";
+import { GOOGLE_REVIEW_URL, PHONE_DISPLAY, PHONE_HREF, BOOKINGS_EMAIL } from "../lib/links";
 
 const LAST_UPDATED = "February 26, 2026";
 
@@ -227,7 +227,7 @@ const SECTIONS = [
           { name: "The Storehouse", link: "https://www.lovetaupo.com/en/operators/the-storehouse-taupo/", image: "https://www.lovetaupo.com/media/2958424/the-storehouse-cafe-coffee-friends-eating-breakfast.jpg", desc: "Trendy industrial vibe with great food." }
         ],
         Bars: [
-          { name: "Finn’s Bistro & Beer Garden", link: "https://www.finnsbistro.co.nz", image: "https://core50.nz/wp-content/uploads/2021/05/JPEG_JM_Core50_Finns_0005.jpg", desc: "Classic beer garden with local brews." },
+          { name: "Finn’s Bistro & Beer Garden", link: "https://www.finnsbistro.co.nz", image: getImageUrl("finnsbistro.jpg"), desc: "Classic beer garden with local brews." },
           { name: "Vine Eatery & Bar", link: "https://www.vineeatery.co.nz", image: "https://www.lovetaupo.com/media/hsidmhmi/vine-eatery-restaurant.jpg", desc: "Tapas and Mediterranean shared dining." },
           { name: "The Deck", link: "https://www.thedecktaupo.co.nz", image: "https://www.lovetaupo.com/media/2960018/the-deck-bar-taupo-13.jpg", desc: "Elevated lakefront bar with great views." },
           { name: "Jolly Good Fellows", link: "https://www.jollygoodfellows.co.nz", image: "https://www.taupo.info/sites/www.taupo.info/files/styles/full__smartport/public/pics/listings/images/jolly_good_fellows_-_outdoor_seating_new.png?itok=9-BUeGF4", desc: "British-style pub with garden bar." },
@@ -639,15 +639,20 @@ export function GuestInformation() {
                 transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
                 className="space-y-16"
               >
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 text-[#203F3A]">
-                    {activeSection.icon}
-                    <span className="text-[10px] tracking-[0.4em] font-black uppercase">One Eleven | Taupō</span>
+                {/* The Thank You panel carries its own heading, so the generic
+                    chapter title is suppressed there rather than stacking a
+                    second "Thank You" above it. */}
+                {activeTab !== "thanks" && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3 text-[#203F3A]">
+                      {activeSection.icon}
+                      <span className="text-[10px] tracking-[0.4em] font-black uppercase">One Eleven | Taupō</span>
+                    </div>
+                    <h2 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight tracking-tight">
+                      {activeSection.content.header}
+                    </h2>
                   </div>
-                  <h2 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight tracking-tight">
-                    {activeSection.content.header}
-                  </h2>
-                </div>
+                )}
 
                 {activeTab === "welcome" && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
@@ -731,11 +736,11 @@ export function GuestInformation() {
 
                     <div className="bg-[#16302B] p-16 rounded-[56px] text-white flex flex-col justify-between relative overflow-hidden group">
                       <div className="relative z-10 space-y-12">
-                        <div className="w-20 h-20 rounded-[24px] bg-white/10 flex items-center justify-center text-[#203F3A]">
+                        <div className="w-20 h-20 rounded-[24px] bg-white/10 flex items-center justify-center text-[#D7C8B4]">
                           <Key size={40} />
                         </div>
-                        <h3 className="text-5xl font-serif leading-tight">Smart Lock <span className="text-[#203F3A]">Entry.</span></h3>
-                        <p className="text-slate-400 text-lg leading-relaxed">
+                        <h3 className="text-5xl font-serif leading-tight">Smart Lock <span className="italic text-[#D7C8B4]">Entry.</span></h3>
+                        <p className="text-[#F4F1EA]/80 text-lg leading-relaxed">
                           {activeSection.content.pinInfo}
                         </p>
                         <div className="pt-12 border-t border-white/10 grid grid-cols-2 gap-12">
@@ -971,66 +976,84 @@ export function GuestInformation() {
                       </div>
                       <div className="p-10 bg-[#16302B] rounded-[40px] text-white">
                         <div className="flex gap-6 mb-6">
-                          <Clock className="text-[#203F3A]" size={28} />
+                          <Clock className="text-[#D7C8B4]" size={28} />
                           <h4 className="text-2xl font-serif">Check-out by 10:00 AM</h4>
                         </div>
-                        <p className="text-slate-400 leading-relaxed italic">{activeSection.content.doorCode}</p>
+                        <p className="text-[#F4F1EA]/80 leading-relaxed italic">{activeSection.content.doorCode}</p>
                       </div>
                     </div>
-                    <div className="rounded-[56px] overflow-hidden aspect-[4/5] shadow-2xl">
-                      <img src={activeSection.content.image} className="w-full h-full object-cover" alt="Departure" />
+                    <div className="aspect-square overflow-hidden rounded-[56px] bg-[#F4F1EA] shadow-2xl">
+                      <img
+                        src={activeSection.content.image}
+                        className="h-full w-full object-cover"
+                        alt="One Eleven on the Mile"
+                      />
                     </div>
                   </div>
                 )}
 
                 {activeTab === "thanks" && (
-                  <div className="text-center space-y-16 py-20">
-                    <div className="max-w-2xl mx-auto space-y-8">
-                      <Heart className="text-[#203F3A] mx-auto animate-bounce" size={64} />
-                      <h2 className="text-6xl font-serif text-slate-900 tracking-tighter">Thank you for <br /><span className="italic text-[#203F3A]">staying with us.</span></h2>
-                      <p className="text-xl text-slate-500 font-light leading-relaxed">{activeSection.content.text}</p>
-                    </div>
-                    {/* The ask. This page is open during and just after the
-                        stay, which is the one moment a guest is most likely to
-                        actually leave a review — so make it one tap. */}
-                    <div className="max-w-3xl mx-auto bg-[#16302B] text-[#F4F1EA] rounded-[48px] p-10 md:p-14 shadow-2xl">
-                      <div className="flex items-center justify-center gap-1.5 mb-6 text-[#D7C8B4]">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={22} fill="#D7C8B4" strokeWidth={0} />
-                        ))}
-                      </div>
-                      <h3 className="font-serif text-3xl md:text-4xl font-light leading-tight">
-                        Would you tell someone else about it?
-                      </h3>
-                      <p className="mt-5 text-base md:text-lg font-light leading-relaxed text-[#F4F1EA]/80">
-                        We&rsquo;re a family running one house, not a chain — a review on Google is
-                        genuinely the biggest thing you can do for us, and it helps the next guests
-                        know what they&rsquo;re booking. It takes about a minute.
-                      </p>
-                      <a
-                        href={GOOGLE_REVIEW_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        data-cursor="review"
-                        className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#F4F1EA] px-9 py-4 text-[11px] font-bold uppercase tracking-[0.22em] text-[#203F3A] shadow-lg transition-all hover:bg-[#D7C8B4]"
-                      >
-                        Leave a Google Review
-                        <ArrowUpRight size={16} />
-                      </a>
-                      <p className="mt-5 text-[11px] uppercase tracking-[0.2em] text-[#F4F1EA]/50">
-                        Something not right? Call or email us first — we&rsquo;d rather fix it.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                      {activeSection.content.contact?.map((item: any, i: number) => (
-                        <div key={i} className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-sm flex flex-col items-center gap-6">
-                          <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-[#203F3A]">
-                            {item.icon}
-                          </div>
-                          <span className="text-lg font-bold text-slate-900">{item.value}</span>
+                  /* One ask, not three thank-yous. The guest is on this page
+                     during or just after the stay, which is the one moment a
+                     review actually gets written — so the review is the page,
+                     and everything else is a footnote under it. */
+                  <div className="py-10 md:py-16">
+                    <div className="mx-auto max-w-4xl overflow-hidden rounded-[48px] bg-[#16302B] text-[#F4F1EA] shadow-2xl">
+                      <div className="p-10 text-center md:p-16">
+                        <div className="mb-7 flex items-center justify-center gap-1.5 text-[#D7C8B4]">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} size={24} fill="#D7C8B4" strokeWidth={0} />
+                          ))}
                         </div>
-                      ))}
+
+                        <h2 className="font-serif text-4xl font-light leading-[1.05] tracking-tight md:text-6xl">
+                          Thanks for staying.<br />
+                          <span className="italic text-[#D7C8B4]">Would you tell someone?</span>
+                        </h2>
+
+                        <p className="mx-auto mt-6 max-w-xl text-base font-light leading-relaxed text-[#F4F1EA]/85 md:text-lg">
+                          We&rsquo;re a family running one house, not a chain. A review on Google is
+                          the biggest thing you can do for us, and it tells the next guests what
+                          they&rsquo;re really booking. It takes about a minute.
+                        </p>
+
+                        {/* The incentive is the reason to act now, so it sits with
+                            the button rather than in small print below it. */}
+                        <div className="mx-auto mt-9 inline-flex flex-col items-center gap-5">
+                          <a
+                            href={GOOGLE_REVIEW_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-cursor="review"
+                            className="group inline-flex items-center gap-3 rounded-full bg-[#F4F1EA] px-10 py-5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#203F3A] shadow-xl transition-all hover:bg-[#D7C8B4]"
+                          >
+                            Leave a Google Review
+                            <ArrowUpRight
+                              size={16}
+                              className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                            />
+                          </a>
+
+                          <p className="flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D7C8B4]">
+                            <span className="rounded-full border border-[#D7C8B4]/50 px-3 py-1">10% off</span>
+                            your next stay when you do
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center justify-between gap-4 border-t border-[#D7C8B4]/20 px-10 py-7 text-center md:flex-row md:text-left">
+                        <p className="text-[11px] leading-relaxed text-[#F4F1EA]/70">
+                          Something not right? Tell us first — we&rsquo;d much rather fix it.
+                        </p>
+                        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-[#D7C8B4]">
+                          <a href={PHONE_HREF} className="hover:text-[#F4F1EA] transition-colors">
+                            {PHONE_DISPLAY}
+                          </a>
+                          <a href={`mailto:${BOOKINGS_EMAIL}`} className="hover:text-[#F4F1EA] transition-colors">
+                            {BOOKINGS_EMAIL}
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
