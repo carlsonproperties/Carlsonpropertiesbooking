@@ -48,7 +48,7 @@ const ensuite4 = BEDROOM_IMAGES.ensuite4;
 const bedroom5 = BEDROOM_IMAGES.bedroom5;
 const ensuite5 = BEDROOM_IMAGES.ensuite5;
 
-const GalleryItem = ({ item, index }: { item: any; index: number }) => {
+const GalleryItem = ({ item, index, onOpen }: { item: any; index: number; onOpen: (src: string) => void }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -64,17 +64,21 @@ const GalleryItem = ({ item, index }: { item: any; index: number }) => {
       style={{ y: smoothY }}
       className={`relative group mb-12 ${index % 2 === 0 ? "md:mt-0" : "md:mt-24"}`}
     >
-      <motion.div
+      <motion.button
+        type="button"
+        onClick={() => onOpen(item.img)}
+        aria-label={`View ${item.title} full screen`}
+        data-cursor="EXPAND"
         initial={{ opacity: 0, scale: 0.96 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: index * 0.08 }}
-        className="relative overflow-hidden rounded-3xl border border-[#D7C8B4]/40 bg-[#F4F1EA] p-3 shadow-xl transition-all duration-700 ease-out group-hover:border-[#D7C8B4] group-hover:shadow-2xl"
+        className="block w-full cursor-pointer relative overflow-hidden rounded-3xl border border-[#D7C8B4]/40 bg-[#F4F1EA] p-3 shadow-xl transition-all duration-700 ease-out group-hover:border-[#D7C8B4] group-hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9B7955] focus-visible:ring-offset-2"
       >
         <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-black/5">
           <img 
             src={item.img} 
-            className="w-full h-full object-cover grayscale contrast-[1.05] transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0" 
+            className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105" 
             alt={item.title} 
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -84,19 +88,19 @@ const GalleryItem = ({ item, index }: { item: any; index: number }) => {
           </div>
 
           <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-left">
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#D7C8B4] block">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white block drop-shadow">
               Click to view fullscreen
             </span>
           </div>
         </div>
-      </motion.div>
+      </motion.button>
       
       <div className="mt-5 px-3 text-left flex items-baseline justify-between">
         <div>
-          <span className="text-[10px] text-[#9B7955] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1} //</span>
+          <span className="text-[10px] text-[#7A5E41] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1} //</span>
           <h5 className="font-serif text-xl text-[#203F3A] uppercase tracking-wide">{item.title}</h5>
         </div>
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#203F3A]/40">Explore</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#203F3A]/85">Explore</span>
       </div>
     </motion.div>
   );
@@ -109,6 +113,21 @@ export function About() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Lightbox: close on Escape and stop the page scrolling underneath it.
+  useEffect(() => {
+    if (!selectedImage) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [selectedImage]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -128,6 +147,9 @@ export function About() {
       {/* Lightbox Modal */}
       {selectedImage && (
         <div 
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo viewer"
           className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10"
           onClick={() => setSelectedImage(null)}
         >
@@ -137,7 +159,10 @@ export function About() {
             className="relative max-w-7xl w-full h-full flex items-center justify-center"
           >
             <button 
-              className="absolute top-0 right-0 m-4 text-white/60 hover:text-white transition-colors"
+              type="button"
+              aria-label="Close photo viewer"
+              autoFocus
+              className="absolute top-0 right-0 z-10 m-4 rounded-full p-2 text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               onClick={() => setSelectedImage(null)}
             >
               <X size={32} />
@@ -169,7 +194,7 @@ export function About() {
             >
               Owner Portal
             </Link>
-            <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#203F3A]/20">
+            <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#D7C8B4] transition-all shadow-lg shadow-[#203F3A]/20">
               Book Now
             </Link>
           </div>
@@ -262,7 +287,7 @@ export function About() {
                     { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/sauanaspa.jpg", title: "Outdoor Sauna & Spa Pool", speed: -0.12 },
                     { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/outdoor%20lounge.png", title: "Al Fresco Dining & BBQ", speed: 0.08 }
                   ].map((item, i) => (
-                    <GalleryItem key={i} item={item} index={i} />
+                    <GalleryItem key={i} item={item} index={i} onOpen={setSelectedImage} />
                   ))}
                 </Masonry>
               </ResponsiveMasonry>
@@ -271,9 +296,9 @@ export function About() {
         </section>
 
         {/* Where You'll Sleep Section */}
-        <section className="bg-[#1a1c16] py-32 px-6 relative overflow-hidden">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#203F3A]/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#203F3A]/5 rounded-full blur-[120px] pointer-events-none" />
+        <section className="bg-[#16302B] py-32 px-6 relative overflow-hidden">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#D7C8B4]/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#9B7955]/10 rounded-full blur-[120px] pointer-events-none" />
 
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10 text-left">
@@ -282,7 +307,7 @@ export function About() {
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="text-[#203F3A] text-[10px] font-bold uppercase tracking-[0.4em] block"
+                  className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.4em] block"
                 >
                   Rest & Rejuvenate
                 </motion.span>
@@ -333,7 +358,7 @@ export function About() {
                   transition={{ delay: i * 0.1, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
                   className="relative group text-left"
                 >
-                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-[#D7C8B4]/20 italic pointer-events-none group-hover:text-[#D7C8B4]/40 transition-colors duration-500">
+                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-[#D7C8B4]/55 italic pointer-events-none group-hover:text-[#D7C8B4]/80 transition-colors duration-500">
                     0{i + 1}
                   </div>
 
@@ -347,10 +372,10 @@ export function About() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.8, ease: "circOut" }}
                       src={showEnsuites ? room.ensuiteImg : room.img} 
-                      className="w-full h-full object-cover grayscale group-hover/img:grayscale-0 group-hover/img:scale-110 transition-all duration-700 ease-out" 
+                      className="w-full h-full object-cover group-hover/img:scale-110 transition-all duration-700 ease-out" 
                       alt={room.title} 
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1c16] via-transparent to-transparent opacity-40" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#16302B] via-transparent to-transparent opacity-40" />
                     
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity bg-black/20 backdrop-blur-[2px]">
                       <div className="bg-white/20 p-3 rounded-full border border-white/40">
@@ -394,7 +419,7 @@ export function About() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="text-[#203F3A] text-[10px] font-bold uppercase tracking-[0.5em] block"
+                    className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.5em] block"
                   >
                     The Distinction
                   </motion.span>
@@ -488,11 +513,11 @@ export function About() {
 
                 <motion.div 
                   whileHover={{ y: -5 }}
-                  className="bg-[#1a1c16] rounded-[32px] p-8 text-white flex items-center justify-between group cursor-pointer"
+                  className="bg-[#16302B] rounded-[32px] p-8 text-white flex items-center justify-between group cursor-pointer"
                   onClick={() => navigate('/book')}
                 >
                   <div className="space-y-1">
-                    <span className="text-[9px] text-[#203F3A] font-bold uppercase tracking-[0.3em]">Ready to visit?</span>
+                    <span className="text-[9px] text-[#D7C8B4] font-bold uppercase tracking-[0.3em]">Ready to visit?</span>
                     <h4 className="font-serif text-xl">Reserve Your Dates</h4>
                   </div>
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#203F3A] transition-colors">

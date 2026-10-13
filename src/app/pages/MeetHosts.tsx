@@ -54,7 +54,7 @@ export function MeetHosts() {
             >
               Owner Portal
             </Link>
-            <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-black hover:bg-[#8A8D6D] transition-all shadow-xl shadow-[#203F3A]/20">
+            <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-black hover:bg-[#D7C8B4] transition-all shadow-xl shadow-[#203F3A]/20">
               Book Now
             </Link>
           </div>
@@ -71,7 +71,7 @@ export function MeetHosts() {
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       {/* Hero Section */}
-      <section className="relative h-[110vh] flex items-center justify-center overflow-hidden bg-slate-950">
+      <section className="relative h-[110vh] flex items-center justify-center overflow-hidden bg-[#16302B]">
         <motion.div style={{ scale: heroScale, opacity: heroOpacity }} className="absolute inset-0">
           <img src={familyBanner} className="w-full h-full object-cover opacity-60 brightness-75 scale-105" alt="The Carlson Family" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#1a1c16]" />
@@ -105,7 +105,7 @@ export function MeetHosts() {
       </section>
 
       {/* Vision Statement */}
-      <section className="py-40 bg-[#1a1c16] relative overflow-hidden">
+      <section className="py-40 bg-[#16302B] relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-full pointer-events-none opacity-5">
            <h2 className="text-[30vw] font-serif text-[#203F3A] whitespace-nowrap select-none">CARLSON PROPERTIES</h2>
         </div>
@@ -129,8 +129,8 @@ export function MeetHosts() {
             </div>
             
             <div className="relative group">
-              <div className="absolute -inset-4 bg-[#203F3A]/20 rounded-[50px] blur-2xl group-hover:bg-[#203F3A]/30 transition-all" />
-              <img src={familyHighFive} className="relative rounded-[40px] shadow-2xl w-full grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Family High Five" />
+              <div className="absolute -inset-4 bg-[#D7C8B4]/15 rounded-[50px] blur-2xl group-hover:bg-[#D7C8B4]/25 transition-all" />
+              <img src={familyHighFive} className="relative rounded-[40px] shadow-2xl w-full" alt="Family High Five" />
             </div>
           </motion.div>
         </div>
@@ -181,7 +181,7 @@ export function MeetHosts() {
                 viewport={{ once: true }}
                 className="group rounded-[40px] overflow-hidden shadow-xl aspect-[3/4]"
               >
-                <img src={familyGroup} className="w-full h-full object-cover" alt="The Carlson Group" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
+                <img src={familyGroup} alt="The Carlson Group" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 100 }}
@@ -190,7 +190,7 @@ export function MeetHosts() {
                 transition={{ delay: 0.2 }}
                 className="group rounded-[40px] overflow-hidden shadow-xl aspect-[3/4] mt-12"
               >
-                <img src={familyPlaying} className="w-full h-full object-cover" alt="Family Playing" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
+                <img src={familyPlaying} alt="Family Playing" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
               </motion.div>
             </div>
           </div>
@@ -198,7 +198,7 @@ export function MeetHosts() {
       </section>
 
       {/* Focus Section */}
-      <section className="relative h-[80vh] flex items-center overflow-hidden bg-[#1a1c16]">
+      <section className="relative h-[80vh] flex items-center overflow-hidden bg-[#16302B]">
         <div className="absolute inset-0 opacity-40">
            <img src={familyFieldWalk} className="w-full h-full object-cover" alt="Walking in the field" />
         </div>

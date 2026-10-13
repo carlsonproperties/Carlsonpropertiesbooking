@@ -363,7 +363,7 @@ export function Home() {
               <div className="lg:col-span-6 space-y-8 text-left">
                 <div className="flex items-center gap-3">
                   <span className="w-2 h-2 rounded-full bg-[#9B7955]" />
-                  <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#9B7955]">
+                  <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#7A5E41]">
                     Hosted By Matt &amp; Ashleigh
                   </span>
                 </div>
@@ -380,32 +380,32 @@ export function Home() {
                 {/* Key Facts Grid */}
                 <div className="grid grid-cols-2 gap-8 pt-6 border-t border-[#D7C8B4]/60">
                   <div>
-                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                    <span className="text-[10px] uppercase tracking-widest text-[#7A5E41] font-bold block mb-1">
                       Capacity
                     </span>
                     <p className="text-xl font-serif text-[#203F3A]">Up to 10 Guests</p>
-                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">5 bedrooms, 4 bathrooms</p>
+                    <p className="text-xs text-[#203F3A]/80 font-light mt-0.5">5 bedrooms, 4 bathrooms</p>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                    <span className="text-[10px] uppercase tracking-widest text-[#7A5E41] font-bold block mb-1">
                       Wellness
                     </span>
                     <p className="text-xl font-serif text-[#203F3A]">Pool, Spa &amp; Sauna</p>
-                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">Heated year-round + private gym</p>
+                    <p className="text-xs text-[#203F3A]/80 font-light mt-0.5">Heated year-round + private gym</p>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                    <span className="text-[10px] uppercase tracking-widest text-[#7A5E41] font-bold block mb-1">
                       Location
                     </span>
                     <p className="text-xl font-serif text-[#203F3A]">111 Jarden Mile</p>
-                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">5 mins from Taupō town centre</p>
+                    <p className="text-xs text-[#203F3A]/80 font-light mt-0.5">5 mins from Taupō town centre</p>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                    <span className="text-[10px] uppercase tracking-widest text-[#7A5E41] font-bold block mb-1">
                       Hosting
                     </span>
                     <p className="text-xl font-serif text-[#203F3A]">Local Hosts</p>
-                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">Direct care from Matt &amp; Ashleigh</p>
+                    <p className="text-xs text-[#203F3A]/80 font-light mt-0.5">Direct care from Matt &amp; Ashleigh</p>
                   </div>
                 </div>
 
@@ -419,7 +419,7 @@ export function Home() {
                   </Link>
                   <Link
                     to="/meet-hosts"
-                    className="text-xs uppercase tracking-[0.2em] font-semibold text-[#203F3A] hover:text-[#9B7955] transition-colors px-4 py-2"
+                    className="text-xs uppercase tracking-[0.2em] font-semibold text-[#203F3A] hover:text-[#7A5E41] transition-colors px-4 py-2"
                   >
                     Meet Your Hosts →
                   </Link>
@@ -489,7 +489,7 @@ export function Home() {
           <div className="flex items-center gap-4 px-5 py-3">
             <div className="min-w-0">
               <p className="font-display text-lg leading-none text-[#203F3A]">Sleeps 10</p>
-              <p className="mt-1 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-[#203F3A]/70">
+              <p className="mt-1 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-[#203F3A]/85">
                 Pool · Sauna · Spa
               </p>
             </div>

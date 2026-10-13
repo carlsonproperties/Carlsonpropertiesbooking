@@ -20,7 +20,9 @@ const DEFAULT_SEO = {
   defaultKeywords: 'accommodation in taupo, taupo accommodation, accommodation taupo nz, luxury accommodation taupo, holiday home taupo, lake view taupo, taupo holiday homes, vacation rental taupo, taupo rentals, lake taupo accommodation, luxury holiday homes taupo, family accommodation taupo, group accommodation taupo, large holiday home taupo, five bedroom taupo, spa accommodation taupo, sauna taupo, gym accommodation taupo, taupo airbnb alternative, direct booking taupo, taupo luxury rentals, new zealand accommodation, taupo nz accommodation, taupo stays, boutique accommodation taupo, one eleven on the mile',
   siteUrl: typeof window !== 'undefined' ? window.location.origin : 'https://carlsonproperties.co.nz',
   image: '/og-image.jpg',
-  imageUrl: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg',
+  // Purpose-built 1200x630 social card (public/og-image.jpg) rather than a raw
+  // property photo, so link previews carry the name, the pitch and the brand.
+  imageUrl: 'https://www.carlsonproperties.co.nz/og-image.jpg',
 };
 
 export function SEO({
@@ -225,6 +227,11 @@ export function SEO({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={fullImage} />
+      {/* Facebook, LinkedIn and Slack size the preview from these before the
+          image itself loads; without them the card can render small or late. */}
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="One Eleven on the Mile — private five-bedroom lake house, Taupō" />
       <meta property="og:site_name" content={DEFAULT_SEO.siteName} />
       <meta property="og:locale" content="en_NZ" />
       

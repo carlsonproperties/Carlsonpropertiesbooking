@@ -309,6 +309,42 @@ export function GuestInformation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const activeSection = SECTIONS.find(s => s.id === activeTab) || SECTIONS[0];
+  const activeIndex = SECTIONS.findIndex(x => x.id === activeSection.id);
+
+  /* Chapters are addressable: /guest-info#wifi opens straight on that
+     chapter, so a host can text a guest the exact page they need. The hash
+     is kept in sync as they move, and back/forward work as expected. */
+  useEffect(() => {
+    const fromHash = () => {
+      const id = window.location.hash.replace("#", "");
+      if (id && SECTIONS.some(x => x.id === id)) setActiveTab(id);
+    };
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+    return () => window.removeEventListener("hashchange", fromHash);
+  }, []);
+
+  const goToSection = React.useCallback((id: string) => {
+    setActiveTab(id);
+    if (window.location.hash !== `#${id}`) {
+      window.history.replaceState(null, "", `#${id}`);
+    }
+  }, []);
+
+  /* A manual is read like a book, so arrow keys page through it — but not
+     while someone is typing in a field. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement as HTMLElement | null;
+      if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (el?.isContentEditable) return;
+      const i = SECTIONS.findIndex(x => x.id === activeTab);
+      if (e.key === "ArrowRight" && i < SECTIONS.length - 1) goToSection(SECTIONS[i + 1].id);
+      if (e.key === "ArrowLeft" && i > 0) goToSection(SECTIONS[i - 1].id);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [activeTab, goToSection]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -352,7 +388,7 @@ export function GuestInformation() {
             </Link>
             <Link 
               to="/book" 
-              className="bg-slate-900 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#203F3A] hover:shadow-xl hover:shadow-[#203F3A]/20 transition-all"
+              className="bg-[#16302B] text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-black hover:bg-[#203F3A] hover:shadow-xl hover:shadow-[#203F3A]/20 transition-all"
             >
               Book Direct
             </Link>
@@ -539,12 +575,28 @@ export function GuestInformation() {
           <aside className="hidden lg:block space-y-3 text-left sticky top-32 h-fit">
             <div className="px-6 py-3 mb-6">
               <span className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-400">Guide Chapters</span>
+              <div className="mt-4 flex items-center gap-3">
+                <div className="h-1 flex-1 rounded-full bg-slate-200 overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full bg-[#203F3A]"
+                    animate={{ width: `${((activeIndex + 1) / SECTIONS.length) * 100}%` }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </div>
+                <span className="font-mono text-[10px] tabular-nums text-slate-400">
+                  {activeIndex + 1}/{SECTIONS.length}
+                </span>
+              </div>
+              <p className="mt-3 text-[10px] text-slate-400">
+                Use <kbd className="rounded border border-slate-200 px-1">←</kbd>{" "}
+                <kbd className="rounded border border-slate-200 px-1">→</kbd> to page through
+              </p>
             </div>
             {SECTIONS.map((section) => (
               <button
                 key={section.id}
                 onClick={() => {
-                  setActiveTab(section.id);
+                  goToSection(section.id);
                   window.scrollTo({ top: 400, behavior: "smooth" });
                 }}
                 className={`w-full flex items-center gap-5 px-8 py-5 rounded-[24px] text-sm font-bold transition-all duration-500 group ${
@@ -565,12 +617,12 @@ export function GuestInformation() {
               </button>
             ))}
             
-            <div className="mt-16 p-10 rounded-[40px] bg-slate-900 text-white relative overflow-hidden group">
+            <div className="mt-16 p-10 rounded-[40px] bg-[#16302B] text-white relative overflow-hidden group">
               <div className="relative z-10">
-                <Phone className="text-[#203F3A] mb-6" size={28} />
+                <Phone className="text-[#D7C8B4] mb-6" size={28} />
                 <h4 className="font-serif text-2xl mb-2">Need Help?</h4>
                 <p className="text-slate-400 text-sm leading-relaxed mb-8">Matt & Ash are just a call or message away if you need anything at all.</p>
-                <a href="tel:0276977961" className="text-[11px] font-black tracking-widest uppercase text-[#203F3A] hover:text-white transition-colors">Contact Host</a>
+                <a href="tel:0276977961" className="text-[11px] font-black tracking-widest uppercase text-[#D7C8B4] hover:text-white transition-colors">Contact Host</a>
               </div>
               <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-[#203F3A]/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000" />
             </div>
@@ -677,7 +729,7 @@ export function GuestInformation() {
                       </div>
                     </div>
 
-                    <div className="bg-slate-900 p-16 rounded-[56px] text-white flex flex-col justify-between relative overflow-hidden group">
+                    <div className="bg-[#16302B] p-16 rounded-[56px] text-white flex flex-col justify-between relative overflow-hidden group">
                       <div className="relative z-10 space-y-12">
                         <div className="w-20 h-20 rounded-[24px] bg-white/10 flex items-center justify-center text-[#203F3A]">
                           <Key size={40} />
@@ -917,7 +969,7 @@ export function GuestInformation() {
                           ))}
                         </div>
                       </div>
-                      <div className="p-10 bg-slate-900 rounded-[40px] text-white">
+                      <div className="p-10 bg-[#16302B] rounded-[40px] text-white">
                         <div className="flex gap-6 mb-6">
                           <Clock className="text-[#203F3A]" size={28} />
                           <h4 className="text-2xl font-serif">Check-out by 10:00 AM</h4>
