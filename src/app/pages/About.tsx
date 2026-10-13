@@ -21,7 +21,7 @@ import {
 import { Link, useNavigate } from "react-router";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { MobileMenu } from "../components/MobileMenu";
-import { Footer } from "../components/Footer";
+import { StatementFooter as Footer } from "../components/StatementFooter";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
 import { GALLERY_IMAGES, BEDROOM_IMAGES } from "../lib/images";
@@ -61,25 +61,41 @@ const GalleryItem = ({ item, index }: { item: any; index: number }) => {
     <motion.div
       ref={ref}
       style={{ y: smoothY }}
-      className={`relative group mb-10 ${index % 2 === 0 ? "md:mt-0" : "md:mt-32"}`}
+      className={`relative group mb-12 ${index % 2 === 0 ? "md:mt-0" : "md:mt-24"}`}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.96 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
-        className="relative overflow-hidden rounded-[20px] shadow-2xl bg-white p-3"
+        transition={{ duration: 0.8, delay: index * 0.08 }}
+        className="relative overflow-hidden rounded-3xl border border-[#D7C8B4]/40 bg-[#F4F1EA] p-3 shadow-xl transition-all duration-700 ease-out group-hover:border-[#D7C8B4] group-hover:shadow-2xl"
       >
-        <img 
-          src={item.img} 
-          className="w-full h-auto rounded-[12px] transition-transform duration-700 group-hover:scale-[1.02]" 
-          alt={item.title} 
-        />
+        <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-black/5">
+          <img 
+            src={item.img} 
+            className="w-full h-full object-cover grayscale contrast-[1.05] transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0" 
+            alt={item.title} 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          <div className="absolute top-4 right-4 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/40 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+            <Maximize2 size={16} />
+          </div>
+
+          <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-left">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#D7C8B4] block">
+              Click to view fullscreen
+            </span>
+          </div>
+        </div>
       </motion.div>
       
-      <div className="mt-6 px-4 text-left">
-        <span className="text-[10px] text-[#203F3A] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1}//</span>
-        <h5 className="font-serif text-xl text-slate-800 uppercase">{item.title}</h5>
+      <div className="mt-5 px-3 text-left flex items-baseline justify-between">
+        <div>
+          <span className="text-[10px] text-[#9B7955] font-bold uppercase tracking-[0.3em] block mb-1">0{index + 1} //</span>
+          <h5 className="font-serif text-xl text-[#203F3A] uppercase tracking-wide">{item.title}</h5>
+        </div>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#203F3A]/40">Explore</span>
       </div>
     </motion.div>
   );
@@ -282,17 +298,17 @@ export function About() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="flex items-center p-1 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 w-fit"
+                className="flex items-center p-1.5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 w-fit"
               >
                 <button 
                   onClick={() => setShowEnsuites(false)}
-                  className={`px-8 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-500 ${!showEnsuites ? "bg-[#203F3A] text-white shadow-xl" : "text-white/60 hover:text-white hover:bg-white/5"}`}
+                  className={`px-8 py-3 rounded-xl text-[10px] uppercase tracking-[0.25em] font-bold transition-all duration-300 ${!showEnsuites ? "bg-[#F4F1EA] text-[#203F3A] shadow-xl" : "text-[#F4F1EA]/70 hover:text-white hover:bg-white/10"}`}
                 >
                   The Bedrooms
                 </button>
                 <button 
                   onClick={() => setShowEnsuites(true)}
-                  className={`px-8 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-500 ${showEnsuites ? "bg-[#203F3A] text-white shadow-xl" : "text-white/60 hover:text-white hover:bg-white/5"}`}
+                  className={`px-8 py-3 rounded-xl text-[10px] uppercase tracking-[0.25em] font-bold transition-all duration-300 ${showEnsuites ? "bg-[#F4F1EA] text-[#203F3A] shadow-xl" : "text-[#F4F1EA]/70 hover:text-white hover:bg-white/10"}`}
                 >
                   The Ensuites
                 </button>
@@ -315,13 +331,13 @@ export function About() {
                   transition={{ delay: i * 0.1, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
                   className="relative group text-left"
                 >
-                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-white/5 italic pointer-events-none group-hover:text-[#203F3A]/20 transition-colors duration-500">
+                  <div className="absolute -top-4 -left-2 z-20 font-serif text-5xl text-[#D7C8B4]/20 italic pointer-events-none group-hover:text-[#D7C8B4]/40 transition-colors duration-500">
                     0{i + 1}
                   </div>
 
                   <div 
                     onClick={() => setSelectedImage(showEnsuites ? room.ensuiteImg : room.img)}
-                    className="relative aspect-[3/2] rounded-2xl overflow-hidden mb-8 shadow-2xl bg-black/40 cursor-zoom-in group/img"
+                    className="relative aspect-[3/2] rounded-2xl overflow-hidden mb-6 shadow-2xl bg-black/40 border border-white/10 cursor-zoom-in group/img"
                   >
                     <motion.img 
                       key={showEnsuites ? 'ensuite' : 'bedroom'}
@@ -329,7 +345,7 @@ export function About() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.8, ease: "circOut" }}
                       src={showEnsuites ? room.ensuiteImg : room.img} 
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                      className="w-full h-full object-cover grayscale group-hover/img:grayscale-0 group-hover/img:scale-110 transition-all duration-700 ease-out" 
                       alt={room.title} 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1a1c16] via-transparent to-transparent opacity-40" />
@@ -342,15 +358,20 @@ export function About() {
                   </div>
 
                   <div className="space-y-4 relative px-2">
-                    <h4 className="font-serif text-2xl text-white group-hover:text-[#203F3A] transition-colors duration-300">
-                      {room.title}
-                    </h4>
-                    <div className="h-px w-8 bg-[#203F3A]/40 group-hover:w-full transition-all duration-700" />
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-serif text-2xl text-[#F4F1EA] group-hover:text-[#D7C8B4] transition-colors duration-300">
+                        {room.title}
+                      </h4>
+                      <span className="text-[9px] uppercase tracking-[0.2em] font-semibold text-[#D7C8B4] border border-[#D7C8B4]/30 px-2.5 py-0.5 rounded-full bg-white/5">
+                        {room.type}
+                      </span>
+                    </div>
+                    <div className="h-px w-8 bg-[#D7C8B4]/40 group-hover:w-full transition-all duration-700" />
                     <div className="space-y-2">
                       {room.desc.map((line, idx) => (
-                        <div key={idx} className="flex items-center gap-2">
-                          <div className="w-1 h-1 rounded-full bg-[#203F3A]/40" />
-                          <p className="text-white/50 text-[10px] tracking-widest leading-relaxed font-medium uppercase">{line}</p>
+                        <div key={idx} className="flex items-center gap-2.5">
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#D7C8B4]" />
+                          <p className="text-[#F4F1EA]/85 text-[11px] tracking-wider leading-relaxed font-semibold uppercase">{line}</p>
                         </div>
                       ))}
                     </div>

@@ -53,7 +53,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { MobileMenu } from "../components/MobileMenu";
-import { Footer } from "../components/Footer";
+import { StatementFooter as Footer } from "../components/StatementFooter";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
 import { guestInfoSchema } from "../lib/schemas";
@@ -427,6 +427,48 @@ export function GuestInformation() {
               <p className="mt-8 text-lg md:text-xl text-slate-500 font-light max-w-xl leading-relaxed">
                 Everything you need for a seamless stay at One Eleven, from check-in details to our hand-picked local favorites.
               </p>
+
+              {/* Interactive Quick Essentials Bar */}
+              <div className="mt-10 flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => {
+                    navigator.clipboard?.writeText("One Eleven Guest");
+                    alert("WiFi Network: 'One Eleven Guest' copied! Password is sent 3 days before arrival.");
+                  }}
+                  className="group inline-flex items-center gap-2 rounded-2xl border border-[#203F3A]/15 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#203F3A] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#203F3A] hover:shadow-md"
+                >
+                  <Wifi size={15} className="text-[#9B7955]" />
+                  <span>WiFi: One Eleven Guest</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    alert("Door Code: The last 4 digits of the cell phone used when booking your stay.");
+                  }}
+                  className="group inline-flex items-center gap-2 rounded-2xl border border-[#203F3A]/15 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#203F3A] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#203F3A] hover:shadow-md"
+                >
+                  <Key size={15} className="text-[#9B7955]" />
+                  <span>Keyless Door Code</span>
+                </button>
+
+                <a
+                  href="tel:0276977961"
+                  className="group inline-flex items-center gap-2 rounded-2xl border border-[#203F3A]/15 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#203F3A] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#203F3A] hover:shadow-md"
+                >
+                  <Phone size={15} className="text-[#9B7955]" />
+                  <span>Call Matt &amp; Ash</span>
+                </a>
+
+                <a
+                  href="https://maps.google.com/?q=111+Jarden+Mile,+Taup%C5%8D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 rounded-2xl border border-[#203F3A]/15 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#203F3A] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#203F3A] hover:shadow-md"
+                >
+                  <MapPin size={15} className="text-[#9B7955]" />
+                  <span>111 Jarden Mile</span>
+                </a>
+              </div>
             </div>
             {GUIDE_BOOK_PDF && (
             <motion.a 

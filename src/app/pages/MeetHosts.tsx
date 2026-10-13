@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { Menu, Quote, Heart, Target, Instagram, Facebook } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { MobileMenu } from "../components/MobileMenu";
-import { Footer } from "../components/Footer";
+import { StatementFooter as Footer } from "../components/StatementFooter";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
 import { FAMILY_IMAGES } from "../lib/images";
@@ -84,12 +84,12 @@ export function MeetHosts() {
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-8"
           >
-            <span className="text-[12px] uppercase tracking-[0.8em] font-black text-[#203F3A] bg-[#203F3A]/10 px-6 py-2 rounded-full border border-[#203F3A]/20 backdrop-blur-sm inline-block">The Creators</span>
-            <h1 className="text-7xl md:text-[11rem] font-serif leading-[0.8] tracking-tighter">
+            <span className="text-[11px] uppercase tracking-[0.6em] font-bold text-[#D7C8B4] bg-white/10 px-6 py-2 rounded-full border border-[#D7C8B4]/30 backdrop-blur-sm inline-block">The Creators</span>
+            <h1 className="text-7xl md:text-[11rem] font-serif leading-[0.8] tracking-tighter text-[#F4F1EA]">
               Matt & <br />
-              <span className="italic text-[#203F3A]">Ashleigh.</span>
+              <span className="italic text-[#D7C8B4]">Ashleigh.</span>
             </h1>
-            <p className="text-xl md:text-3xl font-light tracking-[0.2em] opacity-80 max-w-2xl mx-auto mt-12 font-serif uppercase">
+            <p className="text-xl md:text-3xl font-light tracking-[0.2em] text-[#F4F1EA]/85 max-w-2xl mx-auto mt-12 font-serif uppercase">
               The Heart of Carlson Properties
             </p>
           </motion.div>
@@ -118,13 +118,13 @@ export function MeetHosts() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
           >
             <div className="space-y-12">
-              <Quote className="text-[#203F3A] w-20 h-20 opacity-20" />
+              <Quote className="text-[#D7C8B4] w-20 h-20 opacity-30" />
               <h2 className="text-4xl md:text-6xl font-serif text-white/95 leading-[1.15] italic font-light">
-                We wanted to create a space that truly <span className="text-[#203F3A]">felt like home</span>, where you had everything at your fingertips—no need to pop out for scissors.
+                We wanted to create a space that truly <span className="text-[#D7C8B4]">felt like home</span>, where you had everything at your fingertips—no need to pop out for scissors.
               </h2>
               <div className="flex items-center gap-6">
-                <div className="w-16 h-px bg-[#203F3A]" />
-                <p className="text-[#203F3A] uppercase tracking-[0.5em] text-xs font-black">Our Philosophy</p>
+                <div className="w-16 h-px bg-[#D7C8B4]" />
+                <p className="text-[#D7C8B4] uppercase tracking-[0.5em] text-xs font-bold">Our Philosophy</p>
               </div>
             </div>
             
@@ -179,18 +179,18 @@ export function MeetHosts() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="rounded-[40px] overflow-hidden shadow-xl aspect-[3/4]"
+                className="group rounded-[40px] overflow-hidden shadow-xl aspect-[3/4]"
               >
-                <img src={familyGroup} className="w-full h-full object-cover" alt="The Carlson Group" />
+                <img src={familyGroup} className="w-full h-full object-cover" alt="The Carlson Group" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="rounded-[40px] overflow-hidden shadow-xl aspect-[3/4] mt-12"
+                className="group rounded-[40px] overflow-hidden shadow-xl aspect-[3/4] mt-12"
               >
-                <img src={familyPlaying} className="w-full h-full object-cover" alt="Family Playing" />
+                <img src={familyPlaying} className="w-full h-full object-cover" alt="Family Playing" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" />
               </motion.div>
             </div>
           </div>
@@ -207,27 +207,27 @@ export function MeetHosts() {
         <div className="max-w-7xl mx-auto px-6 relative z-10 w-full text-left">
           <div className="max-w-3xl space-y-12">
             <div className="space-y-6">
-              <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.7em] block">Our Focus</span>
+              <span className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.7em] block">Our Focus</span>
               <h3 className="text-5xl md:text-8xl font-serif text-white leading-tight">
                 Excellence <br />
-                <span className="italic text-[#203F3A]">in every detail.</span>
+                <span className="italic text-[#D7C8B4]">in every detail.</span>
               </h3>
             </div>
             
-            <p className="text-2xl text-white/70 font-light leading-relaxed">
+            <p className="text-2xl text-white/90 font-light leading-relaxed">
               Our ambition has shifted from expansion to refinement. We are dedicated to making One Eleven the premier destination in Taupō, focusing every effort on providing a world-class experience that brings you back year after year.
             </p>
 
             <Link 
               to="/book"
-              className="group inline-flex items-center gap-6 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/20 px-10 py-5 rounded-full transition-all"
+              className="group inline-flex items-center gap-6 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-[#D7C8B4]/40 px-10 py-5 rounded-full transition-all"
             >
-              <div className="w-12 h-12 rounded-full bg-[#203F3A] flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Target className="text-white" size={20} />
+              <div className="w-12 h-12 rounded-full bg-[#D7C8B4] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Target className="text-[#203F3A]" size={20} />
               </div>
               <div className="text-left">
                 <span className="text-white font-serif text-lg block">The Carlson Commitment</span>
-                <span className="text-[#203F3A] text-[9px] uppercase tracking-[0.4em] font-black">Book Your Stay</span>
+                <span className="text-[#D7C8B4] text-[10px] uppercase tracking-[0.35em] font-bold">Book Your Stay</span>
               </div>
             </Link>
           </div>

@@ -477,36 +477,6 @@ export function Home() {
           </div>
         </section>
 
-        {/* Why Book Direct */}
-        <section className="py-24 px-6 bg-white text-[#203F3A]">
-          <div className="max-w-5xl mx-auto text-center">
-            <span className="text-[11px] uppercase tracking-[0.35em] text-[#9B7955] font-bold block mb-3">
-              Direct Direct Booking
-            </span>
-            <h2 className="text-4xl md:text-5xl font-serif font-light mb-4">
-              Why Book <span className="italic text-[#9B7955]">Direct With Us</span>
-            </h2>
-            <p className="text-[#203F3A]/70 max-w-xl mx-auto font-light text-sm md:text-base mb-16">
-              Reserve straight through carlsonproperties.co.nz for the best rate and direct communication with Matt &amp; Ashleigh.
-            </p>
-
-            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { title: "Best Rate Guaranteed", desc: "No third-party platform markups or hidden fees" },
-                { title: "Direct Host Contact", desc: "Speak directly with Matt & Ashleigh anytime" },
-                { title: "Local Recommendations", desc: "Personal suggestions for Taupō dining and outings" },
-                { title: "Flexible Care", desc: "Direct handling of requests, early arrival, or questions" },
-              ].map((b, i) => (
-                <div key={i} className="text-center p-4">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#203F3A] mx-auto mb-4" />
-                  <h4 className="font-serif text-lg text-[#203F3A] mb-1.5">{b.title}</h4>
-                  <p className="text-xs text-[#203F3A]/70 font-light leading-relaxed">{b.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Massive Awwwards Statement Footer */}
         <Footer />
 

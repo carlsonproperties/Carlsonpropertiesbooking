@@ -1,12 +1,24 @@
 import * as React from "react";
 import { Link } from "react-router";
-import { Star, Instagram, Facebook, ArrowUpRight, Phone, Mail, MapPin } from "lucide-react";
+import { 
+  Star, 
+  Instagram, 
+  Facebook, 
+  ArrowUpRight, 
+  Phone, 
+  Mail, 
+  MapPin,
+  ShieldCheck,
+  MessageSquare,
+  Compass,
+  CalendarCheck,
+  Sparkles
+} from "lucide-react";
 import { CarlsonLogo } from "./CarlsonLogo";
 import { OneElevenLogo } from "./OneElevenLogo";
-import { ScallopedSeal, ClubRoundel } from "./ClubMarks";
+import { ScallopedSeal } from "./ClubMarks";
 
-/** Live local time at the house. Taupō observes NZST/NZDT, so the zone does
- *  the daylight-saving switch for us rather than a hardcoded offset. */
+/** Live local time at the house. Taupō observes NZST/NZDT. */
 function TaupoClock() {
   const [time, setTime] = React.useState<string | null>(null);
 
@@ -34,12 +46,12 @@ function TaupoClock() {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/85">
+      <span className="inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 bg-white/5 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/85 backdrop-blur-sm">
         <span className="h-1.5 w-1.5 rounded-full bg-[#D7C8B4]" />
         Taupō <span className="font-mono tracking-normal tabular-nums">{time}</span>
       </span>
-      <span className="inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/85">
-        Pool <span className="text-[#D7C8B4]/80">Heated year-round</span>
+      <span className="inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 bg-white/5 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/85 backdrop-blur-sm">
+        Pool <span className="text-[#D7C8B4]/90">Heated year-round</span>
       </span>
     </div>
   );
@@ -49,11 +61,98 @@ export function StatementFooter() {
   return (
     <footer className="relative bg-[#203F3A] text-[#F4F1EA] pt-24 pb-12 px-6 overflow-hidden">
       {/* Decorative architectural ambient glow */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#5E7F77]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#5E7F77]/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/3 left-0 w-[500px] h-[500px] bg-[#D7C8B4]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Top Header Row: Coordinated Logo & Direct CTA */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pb-16 border-b border-[#D7C8B4]/20">
+        
+        {/* ==============================================================
+            INTERACTIVE DIRECT BOOKING SUITE (Replaces old static section)
+           ============================================================== */}
+        <div className="pb-20 border-b border-[#D7C8B4]/20">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 bg-white/5 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-[#D7C8B4] backdrop-blur-md">
+              <Sparkles size={12} className="text-[#D7C8B4]" />
+              Direct Reservation Privileges
+            </div>
+            <h2 
+              className="text-4xl sm:text-5xl md:text-6xl font-serif font-light text-[#F4F1EA] tracking-tight leading-[1.1]"
+              style={{ fontFamily: "'Fraunces', Georgia, serif", fontVariationSettings: "'SOFT' 100, 'opsz' 144" }}
+            >
+              Why Book <span className="italic font-normal text-[#D7C8B4]">Direct With Us</span>
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto font-sans text-sm md:text-base font-light leading-relaxed text-[#F4F1EA]/80">
+              Reserve straight through <span className="text-[#F4F1EA] font-medium underline underline-offset-4 decoration-[#D7C8B4]/50">carlsonproperties.co.nz</span> for the guaranteed best rate, zero third-party markups, and direct communication with hosts Matt &amp; Ashleigh.
+            </p>
+          </div>
+
+          {/* Four Interactive Direct Benefit Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: ShieldCheck,
+                title: "Best Rate Guaranteed",
+                tag: "Zero Platform Markups",
+                desc: "Save 12–18% in commercial OTA commission fees. You always receive our lowest available seasonal rate."
+              },
+              {
+                icon: MessageSquare,
+                title: "Direct Host Contact",
+                tag: "Matt & Ashleigh",
+                desc: "Speak directly with us anytime via call or WhatsApp. No automated chatbots, delays, or middlemen."
+              },
+              {
+                icon: Compass,
+                title: "Curated Taupō Guide",
+                tag: "Local Insider Access",
+                desc: "Handpicked lake charters, private chefs, secluded geothermal pools, and preferred dining reservations."
+              },
+              {
+                icon: CalendarCheck,
+                title: "Flexible Care",
+                tag: "Priority Scheduling",
+                desc: "Direct handling of requests, early arrival, or late departure whenever property prep allows."
+              }
+            ].map((card, i) => (
+              <div 
+                key={i}
+                className="group relative rounded-3xl border border-[#D7C8B4]/25 bg-white/[0.04] p-8 text-left backdrop-blur-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-[#D7C8B4] hover:bg-white/[0.08] hover:shadow-2xl"
+              >
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#D7C8B4]/30 bg-[#203F3A] text-[#D7C8B4] shadow-md transition-all duration-300 group-hover:scale-110 group-hover:bg-[#F4F1EA] group-hover:text-[#203F3A]">
+                  <card.icon size={26} strokeWidth={1.75} />
+                </div>
+                <span className="block text-[9px] font-bold uppercase tracking-[0.25em] text-[#D7C8B4]/80 mb-2">
+                  {card.tag}
+                </span>
+                <h4 className="font-serif text-xl text-[#F4F1EA] mb-3 leading-snug">
+                  {card.title}
+                </h4>
+                <p className="font-sans text-xs font-light leading-relaxed text-[#F4F1EA]/75">
+                  {card.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Direct Reserve Action Bar */}
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-2xl border border-[#D7C8B4]/20 bg-white/[0.03] p-6 backdrop-blur-sm">
+            <div className="text-left">
+              <span className="block font-serif text-lg text-[#F4F1EA]">Planning your stay at One Eleven?</span>
+              <span className="text-xs font-light text-[#F4F1EA]/70">5 bedrooms · 4 bathrooms · heated pool &amp; sauna · sleeps up to 10 guests</span>
+            </div>
+            <Link
+              to="/book"
+              data-cursor="RESERVE"
+              className="group flex-shrink-0 inline-flex items-center gap-3 rounded-full bg-[#F4F1EA] px-8 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] text-[#203F3A] shadow-xl transition-all duration-300 hover:bg-[#D7C8B4]"
+            >
+              <span>Check Calendar &amp; Rates</span>
+              <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Top Header Row: Coordinated Brand & Clock */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 py-16 border-b border-[#D7C8B4]/20">
           <div className="flex flex-col sm:flex-row sm:items-start gap-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-6">
               <CarlsonLogo dark={false} />
@@ -95,17 +194,17 @@ export function StatementFooter() {
               </div>
             </div>
           </div>
-          <div className="mt-8 max-w-2xl">
+          <div className="mt-8 max-w-2xl text-left">
             <p className="text-base md:text-lg text-[#F4F1EA]/85 font-light leading-relaxed">
               Guests keep telling us the same thing — they meant to head into town, and then didn&rsquo;t.
-              Five bedrooms and room for ten, a pool that stays warm through July, a cedar sauna out in
-              the garden, and the lake doing its thing through every window.
+              Five bedrooms and room for ten, a pool that stays warm through July, a 4-person rectangular cedar sauna out in
+              the courtyard, and the lake doing its thing through every window.
             </p>
             <p className="mt-4 text-base md:text-lg text-[#D7C8B4] font-light leading-relaxed italic">
               Taupō is five minutes away, for whenever you finally want it.
             </p>
             <ul className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/70">
-              {['5 Bedrooms', 'Sleeps 10', 'Heated Pool', 'Cedar Sauna', '5 Min to Town'].map(
+              {['5 Bedrooms', 'Sleeps 10', 'Heated Pool', '4-Person Cedar Sauna', 'Double-Sided Fire', '5 Min to Town'].map(
                 (fact, i) => (
                   <li key={fact} className="flex items-center gap-3">
                     {i > 0 && <span className="h-1 w-1 rounded-full bg-[#D7C8B4]/50" aria-hidden="true" />}
@@ -146,8 +245,8 @@ export function StatementFooter() {
             <h4 className="font-serif text-xl text-[#F4F1EA]">Navigation</h4>
             <ul className="space-y-2.5 text-xs uppercase tracking-[0.2em] font-medium text-[#D7C8B4]">
               <li><Link to="/about" className="hover:text-[#F4F1EA] transition-colors">About One Eleven</Link></li>
-              <li><Link to="/meet-hosts" className="hover:text-[#F4F1EA] transition-colors">Meet Matt & Ashleigh</Link></li>
-              <li><Link to="/guest-info" className="hover:text-[#F4F1EA] transition-colors">Guest Directory & House Manual</Link></li>
+              <li><Link to="/meet-hosts" className="hover:text-[#F4F1EA] transition-colors">Meet Matt &amp; Ashleigh</Link></li>
+              <li><Link to="/guest-info" className="hover:text-[#F4F1EA] transition-colors">Guest Directory &amp; House Manual</Link></li>
               <li><Link to="/blog" className="hover:text-[#F4F1EA] transition-colors">Taupō Journal</Link></li>
               <li><Link to="/book" className="hover:text-[#F4F1EA] transition-colors">Check Availability</Link></li>
             </ul>
@@ -165,7 +264,7 @@ export function StatementFooter() {
                   to="/owner-login"
                   className="inline-block text-[10px] text-[#D7C8B4]/60 hover:text-[#F4F1EA] border border-[#D7C8B4]/20 px-3 py-1 rounded transition-colors"
                 >
-                  Owner Portal →
+                  Owner Portal &rarr;
                 </Link>
               </li>
             </ul>
