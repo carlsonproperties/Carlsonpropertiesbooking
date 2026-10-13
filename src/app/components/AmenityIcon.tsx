@@ -1,5 +1,22 @@
 import React from 'react';
 
+/**
+ * The 12 official One Eleven amenity icons.
+ *
+ * These paths are the same artwork as /public/brand/icons/ (verified
+ * identical to every symbol in _sprite.svg). They are inlined rather than
+ * referenced with <use href="/brand/icons/_sprite.svg#oe-..."> on purpose:
+ * external-file <use> renders nothing in several Safari versions, and
+ * inlining costs no extra request while still honouring currentColor.
+ *
+ * Name mapping to the brand files, if you need to re-export or re-sync:
+ *   pool → heated-pool        views  → lake-mountain-views
+ *   coffee → barista-coffee   sleeps → guests
+ *   checkin → self-check-in   town   → location
+ *   (sauna, spa, gym, bedrooms, bathrooms, wifi match by name)
+ *
+ * If you edit an icon here, update the matching file and _sprite.svg too.
+ */
 export type AmenityType =
   | 'pool'
   | 'sauna'

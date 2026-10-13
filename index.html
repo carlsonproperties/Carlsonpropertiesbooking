@@ -14,18 +14,10 @@
     <!-- Self-hosted Clubhouse Fonts (Fraunces + Figtree) -->
     <link rel="stylesheet" href="/fonts/fonts.css" />
 
-    <!-- Lake & Stone typefaces: Playfair Display (display) + Inter (UI/body).
-         Loaded here rather than via CSS @import, which the bundler drops. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Good Company / Clubhouse Typefaces:
-         Fraunces (soft 70s heritage serif for headings & wordmark)
-         Figtree (clean modern club sans for UI, labels & house facts)
-         Playfair Display + Inter preserved for existing fallback -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,50..100;1,9..144,300..900,50..100&family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Inter:wght@100..900&display=swap"
-    />
+    <!-- Fraunces + Figtree are self-hosted above (/fonts/fonts.css), so there is
+         no Google Fonts request here: it was pulling four families (including
+         Playfair Display and Inter, which nothing references since the Clubhouse
+         identity landed) and render-blocking on a third-party origin. -->
 
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FYSMJGFR1J"></script>

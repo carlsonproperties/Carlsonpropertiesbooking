@@ -135,12 +135,7 @@ export function Home() {
               >
                 Journal
               </Link>
-              <Link
-                to="/owner-login"
-                className={`${isScrolled ? "text-[#203F3A]/70" : "text-[#F4F1EA]/70"} hover:text-[#D7C8B4] transition-colors text-[10px]`}
-              >
-                Owner Portal
-              </Link>
+              {/* Owner Portal is staff-only — it lives in the footer, not the guest nav. */}
               <Link
                 to="/book"
                 data-cursor="book"
@@ -261,6 +256,26 @@ export function Home() {
               >
                 <span>Tour The Spaces</span>
                 <ArrowDown size={14} />
+              </a>
+            </motion.div>
+
+            {/* Social proof, above the fold. The Google listing rates 5.0, so it
+                shows as five stars — never a decimal. */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.45 }}
+              className="mt-8 flex justify-center"
+            >
+              <a
+                href="https://g.page/r/CZuTLT-YqNStEAE/review"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="VIEW"
+                className="inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.18em] font-semibold text-[#F4F1EA]/90 hover:text-[#D7C8B4] transition-colors"
+              >
+                <span aria-hidden="true" className="text-[#D7C8B4] tracking-[0.1em]">★★★★★</span>
+                Five stars on Google
               </a>
             </motion.div>
           </div>
@@ -494,6 +509,29 @@ export function Home() {
 
         {/* Massive Awwwards Statement Footer */}
         <Footer />
+
+        {/* Mobile booking bar — most bookings start on a phone, so the direct
+            CTA stays reachable. Desktop carries it in the nav instead. */}
+        <div
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-[#F4F1EA]/95 backdrop-blur-md border-t border-[#D7C8B4]"
+          style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+        >
+          <div className="flex items-center gap-4 px-5 py-3">
+            <div className="min-w-0">
+              <p className="font-display text-lg leading-none text-[#203F3A]">Sleeps 10</p>
+              <p className="mt-1 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-[#203F3A]/70">
+                Pool · Sauna · Spa
+              </p>
+            </div>
+            <Link
+              to="/book"
+              data-cursor="RESERVE"
+              className="ml-auto shrink-0 rounded-full bg-[#203F3A] px-6 py-3.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#F4F1EA] transition-colors hover:bg-[#16302B]"
+            >
+              Check Availability
+            </Link>
+          </div>
+        </div>
       </div>
     </>
   );

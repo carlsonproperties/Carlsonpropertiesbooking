@@ -5,6 +5,47 @@ import { CarlsonLogo } from "./CarlsonLogo";
 import { OneElevenLogo } from "./OneElevenLogo";
 import { ScallopedSeal, ClubRoundel } from "./ClubMarks";
 
+/** Live local time at the house. Taupō observes NZST/NZDT, so the zone does
+ *  the daylight-saving switch for us rather than a hardcoded offset. */
+function TaupoClock() {
+  const [time, setTime] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const tick = () => {
+      try {
+        setTime(
+          new Intl.DateTimeFormat("en-NZ", {
+            timeZone: "Pacific/Auckland",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }).format(new Date()),
+        );
+      } catch {
+        setTime(null);
+      }
+    };
+    tick();
+    const id = window.setInterval(tick, 30_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  if (!time) return null;
+
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/85">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#D7C8B4]" />
+        Taupō <span className="font-mono tracking-normal tabular-nums">{time}</span>
+      </span>
+      <span className="inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F4F1EA]/85">
+        Pool <span className="font-mono tracking-normal">38°C</span>
+        <span className="text-[#D7C8B4]/70">Heated year-round</span>
+      </span>
+    </div>
+  );
+}
+
 export function StatementFooter() {
   return (
     <footer className="relative bg-[#203F3A] text-[#F4F1EA] pt-24 pb-12 px-6 overflow-hidden">
@@ -14,10 +55,13 @@ export function StatementFooter() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Top Header Row: Coordinated Logo & Direct CTA */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pb-16 border-b border-[#D7C8B4]/20">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-            <CarlsonLogo dark={false} />
-            <span className="hidden sm:inline text-[#D7C8B4]/40">|</span>
-            <OneElevenLogo dark={false} withEndorsement={false} />
+          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+              <CarlsonLogo dark={false} />
+              <span className="hidden sm:inline text-[#D7C8B4]/40">|</span>
+              <OneElevenLogo dark={false} withEndorsement={false} />
+            </div>
+            <TaupoClock />
           </div>
 
           <div className="flex items-center gap-4">
