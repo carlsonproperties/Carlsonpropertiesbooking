@@ -22,3 +22,6 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# Agent working directory (build scripts, extracted data, keys)
+_str_plan/

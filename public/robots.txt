@@ -4,10 +4,21 @@ Allow: /
 
 # Disallow owner dashboard and checkout pages
 Disallow: /dashboard
+Disallow: /admin
 Disallow: /owner-login
 Disallow: /checkout
 Disallow: /cart
 Disallow: /booking-success
+
+# Disallow internal / diagnostic pages
+Disallow: /payment-lookup
+Disallow: /stripe-info
+Disallow: /stripe-account-check
+Disallow: /test-emails
+Disallow: /health-check
+Disallow: /image-test
+Disallow: /image-mapper
+Disallow: /view-latest-booking
 
 # Sitemap location
 Sitemap: https://carlsonproperties.co.nz/sitemap.xml

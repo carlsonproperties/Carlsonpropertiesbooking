@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { faqSchema } from '../lib/schemas';
 
 interface SEOProps {
   title?: string;
@@ -7,17 +8,19 @@ interface SEOProps {
   keywords?: string;
   image?: string;
   url?: string;
+  canonicalUrl?: string;
   type?: string;
   schemaData?: any;
 }
 
 const DEFAULT_SEO = {
-  siteName: 'One Eleven Taupo - Luxury Accommodation',
-  defaultTitle: 'One Eleven Taupo | Luxury Holiday Home with Lake Views & Accommodation',
-  defaultDescription: 'Book luxury accommodation in Taupo, New Zealand. Five-bedroom holiday home with spa, sauna, gym, and stunning panoramic Lake Taupo views. Perfect for families and groups seeking premium Taupo accommodation.',
-  defaultKeywords: 'accommodation taupo, taupo accommodation, luxury accommodation taupo, holiday home taupo, lake view taupo, taupo holiday homes, vacation rental taupo, taupo rentals, lake taupo accommodation, luxury holiday homes taupo, family accommodation taupo, taupo lake view accommodation, premium accommodation taupo, taupo vacation homes, spa accommodation taupo, sauna taupo, gym accommodation taupo, taupo airbnb alternative, direct booking taupo, taupo luxury rentals, five bedroom taupo, group accommodation taupo, large holiday home taupo, taupo property rental, new zealand accommodation, taupo nz accommodation, taupo stays, boutique accommodation taupo',
-  siteUrl: typeof window !== 'undefined' ? window.location.origin : '',
-  image: '/og-image.jpg', // We'll need to create this
+  siteName: 'One Eleven on the Mile | Taupō Luxury Accommodation',
+  defaultTitle: 'Luxury Accommodation in Taupō | One Eleven on the Mile — 5-Bed Lake House with Pool, Spa & Sauna',
+  defaultDescription: 'Book luxury accommodation in Taupō, New Zealand at One Eleven on the Mile — a five-bedroom, four-bathroom lake house with heated pool, spa, sauna, gym and panoramic Lake Taupō views. Sleeps 10. Ideal family and group accommodation in Taupō NZ, bookable direct.',
+  defaultKeywords: 'accommodation in taupo, taupo accommodation, accommodation taupo nz, luxury accommodation taupo, holiday home taupo, lake view taupo, taupo holiday homes, vacation rental taupo, taupo rentals, lake taupo accommodation, luxury holiday homes taupo, family accommodation taupo, group accommodation taupo, large holiday home taupo, five bedroom taupo, spa accommodation taupo, sauna taupo, gym accommodation taupo, taupo airbnb alternative, direct booking taupo, taupo luxury rentals, new zealand accommodation, taupo nz accommodation, taupo stays, boutique accommodation taupo, one eleven on the mile',
+  siteUrl: typeof window !== 'undefined' ? window.location.origin : 'https://carlsonproperties.co.nz',
+  image: '/og-image.jpg',
+  imageUrl: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg',
 };
 
 export function SEO({
@@ -26,125 +29,184 @@ export function SEO({
   keywords = DEFAULT_SEO.defaultKeywords,
   image,
   url,
+  canonicalUrl,
   type = 'website',
   schemaData,
 }: SEOProps) {
   const fullTitle = title 
-    ? `${title} | One Eleven Taupo` 
+    ? `${title} | One Eleven on the Mile` 
     : DEFAULT_SEO.defaultTitle;
   
-  const fullUrl = url 
-    ? `${DEFAULT_SEO.siteUrl}${url}` 
-    : DEFAULT_SEO.siteUrl;
+  const fullUrl = canonicalUrl
+    ? canonicalUrl
+    : url 
+      ? `${DEFAULT_SEO.siteUrl}${url}` 
+      : `${DEFAULT_SEO.siteUrl}/`;
   
   const fullImage = image 
     ? `${DEFAULT_SEO.siteUrl}${image}` 
-    : `${DEFAULT_SEO.siteUrl}${DEFAULT_SEO.image}`;
+    : DEFAULT_SEO.imageUrl;
+
+  const sameAs = [
+    'https://www.instagram.com/oneelevenonthemile',
+    'https://www.facebook.com/p/One-Eleven-On-The-Mile-61563014557673/',
+    'https://g.page/r/CZuTLT-YqNStEBM/review',
+    'https://share.google/t0KAo2MAm0a41hEg3',
+  ];
+
+  const PROPERTY_IMAGES = [
+    'Street facing.jpg', 'kitchen.png', 'poolview.jpg', 'close up pool feature.png',
+    'Open plan living.jpg', 'Bedroom 1.avif', 'sauanaandspa.jpg', 'BBq and patio.png',
+    'lake views.jpg', 'frontdeck.jpg', 'looking into kitchen.png', 'Dining Room.jpg',
+  ].map((f) => `https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/${encodeURIComponent(f)}`);
+
+  const reviews = [
+    { author: 'Tom', date: '2026-01-10', body: 'Stunning place to stay. Well appointed, very spacious and comfortable. Kids loved the pool area. Perfect for extended families or groups.' },
+    { author: 'Rachael', date: '2025-03-17', body: 'Amazing, stunning, everything was thought of! Will definitely be back!' },
+    { author: 'Guest', date: '2024-10-24', body: 'House was awesome — plenty of space to relax. The indoor-outdoor flow is great along with BBQ, pool, spa and sauna. Top-level customer service.' },
+  ].map((r) => ({
+    '@type': 'Review',
+    'author': { '@type': 'Person', 'name': r.author },
+    'datePublished': r.date,
+    'reviewBody': r.body,
+    'reviewRating': { '@type': 'Rating', 'ratingValue': '5' },
+  }));
+
+  const amenityFeature = [
+    'Heated swimming pool', 'Spa pool', 'Sauna', 'Gym', 'BBQ', 'Lake views',
+    'Free parking', 'Free WiFi', 'Air conditioning', 'Full kitchen',
+    'Washing machine', 'Self check-in', 'Indoor fireplace', 'Smart lock entry',
+  ].map((name) => ({
+    '@type': 'LocationFeatureSpecification',
+    name,
+    value: true,
+  }));
 
   // Default structured data for the property
   const defaultSchema = {
-    "@context": "https://schema.org",
-    "@graph": [
+    '@context': 'https://schema.org',
+    '@graph': [
       {
-        "@type": "VacationRental",
-        "name": "One Eleven Taupo",
-        "description": "Luxury five-bedroom holiday home in Taupo with spa, sauna, gym, and stunning panoramic Lake Taupo views",
-        "image": [
-          fullImage
+        '@type': ['LodgingBusiness', 'VacationRental'],
+        '@id': `${DEFAULT_SEO.siteUrl}/#accommodation`,
+        'name': 'One Eleven on the Mile',
+        'alternateName': 'One Eleven Taupo — Luxury Accommodation in Taupō',
+        'description': 'Luxury five-bedroom, four-bathroom holiday home accommodation in Taupō, New Zealand with a heated pool, spa, sauna, gym and panoramic Lake Taupō views. Sleeps up to 10 guests. Direct booking available.',
+        'url': `${DEFAULT_SEO.siteUrl}/`,
+        'image': PROPERTY_IMAGES,
+        'logo': PROPERTY_IMAGES[0],
+        'identifier': { '@type': 'PropertyValue', 'propertyID': 'one-eleven-on-the-mile', 'value': '111 Jarden Mile, Taupō, New Zealand' },
+        'hasMap': 'https://www.google.com/maps/search/?api=1&query=111+Jarden+Mile+Taupo+New+Zealand',
+        'containsPlace': [
+          {
+            '@type': 'Accommodation',
+            'name': 'One Eleven on the Mile — 5-Bedroom Lake House',
+            'numberOfRooms': 5,
+            'numberOfBedrooms': 5,
+            'numberOfBathroomsTotal': 4,
+            'maximumAttendeeCapacity': 10,
+            'petsAllowed': false,
+            'smokingAllowed': false,
+            'amenityFeature': amenityFeature,
+            'occupancy': { '@type': 'QuantitativeValue', 'value': 10, 'maxValue': 10 },
+          },
         ],
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Taupo",
-          "addressRegion": "Waikato",
-          "addressCountry": "NZ"
+        'review': reviews,
+        'telephone': '+64 27 697 7961',
+        'email': 'bookings@carlsonproperties.co.nz',
+        'address': {
+          '@type': 'PostalAddress',
+          'streetAddress': '111 Jarden Mile',
+          'addressLocality': 'Taupō',
+          'addressRegion': 'Waikato',
+          'postalCode': '3330',
+          'addressCountry': 'NZ',
         },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": -38.6857,
-          "longitude": 176.0702
+        'geo': {
+          '@type': 'GeoCoordinates',
+          'latitude': -38.6857,
+          'longitude': 176.0702,
         },
-        "amenityFeature": [
-          {
-            "@type": "LocationFeatureSpecification",
-            "name": "Spa",
-            "value": true
+        'checkinTime': '15:00',
+        'checkoutTime': '10:00',
+        'numberOfRooms': 5,
+        'numberOfBedrooms': 5,
+        'numberOfBathroomsTotal': 4,
+        'maximumAttendeeCapacity': 10,
+        'petsAllowed': false,
+        'smokingAllowed': false,
+        'amenityFeature': amenityFeature,
+        'priceRange': '$$$',
+        'currenciesAccepted': 'NZD',
+        'paymentAccepted': 'Credit Card, Debit Card, Bank Transfer',
+        'aggregateRating': {
+          '@type': 'AggregateRating',
+          'ratingValue': '5.0',
+          'reviewCount': '47',
+        },
+        'sameAs': sameAs,
+        'potentialAction': {
+          '@type': 'ReserveAction',
+          'target': {
+            '@type': 'EntryPoint',
+            'urlTemplate': `${DEFAULT_SEO.siteUrl}/book`,
+            'inLanguage': 'en-NZ',
+            'actionPlatform': ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'],
           },
-          {
-            "@type": "LocationFeatureSpecification",
-            "name": "Sauna",
-            "value": true
-          },
-          {
-            "@type": "LocationFeatureSpecification",
-            "name": "Gym",
-            "value": true
-          },
-          {
-            "@type": "LocationFeatureSpecification",
-            "name": "Lake View",
-            "value": true
-          },
-          {
-            "@type": "LocationFeatureSpecification",
-            "name": "BBQ",
-            "value": true
-          },
-          {
-            "@type": "LocationFeatureSpecification",
-            "name": "Parking",
-            "value": true
-          }
-        ],
-        "numberOfRooms": 5,
-        "numberOfBedrooms": 5,
-        "numberOfBathroomsTotal": 4,
-        "petsAllowed": false,
-        "url": fullUrl,
-        "priceRange": "$$$",
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "5.0",
-          "reviewCount": "47"
-        }
+          'result': { '@type': 'LodgingReservation', 'name': 'Reserve a stay at One Eleven on the Mile' },
+        },
       },
       {
-        "@type": "LocalBusiness",
-        "name": "Carlson Properties - One Eleven Taupo",
-        "description": "Premium vacation rental property management in Taupo, New Zealand",
-        "url": DEFAULT_SEO.siteUrl,
-        "telephone": "",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Taupo",
-          "addressRegion": "Waikato",
-          "addressCountry": "NZ"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": -38.6857,
-          "longitude": 176.0702
-        },
-        "priceRange": "$$$",
-        "image": fullImage
+        '@type': 'VideoObject',
+        'name': 'One Eleven on the Mile — Drone Tour',
+        'description': 'Aerial drone tour of One Eleven on the Mile, luxury accommodation in Taupō, New Zealand.',
+        'thumbnailUrl': PROPERTY_IMAGES[0],
+        'contentUrl': 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4',
+        'embedUrl': 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4',
+        'uploadDate': '2026-01-01',
       },
       {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": DEFAULT_SEO.siteUrl
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": title || "One Eleven Taupo",
-            "item": fullUrl
-          }
-        ]
-      }
-    ]
+        '@type': 'LocalBusiness',
+        '@id': `${DEFAULT_SEO.siteUrl}/#business`,
+        'name': 'Carlson Properties — One Eleven on the Mile',
+        'description': 'Premium short-term rental accommodation management in Taupō, New Zealand.',
+        'url': DEFAULT_SEO.siteUrl,
+        'telephone': '+64 27 697 7961',
+        'email': 'bookings@carlsonproperties.co.nz',
+        'address': {
+          '@type': 'PostalAddress',
+          'streetAddress': '111 Jarden Mile',
+          'addressLocality': 'Taupō',
+          'addressRegion': 'Waikato',
+          'postalCode': '3330',
+          'addressCountry': 'NZ',
+        },
+        'geo': { '@type': 'GeoCoordinates', 'latitude': -38.6857, 'longitude': 176.0702 },
+        'priceRange': '$$$',
+        'image': fullImage,
+        'sameAs': sameAs,
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${DEFAULT_SEO.siteUrl}/#website`,
+        'name': DEFAULT_SEO.siteName,
+        'url': `${DEFAULT_SEO.siteUrl}/`,
+        'inLanguage': 'en-NZ',
+        'potentialAction': {
+          '@type': 'SearchAction',
+          'target': { '@type': 'EntryPoint', 'urlTemplate': `${DEFAULT_SEO.siteUrl}/?q={search_term_string}` },
+          'query-input': 'required name=search_term_string',
+        },
+      },
+      faqSchema,
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': `${DEFAULT_SEO.siteUrl}/` },
+          { '@type': 'ListItem', 'position': 2, 'name': title || 'One Eleven on the Mile', 'item': fullUrl },
+        ],
+      },
+    ],
   };
 
   const schema = schemaData || defaultSchema;
@@ -155,6 +217,7 @@ export function SEO({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
+      <meta name="author" content="Carlson Properties" />
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />

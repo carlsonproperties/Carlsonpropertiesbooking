@@ -24,6 +24,7 @@ import { MobileMenu } from "../components/MobileMenu";
 import { StatementFooter as Footer } from "../components/StatementFooter";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
+import { aboutSchema } from "../lib/schemas";
 import { GALLERY_IMAGES, BEDROOM_IMAGES } from "../lib/images";
 
 // Using your Supabase-hosted property images
@@ -122,6 +123,7 @@ export function About() {
         description="Discover One Eleven Taupo - a purpose-built luxury holiday home featuring 5 bedrooms, 4 bathrooms, heated pool, sauna, gym, and stunning Lake Taupo views. Perfect Taupo accommodation for families and groups."
         keywords="accommodation taupo, about one eleven taupo, taupo luxury holiday home, taupo vacation rental details, five bedroom taupo, lake taupo property, taupo spa accommodation, taupo sauna, heated pool taupo, taupo family accommodation, luxury rental taupo, taupo accommodation features"
         url="/about"
+        schemaData={aboutSchema}
       />
       {/* Lightbox Modal */}
       {selectedImage && (

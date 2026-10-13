@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { BLOG_POSTS } from "../lib/blog-posts";
 import { BlogCard } from "../components/BlogCard";
 import { SEO } from "../components/SEO";
+import { blogSchema } from "../lib/schemas";
 import { Footer } from "../components/Footer";
 
 type Category = 'All' | 'Events' | 'Local Guide' | 'Food & Drink';
@@ -29,6 +30,7 @@ export function Blog() {
         description="Discover the best of Taupō with our local guide. Events, activities, dining recommendations, and insider tips from your hosts at One Eleven on the Mile."
         keywords="Taupō blog, Taupō events, things to do in Taupō, Taupō restaurants, Taupō guide, Lake Taupō"
         canonicalUrl="https://carlsonproperties.co.nz/blog"
+        schemaData={blogSchema}
       />
 
       <div className="min-h-screen bg-[#F4F1EA]">

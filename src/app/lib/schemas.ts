@@ -149,3 +149,70 @@ export const refundBreadcrumbSchema = createBreadcrumbSchema([
   { name: "Home", url: "/" },
   { name: "Refund Policy", url: "/refund" }
 ]);
+
+// ============================================
+// Business identity (sameAs) + per-page schemas
+// ============================================
+export const BUSINESS_SAME_AS = [
+  "https://www.instagram.com/oneelevenonthemile",
+  "https://www.facebook.com/p/One-Eleven-On-The-Mile-61563014557673/",
+  "https://g.page/r/CZuTLT-YqNStEBM/review",
+  "https://share.google/t0KAo2MAm0a41hEg3",
+];
+
+const businessEntity = {
+  "@type": "LocalBusiness",
+  "@id": "https://carlsonproperties.co.nz/#business",
+  "name": "Carlson Properties — One Eleven on the Mile",
+  "description": "Premium luxury accommodation in Taupō, New Zealand.",
+  "url": "https://carlsonproperties.co.nz/",
+  "image": "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg",
+  "telephone": "+64 27 697 7961",
+  "email": "bookings@carlsonproperties.co.nz",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "111 Jarden Mile",
+    "addressLocality": "Taupō",
+    "addressRegion": "Waikato",
+    "postalCode": "3330",
+    "addressCountry": "NZ"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": -38.6857, "longitude": 176.0702 },
+  "sameAs": BUSINESS_SAME_AS
+};
+
+const breadcrumb = (items: { name: string; url: string }[]) => ({
+  "@type": "BreadcrumbList",
+  "itemListElement": items.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.name,
+    "item": `https://carlsonproperties.co.nz${item.url}`
+  }))
+});
+
+const pageSchema = (breadcrumbItems: { name: string; url: string }[]) => ({
+  "@context": "https://schema.org",
+  "@graph": [businessEntity, breadcrumb(breadcrumbItems)]
+});
+
+export const aboutSchema = pageSchema([
+  { name: "Home", url: "/" },
+  { name: "About Our Property", url: "/about" }
+]);
+
+export const bookSchema = pageSchema([
+  { name: "Home", url: "/" },
+  { name: "Book Your Stay", url: "/book" }
+]);
+
+export const blogSchema = pageSchema([
+  { name: "Home", url: "/" },
+  { name: "Journal", url: "/blog" }
+]);
+
+export const blogPostBreadcrumb = (slug: string, title: string) => breadcrumb([
+  { name: "Home", url: "/" },
+  { name: "Journal", url: "/blog" },
+  { name: title, url: `/blog/${slug}` }
+]);

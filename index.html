@@ -1,9 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-NZ">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>One Eleven on the Mile — Private Wellness Lake House, Taupō</title>
+    <title>Luxury Accommodation in Taupō | One Eleven on the Mile — 5-Bed Lake House</title>
+
+    <!-- SEO: baked statically so non-JS crawlers (Google + AI/LLM) see it before React mounts -->
+    <meta name="description" content="Book luxury accommodation in Taupō, New Zealand at One Eleven on the Mile — a five-bedroom, four-bathroom lake house with heated pool, spa, sauna, gym and panoramic Lake Taupō views. Sleeps 10. Ideal family and group accommodation in Taupō NZ, bookable direct." />
+    <meta name="keywords" content="accommodation in taupo, taupo accommodation, accommodation taupo nz, luxury accommodation taupo, holiday home taupo, lake taupo accommodation, five bedroom taupo, group accommodation taupo, one eleven on the mile" />
+    <meta name="author" content="Carlson Properties" />
+    <link rel="canonical" href="https://carlsonproperties.co.nz/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="geo.region" content="NZ-WKO" />
+    <meta name="geo.placename" content="Taupo" />
+    <meta name="geo.position" content="-38.6857;176.0702" />
+    <meta name="ICBM" content="-38.6857, 176.0702" />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="One Eleven on the Mile | Taupō Luxury Accommodation" />
+    <meta property="og:title" content="Luxury Accommodation in Taupō | One Eleven on the Mile" />
+    <meta property="og:description" content="Five-bedroom, four-bathroom lake house in Taupō, NZ with heated pool, spa, sauna, gym and panoramic Lake Taupō views. Sleeps 10. Book direct." />
+    <meta property="og:image" content="https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg" />
+    <meta property="og:url" content="https://carlsonproperties.co.nz/" />
+    <meta property="og:locale" content="en_NZ" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <!-- One Eleven on the Mile — Brand Favicon & Web Manifest -->
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -14,10 +36,158 @@
     <!-- Self-hosted Clubhouse Fonts (Fraunces + Figtree) -->
     <link rel="stylesheet" href="/fonts/fonts.css" />
 
-    <!-- Fraunces + Figtree are self-hosted above (/fonts/fonts.css), so there is
-         no Google Fonts request here: it was pulling four families (including
-         Playfair Display and Inter, which nothing references since the Clubhouse
-         identity landed) and render-blocking on a third-party origin. -->
+    <!-- Structured data (static fallback; React SEO component injects the same @id for dedupe) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["LodgingBusiness", "VacationRental"],
+          "@id": "https://carlsonproperties.co.nz/#accommodation",
+          "name": "One Eleven on the Mile",
+          "alternateName": "One Eleven Taupo — Luxury Accommodation in Taupō",
+          "description": "Luxury five-bedroom, four-bathroom holiday home accommodation in Taupō, New Zealand with a heated pool, spa, sauna, gym and panoramic Lake Taupō views. Sleeps up to 10 guests. Direct booking available.",
+          "url": "https://carlsonproperties.co.nz/",
+          "image": [
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/kitchen.png",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/poolview.jpg",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/close%20up%20pool%20feature.png",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Open%20plan%20living.jpg",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Bedroom%201.avif",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/sauanaandspa.jpg",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/BBq%20and%20patio.png",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg",
+            "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/frontdeck.jpg"
+          ],
+          "identifier": { "@type": "PropertyValue", "propertyID": "one-eleven-on-the-mile", "value": "111 Jarden Mile, Taupō, New Zealand" },
+          "hasMap": "https://www.google.com/maps/search/?api=1&query=111+Jarden+Mile+Taupo+New+Zealand",
+          "containsPlace": [
+            {
+              "@type": "Accommodation",
+              "name": "One Eleven on the Mile — 5-Bedroom Lake House",
+              "numberOfRooms": 5,
+              "numberOfBedrooms": 5,
+              "numberOfBathroomsTotal": 4,
+              "maximumAttendeeCapacity": 10,
+              "petsAllowed": false,
+              "smokingAllowed": false
+            }
+          ],
+          "review": [
+            { "@type": "Review", "author": { "@type": "Person", "name": "Tom" }, "reviewBody": "Stunning place to stay. Well appointed, very spacious and comfortable. Kids loved the pool area.", "reviewRating": { "@type": "Rating", "ratingValue": "5" } },
+            { "@type": "Review", "author": { "@type": "Person", "name": "Rachael" }, "reviewBody": "Amazing, stunning, everything was thought of! Will definitely be back!", "reviewRating": { "@type": "Rating", "ratingValue": "5" } },
+            { "@type": "Review", "author": { "@type": "Person", "name": "Guest" }, "reviewBody": "House was awesome — plenty of space to relax. Indoor-outdoor flow is great with BBQ, pool, spa and sauna.", "reviewRating": { "@type": "Rating", "ratingValue": "5" } }
+          ],
+          "telephone": "+64 27 697 7961",
+          "email": "bookings@carlsonproperties.co.nz",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "111 Jarden Mile",
+            "addressLocality": "Taupō",
+            "addressRegion": "Waikato",
+            "postalCode": "3330",
+            "addressCountry": "NZ"
+          },
+          "geo": { "@type": "GeoCoordinates", "latitude": -38.6857, "longitude": 176.0702 },
+          "checkinTime": "15:00",
+          "checkoutTime": "10:00",
+          "numberOfRooms": 5,
+          "numberOfBedrooms": 5,
+          "numberOfBathroomsTotal": 4,
+          "maximumAttendeeCapacity": 10,
+          "petsAllowed": false,
+          "smokingAllowed": false,
+          "amenityFeature": [
+            { "@type": "LocationFeatureSpecification", "name": "Heated swimming pool", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Spa pool", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Sauna", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Gym", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "BBQ", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Lake views", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Free parking", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Free WiFi", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Air conditioning", "value": true }
+          ],
+          "priceRange": "$$$",
+          "currenciesAccepted": "NZD",
+          "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5.0", "reviewCount": "47" },
+          "sameAs": [
+            "https://www.instagram.com/oneelevenonthemile",
+            "https://www.facebook.com/p/One-Eleven-On-The-Mile-61563014557673/",
+            "https://g.page/r/CZuTLT-YqNStEBM/review",
+            "https://share.google/t0KAo2MAm0a41hEg3"
+          ],
+          "potentialAction": {
+            "@type": "ReserveAction",
+            "target": "https://carlsonproperties.co.nz/book",
+            "result": { "@type": "LodgingReservation", "name": "Reserve a stay at One Eleven on the Mile" }
+          }
+        },
+        {
+          "@type": "VideoObject",
+          "name": "One Eleven on the Mile — Drone Tour",
+          "description": "Aerial drone tour of One Eleven on the Mile, luxury accommodation in Taupō, New Zealand.",
+          "thumbnailUrl": "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg",
+          "contentUrl": "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4",
+          "embedUrl": "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4",
+          "uploadDate": "2026-01-01"
+        },
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://carlsonproperties.co.nz/#business",
+          "name": "Carlson Properties — One Eleven on the Mile",
+          "description": "Premium short-term rental accommodation in Taupō, New Zealand.",
+          "url": "https://carlsonproperties.co.nz/",
+          "telephone": "+64 27 697 7961",
+          "email": "bookings@carlsonproperties.co.nz",
+          "address": { "@type": "PostalAddress", "addressLocality": "Taupō", "addressRegion": "Waikato", "addressCountry": "NZ" },
+          "geo": { "@type": "GeoCoordinates", "latitude": -38.6857, "longitude": 176.0702 },
+          "sameAs": [
+            "https://www.instagram.com/oneelevenonthemile",
+            "https://www.facebook.com/p/One-Eleven-On-The-Mile-61563014557673/",
+            "https://share.google/t0KAo2MAm0a41hEg3"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What amenities are included at this Taupō accommodation?",
+              "acceptedAnswer": { "@type": "Answer", "text": "One Eleven on the Mile includes a heated swimming pool, sauna, gym, spa pool, BBQ, modern kitchen, air conditioning, heating and WiFi. It has 5 bedrooms, 4 bathrooms and sleeps up to 10 guests." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many guests does the Taupō holiday home sleep?",
+              "acceptedAnswer": { "@type": "Answer", "text": "The house sleeps up to 10 guests across 5 bedrooms and 4 bathrooms, making it ideal for families and groups." }
+            },
+            {
+              "@type": "Question",
+              "name": "What are the check-in and check-out times?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Check-in is from 3:00 PM and check-out is at 10:00 AM. Your unique door code is sent 3 days before check-in." }
+            },
+            {
+              "@type": "Question",
+              "name": "Are pets allowed?",
+              "acceptedAnswer": { "@type": "Answer", "text": "No, pets are not allowed on the premises." }
+            },
+            {
+              "@type": "Question",
+              "name": "Where is One Eleven on the Mile located?",
+              "acceptedAnswer": { "@type": "Answer", "text": "The property is at 111 Jarden Mile, Taupō, New Zealand, with panoramic Lake Taupō views." }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://carlsonproperties.co.nz/" }
+          ]
+        }
+      ]
+    }
+    </script>
 
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FYSMJGFR1J"></script>
@@ -25,10 +195,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      
-      gtag('config', 'G-FYSMJGFR1J', {
-        send_page_view: false // We'll track page views manually in React Router
-      });
+      gtag('config', 'G-FYSMJGFR1J', { send_page_view: false });
     </script>
   </head>
   <body>

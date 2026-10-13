@@ -8,6 +8,7 @@ import { MobileMenu } from "../components/MobileMenu";
 import { Footer } from "../components/Footer";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
+import { bookSchema } from "../lib/schemas";
 
 export function Book() {
   const [property, setProperty] = useState<any>(null);
@@ -43,6 +44,7 @@ export function Book() {
         keywords="book accommodation taupo, taupo booking direct, reserve taupo holiday home, book luxury taupo, taupo vacation rental booking, one eleven taupo booking, taupo holiday home rates, book lake view taupo, direct booking taupo, taupo accommodation booking, taupo rental reservation"
         url="/book"
         type="website"
+        schemaData={bookSchema}
       />
       {/* Navigation */}
       <nav className="py-6 border-b border-slate-100 bg-white/80 backdrop-blur-xl sticky top-0 z-[100]">

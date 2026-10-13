@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { BLOG_POSTS } from "../lib/blog-posts";
 import { BlogCard } from "../components/BlogCard";
 import { SEO } from "../components/SEO";
+import { blogPostBreadcrumb, BUSINESS_SAME_AS } from "../lib/schemas";
 import { Footer } from "../components/Footer";
 
 export function BlogPost() {
@@ -48,27 +49,33 @@ export function BlogPost() {
 
   const schemaData = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "image": post.secondaryImage || post.heroImage,
-    "datePublished": post.publishDate,
-    "dateModified": post.publishDate,
-    "author": { "@type": "Person", "name": "Matt & Ashleigh Carlson" },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Carlson Properties",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Black%20White%20Minimalist%20Calligraphy%20Signature%20Logo.png"
-      }
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://www.carlsonproperties.co.nz/blog/${post.slug}`
-    },
-    "description": post.metaDescription,
-    "keywords": post.tags.join(", "),
-    "articleSection": post.category
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "image": post.secondaryImage || post.heroImage,
+        "datePublished": post.publishDate,
+        "dateModified": post.publishDate,
+        "author": { "@type": "Person", "name": "Matt & Ashleigh Carlson" },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carlson Properties",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Logo.png"
+          },
+          "sameAs": BUSINESS_SAME_AS
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `https://www.carlsonproperties.co.nz/blog/${post.slug}`
+        },
+        "description": post.metaDescription,
+        "keywords": post.tags.join(", "),
+        "articleSection": post.category
+      },
+      blogPostBreadcrumb(post.slug, post.title)
+    ]
   };
 
   return (

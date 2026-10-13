@@ -19,6 +19,7 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { ResendConfirmation } from "./pages/ResendConfirmation";
 import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
+import { FinancialsPage } from "./pages/Financials";
 
 // MAINTENANCE MODE
 // Set to true to show maintenance page for all routes
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
       { path: "terms", Component: Terms },
       { path: "privacy", Component: PrivacyPolicy },
       { path: "refund", Component: RefundPolicy },
+      { path: "admin", Component: FinancialsPage },
     ],
   },
   // Catch-all route for maintenance mode
