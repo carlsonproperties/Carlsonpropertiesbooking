@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { Footer } from "../components/Footer";
 import { SEO } from "../components/SEO";
 import { cartBreadcrumbSchema } from "../lib/schemas";
+import { PROPERTY_CARD_IMAGE as PROPERTY_IMAGE } from "../lib/images";
 
-const PROPERTY_IMAGE = "https://hlemnlibokutxjfaviaz.supabase.co/storage/v1/object/public/Media/032_Open2view_ID584542-111_Jarden_Mile.jpg";
 
 export function CartPage() {
   const location = useLocation();

@@ -66,7 +66,7 @@ const REVIEWS: Review[] = [
 ];
 
 export function Testimonials() {
-  const googleMapsUrl = "https://g.page/r/CZuTLT-YqNStEBM/review";
+  const googleMapsUrl = "https://g.page/r/CZuTLT-YqNStEAE/review";
 
   const settings = {
     dots: true,

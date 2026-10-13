@@ -58,7 +58,7 @@ export function Book() {
 
           <div className="hidden md:flex items-center gap-6">
             <a 
-              href="https://g.page/r/CZuTLT-YqNStEBM/review" 
+              href="https://g.page/r/CZuTLT-YqNStEAE/review" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"

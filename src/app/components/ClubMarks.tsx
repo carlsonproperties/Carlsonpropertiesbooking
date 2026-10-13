@@ -49,7 +49,7 @@ export const OvalBadge: React.FC<MarkProps> = ({ className = '', size = 200, ...
   <svg
     viewBox="-266 -156 532 312"
     width={size}
-    height="auto"
+    style={{ height: 'auto' }}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -65,7 +65,7 @@ export const FeltPennant: React.FC<MarkProps> = ({ className = '', size = 240, .
   <svg
     viewBox="-4 -4 788 258"
     width={size}
-    height="auto"
+    style={{ height: 'auto' }}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -81,7 +81,7 @@ export const MonogramOe: React.FC<MarkProps> = ({ className = '', size = 60, ...
   <svg
     viewBox="-5.5 -147.4 247.4 161.3"
     width={size}
-    height="auto"
+    style={{ height: 'auto' }}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -97,7 +97,7 @@ export const HouseNumber111: React.FC<MarkProps> = ({ className = '', size = 90,
   <svg
     viewBox="-5.5 -223.6 387.2 233.6"
     width={size}
-    height="auto"
+    style={{ height: 'auto' }}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -113,7 +113,7 @@ export const RouteBCarlsonWordmark: React.FC<MarkProps> = ({ className = '', siz
   <svg
     viewBox="-21 -175 662.5 319"
     width={size}
-    height="auto"
+    style={{ height: 'auto' }}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -129,7 +129,7 @@ export const RouteBOneElevenWordmark: React.FC<MarkProps> = ({ className = '', s
   <svg
     viewBox="-21 -115.6 902.66 384.89"
     width={size}
-    height="auto"
+    style={{ height: 'auto' }}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
