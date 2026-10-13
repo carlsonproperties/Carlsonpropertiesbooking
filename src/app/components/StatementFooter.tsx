@@ -12,13 +12,15 @@ import {
   MessageSquare,
   Compass,
   CalendarCheck,
-  Sparkles
+  Sparkles,
+  ArrowUp
 } from "lucide-react";
 import { CarlsonLogo } from "./CarlsonLogo";
 import { OneElevenLogo } from "./OneElevenLogo";
-import { ScallopedSeal } from "./ClubMarks";
+import { ScallopedSeal, ClubRoundel } from "./ClubMarks";
 import { motion } from "motion/react";
 import { FooterSignOff } from "./FooterSignOff";
+import { PHONE_HREF, PHONE_DISPLAY, BOOKINGS_EMAIL, INSTAGRAM_URL, FACEBOOK_URL } from "../lib/links";
 
 /** Live local time at the house. Taupō observes NZST/NZDT. */
 function TaupoClock() {
@@ -61,12 +63,12 @@ function TaupoClock() {
 
 export function StatementFooter() {
   return (
-    <footer className="relative bg-[#203F3A] text-[#F4F1EA] pt-24 pb-12 px-6 overflow-hidden">
+    <footer className="relative overflow-hidden bg-[#203F3A] pt-24 text-[#F4F1EA]">
       {/* Decorative architectural ambient glow */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#5E7F77]/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/3 left-0 w-[500px] h-[500px] bg-[#D7C8B4]/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
         
         {/* ==============================================================
             INTERACTIVE DIRECT BOOKING SUITE (Replaces old static section)
@@ -131,7 +133,7 @@ export function StatementFooter() {
                 />
                 <span
                   aria-hidden="true"
-                  className="absolute right-7 top-7 font-mono text-[10px] tabular-nums text-[#D7C8B4]/45 transition-colors duration-500 group-hover:text-[#D7C8B4]"
+                  className="absolute right-7 top-7 font-mono text-[10px] tabular-nums text-[#D7C8B4]/80 transition-colors duration-500 group-hover:text-[#D7C8B4]"
                 >
                   0{i + 1}
                 </span>
@@ -206,94 +208,161 @@ export function StatementFooter() {
           </div>
         </div>
 
-        {/* Main Grid: Directory, Hosts, Details */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 border-b border-[#D7C8B4]/20">
-          {/* Col 1: Personal Host Note */}
-          <div className="md:col-span-5 space-y-4 text-left">
-            <h4 className="font-serif text-xl text-[#F4F1EA]">Local Hosting</h4>
-            <p className="text-sm text-[#F4F1EA]/75 font-light leading-relaxed">
-              We are Matt and Ashleigh Carlson. We live nearby in Taupō and look after every detail ourselves so your stay is effortless from arrival to check-out.
+        {/* Directory. Phone and email are the conversion points on a direct
+            booking site, so they are set as real targets rather than footnotes. */}
+        <div className="grid grid-cols-1 gap-12 border-b border-[#D7C8B4]/20 py-16 md:grid-cols-12">
+          <div className="space-y-5 text-left md:col-span-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#D7C8B4]">
+              Your hosts
             </p>
-            <div className="pt-2 space-y-2 text-xs text-[#D7C8B4] font-medium">
-              <a href="tel:0276977961" className="flex items-center gap-2 hover:text-[#F4F1EA] transition-colors">
-                <Phone size={13} />
-                <span>027 697 7961</span>
+            <h4
+              className="font-serif text-3xl font-light leading-tight text-[#F4F1EA] md:text-4xl"
+              style={{ fontFamily: "'Fraunces', Georgia, serif" }}
+            >
+              Matt &amp; Ashleigh Carlson
+            </h4>
+            <p className="max-w-md text-sm font-light leading-relaxed text-[#F4F1EA]/80">
+              We live nearby in Taupō and look after every detail ourselves, so your stay is
+              effortless from arrival to check-out.
+            </p>
+
+            <div className="space-y-1 pt-3">
+              <a
+                href={PHONE_HREF}
+                className="group flex items-center gap-4 border-t border-[#D7C8B4]/20 py-3.5 transition-colors hover:text-[#D7C8B4]"
+              >
+                <Phone size={15} className="shrink-0 text-[#D7C8B4]" />
+                <span className="font-serif text-lg text-[#F4F1EA] transition-colors group-hover:text-[#D7C8B4]">
+                  {PHONE_DISPLAY}
+                </span>
+                <ArrowUpRight
+                  size={14}
+                  className="ml-auto text-[#D7C8B4]/60 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
               </a>
-              <a href="mailto:bookings@carlsonproperties.co.nz" className="flex items-center gap-2 hover:text-[#F4F1EA] transition-colors">
-                <Mail size={13} />
-                <span>bookings@carlsonproperties.co.nz</span>
+              <a
+                href={`mailto:${BOOKINGS_EMAIL}`}
+                className="group flex items-center gap-4 border-t border-[#D7C8B4]/20 py-3.5 transition-colors hover:text-[#D7C8B4]"
+              >
+                <Mail size={15} className="shrink-0 text-[#D7C8B4]" />
+                <span className="min-w-0 truncate font-serif text-lg text-[#F4F1EA] transition-colors group-hover:text-[#D7C8B4]">
+                  {BOOKINGS_EMAIL}
+                </span>
+                <ArrowUpRight
+                  size={14}
+                  className="ml-auto shrink-0 text-[#D7C8B4]/60 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
               </a>
-              <div className="flex items-center gap-2 text-[#D7C8B4]/80">
-                <MapPin size={13} />
-                <span>111 Jarden Mile, Taupō 3330, NZ</span>
-              </div>
+              <p className="flex items-center gap-4 border-t border-[#D7C8B4]/20 py-3.5 text-sm text-[#F4F1EA]/75">
+                <MapPin size={15} className="shrink-0 text-[#D7C8B4]" />
+                111 Jarden Mile, Taupō 3330, New Zealand
+              </p>
             </div>
           </div>
 
-          {/* Col 3: Policies & Owner Access */}
-          <div className="md:col-span-3 space-y-4 text-left">
-            <h4 className="font-serif text-xl text-[#F4F1EA]">Information</h4>
-            <ul className="space-y-2.5 text-xs uppercase tracking-[0.2em] font-medium text-[#D7C8B4]">
-              <li><Link to="/terms" className="hover:text-[#F4F1EA] transition-colors">Terms of Stay</Link></li>
-              <li><Link to="/privacy" className="hover:text-[#F4F1EA] transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/refund" className="hover:text-[#F4F1EA] transition-colors">Cancellation Terms</Link></li>
-              <li className="pt-2">
-                <Link
-                  to="/owner-login"
-                  className="inline-block text-[10px] text-[#D7C8B4]/85 hover:text-[#F4F1EA] border border-[#D7C8B4]/30 px-3 py-1 rounded transition-colors"
-                >
-                  Owner Portal &rarr;
-                </Link>
-              </li>
+          <div className="space-y-5 text-left md:col-span-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#D7C8B4]">
+              Information
+            </p>
+            <ul className="space-y-0.5">
+              {[
+                { to: "/terms", label: "Terms of Stay" },
+                { to: "/privacy", label: "Privacy Policy" },
+                { to: "/refund", label: "Cancellation Terms" },
+                { to: "/owner-login", label: "Owner Portal" },
+              ].map((item) => (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    className="group flex items-center justify-between border-t border-[#D7C8B4]/20 py-3 text-xs font-medium uppercase tracking-[0.18em] text-[#D7C8B4] transition-colors hover:text-[#F4F1EA]"
+                  >
+                    <span>{item.label}</span>
+                    <ArrowUpRight
+                      size={13}
+                      className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
+                    />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Col 4: Verified Reviews & Social */}
-          <div className="md:col-span-3 space-y-4 text-left">
-            <h4 className="font-serif text-xl text-[#F4F1EA]">Guest Verified</h4>
-            <div className="flex items-center gap-1.5 text-[#D7C8B4]">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={14} fill="#D7C8B4" />
-              ))}
-              <span className="text-xs font-mono font-bold ml-2 text-[#F4F1EA]">5.0 / 5.0</span>
+          <div className="flex flex-col justify-between gap-8 text-left md:col-span-4">
+            <div className="space-y-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#D7C8B4]">
+                Guest verified
+              </p>
+              <div className="flex items-baseline gap-3">
+                <span
+                  className="font-serif text-5xl font-light leading-none text-[#F4F1EA]"
+                  style={{ fontFamily: "'Fraunces', Georgia, serif" }}
+                >
+                  5.0
+                </span>
+                <span className="flex gap-0.5 text-[#D7C8B4]">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={13} fill="#D7C8B4" strokeWidth={0} />
+                  ))}
+                </span>
+              </div>
+              <p className="max-w-xs text-sm font-light leading-relaxed text-[#F4F1EA]/80">
+                56 verified guest reviews across direct bookings, Airbnb and Google.
+              </p>
             </div>
-            <p className="text-xs text-[#F4F1EA]/70 font-light leading-relaxed">
-              56 verified guest reviews across direct bookings and Airbnb.
-            </p>
-            <div className="flex gap-3 pt-3">
-              <a
-                href="https://www.instagram.com/oneelevenonthemile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full border border-[#D7C8B4]/30 flex items-center justify-center hover:bg-[#F4F1EA] hover:text-[#203F3A] transition-all"
-                aria-label="Instagram"
-              >
-                <Instagram size={15} />
-              </a>
-              <a
-                href="https://www.facebook.com/p/One-Eleven-On-The-Mile-61563014557673/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full border border-[#D7C8B4]/30 flex items-center justify-center hover:bg-[#F4F1EA] hover:text-[#203F3A] transition-all"
-                aria-label="Facebook"
-              >
-                <Facebook size={15} />
-              </a>
+
+            <div className="flex items-end justify-between gap-6">
+              <div className="flex gap-3">
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#D7C8B4]/35 transition-all hover:bg-[#F4F1EA] hover:text-[#203F3A]"
+                  aria-label="One Eleven on Instagram"
+                >
+                  <Instagram size={16} />
+                </a>
+                <a
+                  href={FACEBOOK_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#D7C8B4]/35 transition-all hover:bg-[#F4F1EA] hover:text-[#203F3A]"
+                  aria-label="One Eleven on Facebook"
+                >
+                  <Facebook size={16} />
+                </a>
+              </div>
+
+              {/* Slow-turning club seal — the one piece of idle motion down here. */}
+              <div className="oe-spin shrink-0 text-[#D7C8B4]/70" aria-hidden="true">
+                <ClubRoundel size={88} />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Closing wordmark — the page ends on the name, not on legal text. */}
-        <div className="pt-12">
-          <FooterSignOff />
-        </div>
-
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[#D7C8B4]/20 pt-8 text-[10px] uppercase tracking-[0.25em] text-[#D7C8B4]/85 font-medium md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 py-8 text-[10px] font-medium uppercase tracking-[0.25em] text-[#D7C8B4]/85 md:flex-row">
           <span>© {new Date().getFullYear()} Carlson Properties Ltd · Taupō, NZ</span>
-          <span>111 Jarden Mile · Taupō 3330 · New Zealand</span>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            data-cursor="TOP"
+            className="group inline-flex items-center gap-2 rounded-full border border-[#D7C8B4]/35 px-4 py-2 transition-colors hover:border-[#D7C8B4] hover:bg-[#F4F1EA] hover:text-[#203F3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7C8B4]"
+          >
+            Back to top
+            <ArrowUp size={12} className="transition-transform group-hover:-translate-y-0.5" />
+          </button>
           <span>Designed with Lake &amp; Stone</span>
         </div>
+
+        {/* Slow idle rotation on the club seal. Paused for reduced motion. */}
+        <style>{`
+          @keyframes oe-seal-spin { to { transform: rotate(360deg); } }
+          .oe-spin { animation: oe-seal-spin 26s linear infinite; will-change: transform; }
+          @media (prefers-reduced-motion: reduce) { .oe-spin { animation: none; } }
+        `}</style>
       </div>
+
+      <FooterSignOff />
     </footer>
   );
 }
