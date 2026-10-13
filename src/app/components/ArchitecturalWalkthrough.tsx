@@ -1,306 +1,418 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import React, { useRef, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  useReducedMotion,
+  type MotionValue,
+} from "motion/react";
 import { Link } from "react-router";
 import { DRONE_VIDEO } from "../lib/images";
-import { Waves, Flame, Sparkles, Coffee, Compass, Volume2, VolumeX, Eye } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
+
+/* ───────────────────────────────────────────────────────────────
+   Scroll-synchronised architectural walkthrough.
+
+   A tall scroll track (CHAPTERS.length * 115vh) holds a sticky,
+   full-viewport stage. Scroll progress 0 → 1 is divided evenly
+   between chapters; each chapter layer derives its own opacity,
+   scale and parallax from that single progress value, so the
+   sequence scrubs rather than steps.
+
+   Everything animated is transform/opacity only, so it composites
+   on the GPU and holds 60fps.
+   ─────────────────────────────────────────────────────────────── */
+
+const IMG = "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media";
+const FALLBACK = `${IMG}/029_Open2view_ID584542-111_Jarden_Mile.jpg`;
 
 interface Chapter {
   id: string;
   number: string;
+  eyebrow: string;
   title: string;
-  subtitle: string;
-  description: string;
+  body: string;
   quote?: string;
   mediaType: "video" | "image";
   mediaUrl: string;
-  fallbackUrl?: string;
-  badges: string[];
-  ambientColor: string;
+  facts: string[];
 }
 
 const CHAPTERS: Chapter[] = [
   {
-    id: "elevation",
+    id: "arrival",
     number: "01",
-    title: "The Rise on Jarden Mile",
-    subtitle: "Elevation & Architecture",
-    description:
-      "Dark vertical cedar cladding, a shallow roofline, and soaring glass. Positioned high on the mile to command uninterrupted sweeps across Lake Taupō and the mountains beyond.",
-    quote: "Positioned 5 minutes from town, yet quiet enough to hear the lake breeze.",
+    eyebrow: "Arrival on the Mile",
+    title: "The rise on Jarden Mile.",
+    body: "Dark vertical cedar, a shallow roofline and soaring glass, set high on the mile so the lake and the mountains run uninterrupted across every window.",
+    quote: "Five minutes from town, quiet enough to hear the lake.",
     mediaType: "video",
     mediaUrl: DRONE_VIDEO,
-    fallbackUrl: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/029_Open2view_ID584542-111_Jarden_Mile.jpg",
-    badges: ["5 Bedrooms", "4 Bathrooms", "10 Guests", "5 Mins to Town"],
-    ambientColor: "#203F3A",
+    facts: ["5 Bedrooms", "4 Bathrooms", "10 Guests", "5 Mins to Town"],
   },
   {
-    id: "living",
+    id: "great-hall",
     number: "02",
-    title: "Where Everyone Gathers",
-    subtitle: "Great Room & Hearth",
-    description:
-      "Expansive open-plan living with timber accents and full-height glazing. Designed so ten guests can share morning espresso at the island, linger over long dinners, and look out at the water without ever feeling crowded.",
-    quote: "The house is spacious, clean, and incredibly well appointed. Zero complaints.",
+    eyebrow: "The Great Hall & Gathering",
+    title: "Where ten gather and mornings linger.",
+    body: "Open-plan living under cedar timber, a stone fireplace at one end and a ten-seater table at the other. Room enough that nobody is on top of anyone.",
+    quote: "The house is spacious, clean and incredibly well appointed. Zero complaints.",
     mediaType: "image",
-    mediaUrl: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/looking%20into%20kitchen.png",
-    badges: ["Barista Espresso Bar", "10-Seater Dining", "Open-Plan Living", "Lake Glazing"],
-    ambientColor: "#2C3E38",
+    mediaUrl: `${IMG}/looking%20into%20kitchen.png`,
+    facts: ["Barista Espresso Bar", "10-Seater Dining", "Stone Fireplace", "Lake Glazing"],
   },
   {
     id: "wellness",
     number: "03",
-    title: "Heated Year-Round, Swum in July",
-    subtitle: "The Wellness Sanctuary",
-    description:
-      "A private courtyard retreat. Transition effortlessly between the outdoor cedar sauna, the steaming hydrotherapy spa, and the heated pool—framed by manicured gardens and fresh Taupō mountain air.",
-    quote: "The pool and sauna area made it really hard to leave.",
+    eyebrow: "The Private Wellness Club",
+    title: "Heated year-round. Swum in July.",
+    body: "A courtyard of its own: the heated pool, a cedar barrel sauna and the hydrotherapy spa, framed by gardens and clean Taupō air.",
+    quote: "The pool, sauna and spa area made it really hard to leave.",
     mediaType: "image",
-    mediaUrl: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/poolview.jpg",
-    badges: ["Year-Round Heated Pool", "Cedar Outdoor Sauna", "Open-Air Spa", "Private Gym"],
-    ambientColor: "#1B332F",
+    mediaUrl: `${IMG}/poolview.jpg`,
+    facts: ["Year-Round Heated Pool", "Cedar Barrel Sauna", "Hydrotherapy Spa", "Private Gym"],
   },
   {
     id: "dusk",
     number: "04",
-    title: "When the Water Turns to Glass",
-    subtitle: "Dusk & Starry Nights",
-    description:
-      "As the sun dips behind the western ranges, the water turns to glass. Steaming hot tub under Taupō's starlit skies, fire glowing, and wine shared with family and friends.",
-    quote: "The pool was the perfect temperature even for night swims on a cold evening.",
+    eyebrow: "Dusk over Lake Taupō",
+    title: "When the water turns to glass.",
+    body: "The sun drops behind the western ranges, Mount Tauhara goes violet, and the house turns warm from the inside out.",
+    quote: "The pool was the perfect temperature, even for night swims on a cold evening.",
     mediaType: "image",
-    mediaUrl: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg",
-    badges: ["Hydrotherapy Jets", "Ambient Pool Lighting", "Total Privacy", "Starry Skies"],
-    ambientColor: "#162320",
+    mediaUrl: `${IMG}/lake%20views.jpg`,
+    facts: ["Ambient Pool Lighting", "Starlit Skies", "Total Privacy", "Mount Tauhara"],
   },
 ];
 
+const SPAN = 1 / CHAPTERS.length;
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+/* ── Architectural court / lot lines, drawn in sync with scroll ── */
+function CourtLines({ progress }: { progress: MotionValue<number> }) {
+  const draw = useTransform(progress, [0, SPAN * 0.9], [0, 1]);
+  return (
+    <svg
+      viewBox="0 0 400 260"
+      fill="none"
+      aria-hidden="true"
+      className="absolute inset-0 h-full w-full opacity-[0.28]"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <motion.rect
+        x="40" y="30" width="320" height="200"
+        stroke="#F4F1EA" strokeWidth="0.75" style={{ pathLength: draw }}
+      />
+      <motion.line
+        x1="200" y1="30" x2="200" y2="230"
+        stroke="#F4F1EA" strokeWidth="0.75" style={{ pathLength: draw }}
+      />
+      <motion.line
+        x1="40" y1="130" x2="360" y2="130"
+        stroke="#F4F1EA" strokeWidth="0.75" style={{ pathLength: draw }}
+      />
+      <motion.circle
+        cx="200" cy="130" r="42"
+        stroke="#D7C8B4" strokeWidth="0.75" style={{ pathLength: draw }}
+      />
+    </svg>
+  );
+}
+
+/* ── One chapter layer: owns its own scroll-derived transforms ── */
+function ChapterLayer({
+  chapter,
+  index,
+  progress,
+  reduced,
+  muted,
+  onToggleMute,
+}: {
+  chapter: Chapter;
+  index: number;
+  progress: MotionValue<number>;
+  reduced: boolean;
+  muted: boolean;
+  onToggleMute: () => void;
+}) {
+  const start = index * SPAN;
+  const end = start + SPAN;
+  const pad = SPAN * 0.22;
+
+  // Crossfade in and out at the chapter boundaries.
+  const opacity = useTransform(
+    progress,
+    [start - pad, start + pad * 0.5, end - pad * 0.5, end + pad],
+    [0, 1, 1, 0],
+  );
+  // Slow cinematic push-in across the chapter's own span.
+  const scale = useTransform(progress, [start - pad, end + pad], reduced ? [1, 1] : [1.1, 1]);
+  // Copy drifts a little slower than the media — depth without parallax jitter.
+  const textY = useTransform(progress, [start - pad, end + pad], reduced ? [0, 0] : [48, -48]);
+  const badgeSpin = useTransform(progress, [start, end], [0, 90]);
+
+  const isLast = index === CHAPTERS.length - 1;
+  const ctaOpacity = useTransform(progress, [end - pad * 1.4, end - pad * 0.2], [0, 1]);
+
+  return (
+    <motion.div
+      style={{ opacity, willChange: "opacity" }}
+      className="absolute inset-0"
+      aria-hidden={undefined}
+    >
+      {/* Media bed */}
+      <motion.div style={{ scale, willChange: "transform" }} className="absolute inset-0">
+        {chapter.mediaType === "video" ? (
+          <video
+            autoPlay
+            loop
+            muted={muted}
+            playsInline
+            poster={FALLBACK}
+            className="h-full w-full object-cover"
+          >
+            <source src={chapter.mediaUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            src={chapter.mediaUrl}
+            alt=""
+            className="h-full w-full object-cover"
+            loading={index > 1 ? "lazy" : "eager"}
+            onError={(e) => {
+              e.currentTarget.src = FALLBACK;
+            }}
+          />
+        )}
+      </motion.div>
+
+      {/* Legibility scrim — kept light so the photography still reads */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#16302B]/85 via-[#16302B]/45 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#16302B]/70 via-transparent to-[#16302B]/30" />
+
+      {/* Chapter 01 carries the surveyed court lines */}
+      {index === 0 && (
+        <div className="pointer-events-none absolute inset-0">
+          <CourtLines progress={progress} />
+        </div>
+      )}
+
+      {/* Editorial copy */}
+      <motion.div
+        style={{ y: textY, willChange: "transform" }}
+        className="absolute inset-0 flex items-center"
+      >
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
+          <div className="max-w-xl text-[#F4F1EA]">
+            <div className="mb-5 flex items-center gap-4">
+              <span className="font-mono text-xs font-bold tracking-[0.3em] text-[#D7C8B4]">
+                {chapter.number}
+              </span>
+              <span className="h-px w-10 bg-[#D7C8B4]/60" />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#F4F1EA]/80">
+                {chapter.eyebrow}
+              </span>
+            </div>
+
+            <h3 className="font-display text-4xl leading-[1.04] tracking-tight md:text-6xl">
+              {chapter.title}
+            </h3>
+
+            <p className="mt-6 max-w-lg text-base font-light leading-relaxed text-[#F4F1EA]/85 md:text-lg">
+              {chapter.body}
+            </p>
+
+            {chapter.quote && (
+              <p className="mt-6 border-l-2 border-[#D7C8B4] pl-4 font-display text-sm italic text-[#F4F1EA]/80 md:text-base">
+                “{chapter.quote}”
+              </p>
+            )}
+
+            <ul className="mt-8 flex flex-wrap gap-2">
+              {chapter.facts.map((f) => (
+                <li
+                  key={f}
+                  className="rounded-full border border-[#D7C8B4]/40 bg-[#16302B]/40 px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-[#F4F1EA]/90 backdrop-blur-sm"
+                >
+                  {f}
+                </li>
+              ))}
+            </ul>
+
+            {/* Chapter 04 resolves into the reserve pill */}
+            {isLast && (
+              <motion.div style={{ opacity: ctaOpacity }} className="mt-10">
+                <Link
+                  to="/book"
+                  data-cursor="RESERVE"
+                  className="inline-flex items-center gap-3 rounded-full bg-[#F4F1EA] px-7 py-4 text-[11px] font-bold uppercase tracking-[0.2em] text-[#203F3A] transition-colors hover:bg-[#D7C8B4]"
+                >
+                  Check Availability
+                  <span className="h-1 w-1 rounded-full bg-[#9B7955]" />
+                  Reserve the House
+                </Link>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Chapter 01 — surveyed coordinates */}
+      {index === 0 && (
+        <div className="pointer-events-none absolute bottom-10 left-6 font-mono text-[10px] tracking-[0.25em] text-[#F4F1EA]/70 md:left-10">
+          38°41′S · 176°04′E
+        </div>
+      )}
+
+      {/* Chapter 01 — sound control for the drone reel */}
+      {chapter.mediaType === "video" && (
+        <button
+          type="button"
+          onClick={onToggleMute}
+          data-cursor={muted ? "SOUND ON" : "MUTE"}
+          aria-label={muted ? "Turn drone reel sound on" : "Mute drone reel"}
+          className="absolute bottom-24 right-6 z-20 flex items-center gap-2 rounded-full border border-[#D7C8B4]/30 bg-[#16302B]/70 px-4 py-3 text-[#F4F1EA] backdrop-blur-md transition-colors hover:bg-[#16302B] md:right-10"
+        >
+          {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+          <span className="text-[9px] font-semibold uppercase tracking-[0.2em]">
+            {muted ? "Sound On" : "Mute"}
+          </span>
+        </button>
+      )}
+
+      {/* Chapter 03 — club seal and the temperature stat */}
+      {index === 2 && (
+        <>
+          <motion.img
+            src="/brand/marks/seal-stay-a-little-longer-sand.svg"
+            alt=""
+            aria-hidden="true"
+            style={{ rotate: reduced ? 0 : badgeSpin, willChange: "transform" }}
+            className="pointer-events-none absolute right-8 top-24 h-24 w-24 opacity-90 md:right-14 md:h-32 md:w-32"
+          />
+          <div className="pointer-events-none absolute bottom-24 right-6 max-w-[16rem] rounded-2xl border border-[#D7C8B4]/30 bg-[#16302B]/70 p-4 backdrop-blur-md md:right-10">
+            <p className="font-display text-2xl text-[#F4F1EA]">38°C</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-[#F4F1EA]/80">
+              Heated year-round — swim in July, sauna at dusk.
+            </p>
+          </div>
+        </>
+      )}
+    </motion.div>
+  );
+}
+
 export function ArchitecturalWalkthrough() {
+  const trackRef = useRef<HTMLElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [videoMuted, setVideoMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [muted, setMuted] = useState(true);
+  const reduced = useReducedMotion() ?? false;
 
-  const active = CHAPTERS[activeIdx];
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ["start start", "end end"],
+  });
 
-  const handleNext = () => {
-    setActiveIdx((prev) => (prev + 1) % CHAPTERS.length);
-  };
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const idx = Math.min(CHAPTERS.length - 1, Math.max(0, Math.floor(v / SPAN)));
+    setActiveIdx((prev) => (prev === idx ? prev : idx));
+  });
 
-  const handlePrev = () => {
-    setActiveIdx((prev) => (prev - 1 + CHAPTERS.length) % CHAPTERS.length);
+  // Clicking a pill scrolls to the middle of that chapter's span.
+  const goToChapter = (i: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const distance = el.offsetHeight - window.innerHeight;
+    const top = el.offsetTop + (i * SPAN + SPAN / 2) * distance;
+    window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
   };
 
   return (
     <section
-      ref={containerRef}
-      className="relative w-full py-24 md:py-36 bg-[#F4F1EA] text-[#203F3A] overflow-hidden"
+      ref={trackRef}
+      aria-label="Architectural walkthrough"
+      className="relative bg-[#16302B]"
+      style={{ height: `${CHAPTERS.length * 115}vh` }}
     >
-      {/* Top Section Intro Header */}
-      <div className="max-w-7xl mx-auto px-6 mb-12 md:mb-16">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#D7C8B4]/60">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-2 h-2 rounded-full bg-[#203F3A]" />
-              <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#9B7955]">
-                Architectural Walkthrough
-              </span>
-            </div>
-            <h2 className="text-4xl md:text-6xl font-serif font-light tracking-tight text-[#203F3A] leading-[1.08]">
-              One Eleven <br className="hidden md:inline" />
-              <span className="italic font-normal">Room by Room</span>
-            </h2>
-          </div>
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        {CHAPTERS.map((c, i) => (
+          <ChapterLayer
+            key={c.id}
+            chapter={c}
+            index={i}
+            progress={scrollYProgress}
+            reduced={reduced}
+            muted={muted}
+            onToggleMute={() => setMuted((m) => !m)}
+          />
+        ))}
 
-          <div className="max-w-md">
-            <p className="text-sm md:text-base text-[#203F3A]/80 font-light leading-relaxed">
-              Explore the spaces, materials, and private wellness facilities that make this house stand apart on Lake Taupō.
-            </p>
-          </div>
+        {/* Section label */}
+        <div className="pointer-events-none absolute left-6 top-28 z-20 md:left-10 md:top-32">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#D7C8B4]">
+            Architectural Walkthrough
+          </p>
         </div>
 
-        {/* Chapter Navigation Scroller Pills (ACTL / Nueve inspired) */}
-        <div className="flex items-center gap-2 overflow-x-auto py-2 no-scrollbar">
-          {CHAPTERS.map((ch, idx) => {
-            const isCurrent = idx === activeIdx;
-            return (
-              <button
-                key={ch.id}
-                onClick={() => setActiveIdx(idx)}
-                data-cursor="view"
-                className={`flex items-center gap-3 px-5 py-3 rounded-full text-xs uppercase tracking-[0.2em] font-medium transition-all whitespace-nowrap cursor-pointer ${
-                  isCurrent
-                    ? "bg-[#203F3A] text-[#F4F1EA] shadow-md shadow-[#203F3A]/15 scale-[1.02]"
-                    : "bg-white/70 hover:bg-white text-[#203F3A]/70 border border-[#D7C8B4]/50"
-                }`}
-              >
-                <span className={`text-[10px] font-mono ${isCurrent ? "text-[#D7C8B4]" : "text-[#9B7955]"}`}>
-                  {ch.number}
-                </span>
-                <span>{ch.subtitle}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Main Interactive Stage */}
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center">
-          {/* Left Column: Editorial Copy & Narrative */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-8 order-2 lg:order-1">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-6"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-mono font-bold text-[#9B7955] tracking-widest">
-                    PLATE {active.number} / 04
-                  </span>
-                  <span className="w-8 h-[1px] bg-[#D7C8B4]" />
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#203F3A]/60 font-semibold">
-                    {active.subtitle}
-                  </span>
-                </div>
-
-                <h3 className="text-3xl md:text-5xl font-serif font-light text-[#203F3A] tracking-tight leading-[1.12]">
-                  {active.title}
-                </h3>
-
-                <p className="text-sm md:text-base text-[#203F3A]/85 font-light leading-relaxed">
-                  {active.description}
-                </p>
-
-                {/* Real Guest Review Quote */}
-                {active.quote && (
-                  <div className="border-l-2 border-[#D7C8B4] pl-4 py-1 italic font-serif text-sm text-[#203F3A]/80">
-                    “{active.quote}”
-                  </div>
-                )}
-
-                {/* Verified Architectural Fact Badges */}
-                <div className="pt-2 flex flex-wrap gap-2">
-                  {active.badges.map((b, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 rounded-md text-[11px] font-sans font-medium bg-white border border-[#D7C8B4]/70 text-[#203F3A]"
-                    >
-                      {b}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Stage Controls */}
-            <div className="flex items-center justify-between pt-6 border-t border-[#D7C8B4]/50">
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handlePrev}
-                  data-cursor="prev"
-                  aria-label="Previous Chapter"
-                  className="w-10 h-10 rounded-full border border-[#203F3A]/30 flex items-center justify-center hover:bg-[#203F3A] hover:text-[#F4F1EA] transition-all cursor-pointer"
-                >
-                  ←
-                </button>
-                <button
-                  onClick={handleNext}
-                  data-cursor="next"
-                  aria-label="Next Chapter"
-                  className="w-10 h-10 rounded-full border border-[#203F3A]/30 flex items-center justify-center hover:bg-[#203F3A] hover:text-[#F4F1EA] transition-all cursor-pointer"
-                >
-                  →
-                </button>
-                <span className="text-xs font-mono ml-3 text-[#203F3A]/60">
-                  {active.number} of 04
-                </span>
-              </div>
-
-              <Link
-                to="/book"
-                data-cursor="book"
-                className="bg-[#203F3A] text-[#F4F1EA] px-6 py-2.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-semibold hover:bg-[#16302B] transition-all shadow-md shadow-[#203F3A]/15"
-              >
-                Reserve Stay
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Column: Architectural Arched Portal Mask (Nueve inspiration) */}
-          <div className="lg:col-span-7 flex justify-center order-1 lg:order-2">
-            <div
-              className="relative w-full max-w-[580px] aspect-[4/5] rounded-[36px] md:rounded-[48px] overflow-hidden shadow-2xl border border-[#D7C8B4]/60 bg-[#16211E]"
-              data-cursor={active.mediaType === "video" ? "sound" : "explore"}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={active.id}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0 w-full h-full"
-                >
-                  {active.mediaType === "video" ? (
-                    <div className="relative w-full h-full">
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        loop
-                        muted={videoMuted}
-                        playsInline
-                        className="w-full h-full object-cover brightness-[0.88]"
-                      >
-                        <source src={active.mediaUrl} type="video/mp4" />
-                        <img
-                          src={active.fallbackUrl}
-                          alt="One Eleven on the Mile drone exterior"
-                          className="w-full h-full object-cover"
-                        />
-                      </video>
-
-                      {/* Video Sound Toggle Button */}
-                      <button
-                        onClick={() => setVideoMuted(!videoMuted)}
-                        className="absolute bottom-5 right-5 z-20 bg-[#203F3A]/80 backdrop-blur-md text-[#F4F1EA] p-3 rounded-full hover:bg-[#203F3A] transition-all border border-[#D7C8B4]/30 flex items-center gap-2 cursor-pointer"
-                        title={videoMuted ? "Unmute Drone Video" : "Mute Video"}
-                      >
-                        {videoMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                        <span className="text-[9px] uppercase tracking-widest font-semibold pr-1">
-                          {videoMuted ? "Muted" : "Sound"}
-                        </span>
-                      </button>
-                    </div>
-                  ) : (
-                    <img
-                      src={active.mediaUrl}
-                      alt={active.title}
-                      className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
-                      onError={(e) => {
-                        // Fallback image if bucket is loading
-                        e.currentTarget.src =
-                          "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/029_Open2view_ID584542-111_Jarden_Mile.jpg";
-                      }}
-                    />
-                  )}
-
-                  {/* Elegant Vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none" />
-
-                  {/* Top Architectural Badge */}
-                  <div className="absolute top-5 left-5 z-10 bg-[#203F3A]/80 backdrop-blur-md text-[#F4F1EA] px-3.5 py-1.5 rounded-full text-[9px] uppercase tracking-[0.22em] font-medium border border-[#D7C8B4]/30 pointer-events-none">
-                    Taupō, NZ · 111 Jarden Mile
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
+        {/* Scrub pills — click to jump, stroke fills as you scroll */}
+        <nav
+          aria-label="Walkthrough chapters"
+          className="absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#D7C8B4]/25 bg-[#16302B]/70 p-2 backdrop-blur-md"
+        >
+          {CHAPTERS.map((c, i) => (
+            <ChapterPill
+              key={c.id}
+              chapter={c}
+              index={i}
+              isActive={i === activeIdx}
+              progress={scrollYProgress}
+              onSelect={() => goToChapter(i)}
+            />
+          ))}
+        </nav>
       </div>
     </section>
+  );
+}
+
+function ChapterPill({
+  chapter,
+  index,
+  isActive,
+  progress,
+  onSelect,
+}: {
+  chapter: Chapter;
+  index: number;
+  isActive: boolean;
+  progress: MotionValue<number>;
+  onSelect: () => void;
+}) {
+  const start = index * SPAN;
+  const fill = useTransform(progress, [start, start + SPAN], [0, 1], { clamp: true });
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      data-cursor="VIEW"
+      aria-label={`Chapter ${chapter.number} — ${chapter.eyebrow}`}
+      aria-current={isActive ? "true" : undefined}
+      className={`relative overflow-hidden rounded-full px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors md:px-5 ${
+        isActive ? "text-[#16302B]" : "text-[#F4F1EA]/70 hover:text-[#F4F1EA]"
+      }`}
+    >
+      {/* Progress stroke */}
+      <motion.span
+        aria-hidden="true"
+        style={{ scaleX: fill, transformOrigin: "left", willChange: "transform" }}
+        className="absolute inset-0 rounded-full bg-[#D7C8B4]"
+      />
+      <span className="relative flex items-center gap-2">
+        <span className="font-mono">{chapter.number}</span>
+        <span className="hidden sm:inline">{chapter.eyebrow}</span>
+      </span>
+    </button>
   );
 }
