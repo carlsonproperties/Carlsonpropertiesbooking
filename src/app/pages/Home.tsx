@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Star, MapPin, Shield, Coffee, Menu, Instagram, Facebook, Waves, Dumbbell, Zap, Thermometer, Clock, Volume2, VolumeX } from "lucide-react";
+import { Star, MapPin, Shield, Coffee, Menu, Waves, Dumbbell, Zap, Thermometer, Clock, Volume2, VolumeX, ArrowDown } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useNavigate, Link } from "react-router";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
@@ -7,19 +7,24 @@ import { Testimonials } from "../components/Testimonials";
 import { MobileMenu } from "../components/MobileMenu";
 import { Footer } from "../components/Footer";
 import { CarlsonLogo } from "../components/CarlsonLogo";
+import { OneElevenLogo } from "../components/OneElevenLogo";
 import { SEO } from "../components/SEO";
+import { CustomCursor } from "../components/CustomCursor";
+import { EditorialPreloader } from "../components/EditorialPreloader";
+import { ArchitecturalWalkthrough } from "../components/ArchitecturalWalkthrough";
 import { HOME_IMAGES, DRONE_VIDEO } from "../lib/images";
 
-// Using your Supabase-hosted images and video
 const heroImg = HOME_IMAGES.hero;
 const wellnessAreaImg = HOME_IMAGES.wellness;
 
 export function Home() {
   const [property, setProperty] = useState<any>(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMuted, setIsMuted] = useState(false); // Default to unmuted per request
+  const [isMuted, setIsMuted] = useState(true);
   const [showSoundPrompt, setShowSoundPrompt] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [preloaderDone, setPreloaderDone] = useState(false);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroSectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,16 +32,16 @@ export function Home() {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
   });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.1], [1, 1.1]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.12], [1, 1.08]);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-      
-      // Auto-mute when scrolling past the hero section to prevent background noise
+
+      // Auto-mute when scrolling past hero
       if (heroSectionRef.current) {
         const rect = heroSectionRef.current.getBoundingClientRect();
         if (rect.bottom < 100) {
@@ -44,361 +49,393 @@ export function Home() {
         }
       }
     };
-    
-    window.addEventListener("scroll", handleScroll);
-    
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     async function fetchData() {
       try {
-        const res = await fetch(`https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/properties`, {
-          headers: { Authorization: `Bearer ${publicAnonKey.trim()}` }
-        });
+        const res = await fetch(
+          `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798/properties`,
+          {
+            headers: { Authorization: `Bearer ${publicAnonKey.trim()}` },
+          }
+        );
         const data = await res.json();
-        setProperty(data[0] || { name: 'One Eleven' });
+        setProperty(data[0] || { name: "One Eleven" });
       } catch (err) {
-        console.error(err);
-        setProperty({ name: 'One Eleven' });
+        console.error("Property fetch error:", err);
+        setProperty({ name: "One Eleven" });
       }
     }
     fetchData();
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = isMuted;
-      const playPromise = videoRef.current.play();
-      
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn("Autoplay with sound was blocked by browser, playing muted as fallback:", err);
-          if (videoRef.current) {
-            videoRef.current.muted = true;
-            videoRef.current.play();
-            // Show a subtle prompt if sound was blocked by the browser policy
-            if (!isMuted) setShowSoundPrompt(true);
-          }
-        });
-      }
-    }
-  }, [isMuted]);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
     setShowSoundPrompt(false);
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+    }
   };
 
   return (
     <>
       <SEO
-        title="One Eleven On The Mile - Luxury Accommodation Taupō with Lake Views"
-        description="Experience ultimate luxury at One Eleven On The Mile. 5-bedroom estate in Taupō with pool, sauna, gym, and breathtaking panoramic Lake Taupō views. Book your exclusive stay."
-        keywords="Taupō luxury accommodation, lake view holiday home Taupō, Taupō vacation rental, luxury Taupō stay, Lake Taupō accommodation, Taupō pool house, 5 bedroom Taupō rental"
+        title="One Eleven on the Mile — Taupō Holiday Accommodation | Heated Pool, Sauna & Lake Views"
+        description="A five-bedroom Taupō lake house on Jarden Mile with year-round heated pool, cedar sauna, spa, gym, and expansive Lake Taupō views. Warm personal hosting by Matt and Ashleigh Carlson."
+        keywords="Taupō holiday accommodation, One Eleven on the Mile, Lake Taupō holiday home, heated pool Taupō, cedar sauna accommodation, 5 bedroom Taupō house"
         canonicalUrl="https://carlsonproperties.co.nz"
       />
 
-      <div ref={containerRef} className="relative min-h-screen bg-[#F4F1EA]">
-        {!property ? (
-          <div className="h-screen flex items-center justify-center">
-            <motion.div 
-              animate={{ rotate: 360 }} 
-              transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              className="w-12 h-12 border-4 border-[#203F3A] border-t-transparent rounded-full"
-            />
-          </div>
-        ) : (
-          <>
-            <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${
-              isScrolled ? "py-4 bg-white/90 backdrop-blur-xl shadow-sm" : "py-8 bg-transparent"
-            }`}>
-              <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                <Link to="/">
-                  <CarlsonLogo dark={isScrolled} />
-                </Link>
-                
-                <div className="flex gap-12 items-center text-[11px] uppercase tracking-widest font-semibold hidden lg:flex">
-                  <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>About</Link>
-                  <Link to="/meet-hosts" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Meet Your Hosts</Link>
-                  <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Guest Info</Link>
-                  <Link to="/blog" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Journal</Link>
-                  <Link
-                    to="/owner-login"
-                    className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}
-                  >
-                    Owner Portal
-                  </Link>
-                  <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#203F3A]/20">
-                    Book Now
-                  </Link>
-                </div>
+      {/* Bespoke Awwwards Cursor */}
+      <CustomCursor />
 
-                <button 
-                  onClick={() => setIsMenuOpen(true)}
-                  className={`lg:hidden p-2 rounded-full transition-colors ${isScrolled ? "text-slate-900 hover:bg-slate-100" : "text-white hover:bg-white/10"}`}
-                >
-                  <Menu size={24} />
-                </button>
-              </div>
-            </nav>
+      {/* Editorial Preloader */}
+      <EditorialPreloader onComplete={() => setPreloaderDone(true)} />
 
-            <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <div ref={containerRef} className="relative min-h-screen bg-[#F4F1EA] text-[#203F3A]">
+        {/* Navigation Bar */}
+        <nav
+          className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${
+            isScrolled ? "py-4 bg-[#F4F1EA]/95 backdrop-blur-xl border-b border-[#D7C8B4]/40 shadow-sm" : "py-8 bg-transparent"
+          }`}
+        >
+          <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <Link to="/" data-cursor="home">
+              <CarlsonLogo dark={isScrolled} />
+            </Link>
 
-            <section ref={heroSectionRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-              <motion.div style={{ scale: heroScale, opacity: heroOpacity }} className="absolute inset-0 z-0">
-                <div className="absolute inset-0 bg-slate-900">
-                  <video 
-                    ref={videoRef}
-                    autoPlay 
-                    muted={isMuted}
-                    loop 
-                    playsInline 
-                    className="w-full h-full object-cover brightness-[0.4] scale-110"
-                  >
-                    <source 
-                      src={DRONE_VIDEO}
-                      type="video/mp4" 
-                    />
-                    <img 
-                      src={heroImg} 
-                      className="w-full h-full object-cover" 
-                      alt="One Eleven Taupo - Luxury accommodation with panoramic lake and mountain views"
-                      onError={(e) => {
-                        console.error('Hero image failed to load');
-                        console.error('Hero image URL:', e.currentTarget.src);
-                        console.error('Check if Supabase Storage bucket "Website Media" is set to PUBLIC');
-                        // Set fallback image
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&h=900&fit=crop';
-                      }}
-                      onLoad={() => console.log('Hero image loaded successfully:', heroImg)}
-                    />
-                  </video>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#F4F1EA]" />
-              </motion.div>
-
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2 }}
-                onClick={toggleMute}
-                className="absolute bottom-10 right-10 z-50 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-full text-white hover:bg-white/20 transition-all group flex flex-col items-center"
+            <div className="flex gap-10 items-center text-[11px] uppercase tracking-[0.22em] font-semibold hidden lg:flex">
+              <Link
+                to="/about"
+                className={`${isScrolled ? "text-[#203F3A]" : "text-[#F4F1EA]"} hover:text-[#D7C8B4] transition-colors`}
               >
-                {isMuted ? (
-                  <div className="flex items-center gap-3">
-                    <VolumeX size={20} className="group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] uppercase tracking-widest font-bold pr-2">Unmute</span>
-                    {showSoundPrompt && (
-                      <motion.span 
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="absolute right-full mr-4 bg-white text-slate-900 px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest whitespace-nowrap shadow-xl"
-                      >
-                        Tap for sound
-                      </motion.span>
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <Volume2 size={20} className="group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] uppercase tracking-widest font-bold pr-2">Mute</span>
-                  </div>
-                )}
-              </motion.button>
+                About The House
+              </Link>
+              <Link
+                to="/meet-hosts"
+                className={`${isScrolled ? "text-[#203F3A]" : "text-[#F4F1EA]"} hover:text-[#D7C8B4] transition-colors`}
+              >
+                Meet Hosts
+              </Link>
+              <Link
+                to="/guest-info"
+                className={`${isScrolled ? "text-[#203F3A]" : "text-[#F4F1EA]"} hover:text-[#D7C8B4] transition-colors`}
+              >
+                Guest Manual
+              </Link>
+              <Link
+                to="/blog"
+                className={`${isScrolled ? "text-[#203F3A]" : "text-[#F4F1EA]"} hover:text-[#D7C8B4] transition-colors`}
+              >
+                Journal
+              </Link>
+              <Link
+                to="/owner-login"
+                className={`${isScrolled ? "text-[#203F3A]/70" : "text-[#F4F1EA]/70"} hover:text-[#D7C8B4] transition-colors text-[10px]`}
+              >
+                Owner Portal
+              </Link>
+              <Link
+                to="/book"
+                data-cursor="book"
+                className={`px-7 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-semibold transition-all shadow-md ${
+                  isScrolled
+                    ? "bg-[#203F3A] text-[#F4F1EA] hover:bg-[#16302B]"
+                    : "bg-[#F4F1EA] text-[#203F3A] hover:bg-[#D7C8B4]"
+                }`}
+              >
+                Reserve Stay
+              </Link>
+            </div>
 
-              <div className="relative z-10 text-center text-white px-6">
-                <motion.p 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="text-[12px] uppercase tracking-[0.5em] mb-6 font-medium"
-                >
-                  Luxury stays in Taupō
-                </motion.p>
-                <motion.h1 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="text-6xl md:text-9xl font-serif mb-8 tracking-tighter"
-                >
-                  One Eleven <br />
-                  <span className="italic font-normal opacity-90 text-[0.8em]">On the Mile</span>
-                </motion.h1>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.5 }}
-                >
-                  <button className="group flex flex-col items-center gap-4 mx-auto cursor-pointer">
-                    <div className="w-[1px] h-12 bg-white/50 relative overflow-hidden">
-                      <motion.div 
-                        animate={{ y: [0, 48] }} 
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="w-full h-full bg-[#203F3A]" 
-                      />
-                    </div>
-                    <span className="text-[10px] uppercase tracking-widest font-bold">Discover</span>
-                  </button>
-                </motion.div>
-              </div>
-            </section>
+            <button
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Open Navigation Menu"
+              className={`lg:hidden p-2 rounded-full transition-colors ${
+                isScrolled ? "text-[#203F3A] hover:bg-black/5" : "text-[#F4F1EA] hover:bg-white/10"
+              }`}
+            >
+              <Menu size={24} />
+            </button>
+          </div>
+        </nav>
 
-            <section id="about" className="py-32 px-6">
-              <div className="max-w-[1400px] mx-auto text-left">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-                  <motion.div 
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    className="relative"
-                  >
-                    <div className="aspect-[4/5] overflow-hidden rounded-[40px]">
-                      <img src={wellnessAreaImg} className="w-full h-full object-cover" alt="Luxury wellness area with heated pool, spa, and outdoor sauna at One Eleven Taupo accommodation" />
-                    </div>
-                    <div className="absolute -bottom-12 -right-12 bg-white p-10 rounded-3xl shadow-2xl max-w-[280px] hidden md:block border border-slate-100">
-                      <Thermometer className="text-[#203F3A] mb-4" size={32} />
-                      <h4 className="font-serif text-2xl mb-2">Wellness Oasis</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed font-light">Relax in our heated pool, outdoor sauna, and spa, designed for ultimate rejuvenation.</p>
-                    </div>
-                  </motion.div>
+        <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    className="space-y-10"
-                  >
-                    <span className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#203F3A]">Luxury Taupō Accommodation</span>
-                    <h2 className="text-5xl md:text-7xl font-serif text-slate-900 leading-[1.1]">
-                      Redefining the <br />
-                      <span className="italic text-[#203F3A]">Holiday Stay</span>
-                    </h2>
-                    <p className="text-xl text-slate-600 leading-relaxed font-light">
-                      Discover the finest luxury accommodation in Taupō at One Eleven on the Mile, where contemporary design meets unrivalled lake and mountain views. Our five-bedroom, four-bathroom property offers an exclusive retreat for up to 10 guests with panoramic vistas.
+        {/* Hero Section with Drone Video */}
+        <section
+          ref={heroSectionRef}
+          className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-[#16211E]"
+        >
+          <motion.div style={{ scale: heroScale, opacity: heroOpacity }} className="absolute inset-0 z-0">
+            <video
+              ref={videoRef}
+              autoPlay
+              muted={isMuted}
+              loop
+              playsInline
+              className="w-full h-full object-cover brightness-[0.7] scale-105"
+            >
+              <source src={DRONE_VIDEO} type="video/mp4" />
+              <img
+                src={heroImg}
+                className="w-full h-full object-cover"
+                alt="One Eleven on the Mile Taupō exterior overlooking Lake Taupō"
+              />
+            </video>
+            {/* Editorial Lake & Stone overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-[#F4F1EA]" />
+          </motion.div>
+
+          {/* Sound Toggle */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.8 }}
+            onClick={toggleMute}
+            data-cursor="sound"
+            className="absolute bottom-10 right-8 md:right-12 z-40 bg-[#203F3A]/70 backdrop-blur-md border border-[#D7C8B4]/30 px-4 py-3 rounded-full text-[#F4F1EA] hover:bg-[#203F3A] transition-all flex items-center gap-2.5 cursor-pointer shadow-lg"
+          >
+            {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
+            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">
+              {isMuted ? "Sound Off" : "Sound On"}
+            </span>
+          </motion.button>
+
+          {/* Hero Content */}
+          <div className="relative z-10 text-center text-[#F4F1EA] px-6 max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-[#D7C8B4]/30 bg-[#203F3A]/40 backdrop-blur-sm"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D7C8B4]" />
+              <span className="text-[10px] uppercase tracking-[0.35em] text-[#D7C8B4] font-medium">
+                111 Jarden Mile · Taupō, NZ
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              className="text-5xl sm:text-7xl md:text-9xl font-serif font-light mb-6 tracking-tight text-[#F4F1EA] leading-[0.95]"
+            >
+              One Eleven <br />
+              <span className="italic font-normal text-[#D7C8B4] text-[0.85em]">On the Mile</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 0.8 }}
+              className="max-w-xl mx-auto text-sm sm:text-base md:text-lg text-[#F4F1EA]/85 font-light leading-relaxed mb-10"
+            >
+              Beautiful places to stay, warm personal hosting, and time together. Five bedrooms, heated pool, cedar sauna, and panoramic lake vistas.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              <Link
+                to="/book"
+                data-cursor="book"
+                className="w-full sm:w-auto bg-[#F4F1EA] text-[#203F3A] px-9 py-4 rounded-full text-[11px] uppercase tracking-[0.25em] font-semibold hover:bg-[#D7C8B4] transition-all shadow-xl"
+              >
+                Check Availability
+              </Link>
+              <a
+                href="#walkthrough"
+                data-cursor="explore"
+                className="w-full sm:w-auto border border-[#F4F1EA]/40 text-[#F4F1EA] px-8 py-4 rounded-full text-[11px] uppercase tracking-[0.22em] font-medium hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+              >
+                <span>Tour The Spaces</span>
+                <ArrowDown size={14} />
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Architectural Walkthrough — Interactive Scrollytelling Section */}
+        <div id="walkthrough">
+          <ArchitecturalWalkthrough />
+        </div>
+
+        {/* The House Story / Overview */}
+        <section className="py-24 md:py-36 px-6 bg-[#F4F1EA]">
+          <div className="max-w-[1340px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+              {/* Photo Card with Arched Frame */}
+              <div className="lg:col-span-6">
+                <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl border border-[#D7C8B4]/70 bg-white">
+                  <img
+                    src={wellnessAreaImg}
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                    alt="Heated pool and cedar outdoor sauna at One Eleven on the Mile"
+                  />
+                  <div className="absolute bottom-6 left-6 right-6 bg-[#203F3A]/90 backdrop-blur-md text-[#F4F1EA] p-6 rounded-2xl border border-[#D7C8B4]/30">
+                    <span className="text-[10px] uppercase tracking-[0.28em] text-[#D7C8B4] font-semibold block mb-1">
+                      Private Wellness
+                    </span>
+                    <h4 className="font-serif text-xl font-normal">Heated Pool, Spa &amp; Cedar Sauna</h4>
+                    <p className="text-xs text-[#F4F1EA]/70 mt-1 font-light">
+                      Swum even in the depths of July. Designed for total privacy and effortless relaxation.
                     </p>
-
-                    <div className="grid grid-cols-2 gap-12 pt-10 border-t border-slate-200">
-                      {[
-                        { label: "Guests", value: "Up to 10" },
-                        { label: "Bedrooms", value: "5 Luxury Suites" },
-                        { label: "Wellness", value: "Pool, Spa & Gym" },
-                        { label: "Views", value: "Lake & Mountain" },
-                      ].map((item, i) => (
-                        <div key={i}>
-                          <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">{item.label}</p>
-                          <p className="text-lg font-serif text-slate-900">{item.value}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="pt-6">
-                      <Link
-                        to="/book"
-                        className="inline-block bg-[#203F3A] text-white px-10 py-4 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#8A8D6D] transition-all shadow-lg shadow-[#203F3A]/20"
-                      >
-                        Check Availability
-                      </Link>
-                    </div>
-                  </motion.div>
+                  </div>
                 </div>
               </div>
-            </section>
 
-            <section className="py-16 px-6 bg-gradient-to-b from-[#F4F1EA] to-white">
-              <div className="max-w-4xl mx-auto text-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
+              {/* Story Copy */}
+              <div className="lg:col-span-6 space-y-8 text-left">
+                <div className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-[#9B7955]" />
+                  <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#9B7955]">
+                    Hosted By Matt &amp; Ashleigh
+                  </span>
+                </div>
+
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif font-light text-[#203F3A] leading-[1.1]">
+                  Thoughtfully designed for <br />
+                  <span className="italic font-normal">time together.</span>
+                </h2>
+
+                <p className="text-base md:text-lg text-[#203F3A]/85 font-light leading-relaxed">
+                  One Eleven on the Mile was designed from the ground up to host ten people with generous ease. Five private bedrooms and four bathrooms mean everyone enjoys their own space, while expansive shared living rooms, a barista coffee bar, and broad lake views bring everyone naturally together.
+                </p>
+
+                {/* Key Facts Grid */}
+                <div className="grid grid-cols-2 gap-8 pt-6 border-t border-[#D7C8B4]/60">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                      Capacity
+                    </span>
+                    <p className="text-xl font-serif text-[#203F3A]">Up to 10 Guests</p>
+                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">5 bedrooms, 4 bathrooms</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                      Wellness
+                    </span>
+                    <p className="text-xl font-serif text-[#203F3A]">Pool, Spa &amp; Sauna</p>
+                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">Heated year-round + private gym</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                      Location
+                    </span>
+                    <p className="text-xl font-serif text-[#203F3A]">111 Jarden Mile</p>
+                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">5 mins from Taupō town centre</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#9B7955] font-bold block mb-1">
+                      Hosting
+                    </span>
+                    <p className="text-xl font-serif text-[#203F3A]">Local Hosts</p>
+                    <p className="text-xs text-[#203F3A]/60 font-light mt-0.5">Direct care from Matt &amp; Ashleigh</p>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex items-center gap-4">
+                  <Link
+                    to="/book"
+                    data-cursor="book"
+                    className="bg-[#203F3A] text-[#F4F1EA] px-9 py-4 rounded-full text-[11px] uppercase tracking-[0.22em] font-semibold hover:bg-[#16302B] transition-all shadow-lg"
+                  >
+                    View Calendar &amp; Rates
+                  </Link>
+                  <Link
+                    to="/meet-hosts"
+                    className="text-xs uppercase tracking-[0.2em] font-semibold text-[#203F3A] hover:text-[#9B7955] transition-colors px-4 py-2"
+                  >
+                    Meet Your Hosts →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Real Guest Reviews Section */}
+        <Testimonials />
+
+        {/* Amenities Grid in Lake Green */}
+        <section id="amenities" className="bg-[#203F3A] py-32 md:py-40 text-[#F4F1EA] relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="text-center mb-20">
+              <span className="text-[11px] uppercase tracking-[0.35em] text-[#D7C8B4] font-medium block mb-3">
+                Everything In Place
+              </span>
+              <h2 className="text-4xl md:text-7xl font-serif font-light text-[#F4F1EA]">
+                Thoughtful <span className="italic text-[#D7C8B4]">Amenities</span>
+              </h2>
+              <p className="text-[#F4F1EA]/75 max-w-xl mx-auto text-sm md:text-base font-light mt-4 leading-relaxed">
+                Every amenity is already here when you arrive, so you can settle in immediately without needing to hunt down essentials.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { icon: Waves, title: "Heated Pool & Spa", desc: "Heated year-round, swum even in July" },
+                { icon: Thermometer, title: "Outdoor Cedar Sauna", desc: "Private dry sauna next to the spa terrace" },
+                { icon: Dumbbell, title: "Private Fitness Gym", desc: "In-house weights and workout equipment" },
+                { icon: Coffee, title: "Barista Espresso", desc: "Quality beans, grinder, and coffee machine" },
+                { icon: Zap, title: "High-Speed Wi-Fi", desc: "Fast coverage throughout indoor & outdoor areas" },
+                { icon: Clock, title: "Keyless Door Entry", desc: "Smooth self check-in with your unique code" },
+                { icon: Shield, title: "Secure Grounds", desc: "Private off-street parking & tranquil gardens" },
+                { icon: MapPin, title: "Five Minutes to Town", desc: "Lake walks, cafes, and Taupō town centre" },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-[#D7C8B4]/20 hover:border-[#D7C8B4]/50 transition-all text-left"
                 >
-                  <p className="text-lg md:text-xl text-slate-700 leading-relaxed font-light">
-                    Ideally located just <span className="font-serif text-[#203F3A] italic">five minutes from Taupō town center</span>, offering easy access to geothermal wonders, lake activities, and award-winning restaurants
-                  </p>
-                </motion.div>
-              </div>
-            </section>
-
-            <Testimonials />
-
-            <section id="amenities" className="bg-[#203F3A] py-40 overflow-hidden relative">
-              <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                <div className="absolute top-20 left-10 text-[20vw] font-serif text-white whitespace-nowrap select-none">AMENITIES LUXURY RELAX</div>
-              </div>
-
-              <div className="max-w-7xl mx-auto px-6 relative z-10">
-                <div className="text-center mb-24">
-                  <h2 className="text-5xl md:text-8xl font-serif text-white mb-6">Equipped for <span className="italic">Excellence</span></h2>
-                  <p className="text-white/80 max-w-2xl mx-auto text-lg font-light">Every detail curated to ensure your stay exceeds every expectation.</p>
+                  <item.icon className="text-[#D7C8B4] mb-5" size={26} />
+                  <h4 className="font-serif text-lg text-[#F4F1EA] mb-2">{item.title}</h4>
+                  <p className="text-xs text-[#F4F1EA]/65 font-light leading-relaxed">{item.desc}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                  {[
-                    { icon: Waves, title: "Outdoor Spa", desc: "Climate controlled pool & sauna" },
-                    { icon: Dumbbell, title: "Pro Gym", desc: "Full fitness suite in-house" },
-                    { icon: Zap, title: "Fiber Wifi", desc: "High-speed digital connectivity" },
-                    { icon: Thermometer, title: "Climate", desc: "Ducted heating & fireplace" },
-                    { icon: Shield, title: "Security", desc: "24/7 exterior monitoring" },
-                    { icon: Coffee, title: "Chef Kitchen", desc: "Basics & Espresso Machine" },
-                    { icon: Clock, title: "Self Check-in", desc: "Smart lock entry system" },
-                    { icon: MapPin, title: "Location", desc: "5 mins from Taupō center" },
-                  ].map((item, i) => (
-                    <motion.div 
-                      whileHover={{ y: -10 }}
-                      key={i} 
-                      className="bg-white/10 backdrop-blur-md p-8 rounded-[32px] border border-white/20 text-white text-left"
-                    >
-                      <item.icon className="mb-6 opacity-80" size={32} />
-                      <h4 className="font-serif text-xl mb-2">{item.title}</h4>
-                      <p className="text-sm opacity-60 leading-relaxed font-light">{item.desc}</p>
-                    </motion.div>
-                  ))}
+        {/* Why Book Direct */}
+        <section className="py-24 px-6 bg-white text-[#203F3A]">
+          <div className="max-w-5xl mx-auto text-center">
+            <span className="text-[11px] uppercase tracking-[0.35em] text-[#9B7955] font-bold block mb-3">
+              Direct Direct Booking
+            </span>
+            <h2 className="text-4xl md:text-5xl font-serif font-light mb-4">
+              Why Book <span className="italic text-[#9B7955]">Direct With Us</span>
+            </h2>
+            <p className="text-[#203F3A]/70 max-w-xl mx-auto font-light text-sm md:text-base mb-16">
+              Reserve straight through carlsonproperties.co.nz for the best rate and direct communication with Matt &amp; Ashleigh.
+            </p>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { title: "Best Rate Guaranteed", desc: "No third-party platform markups or hidden fees" },
+                { title: "Direct Host Contact", desc: "Speak directly with Matt & Ashleigh anytime" },
+                { title: "Local Recommendations", desc: "Personal suggestions for Taupō dining and outings" },
+                { title: "Flexible Care", desc: "Direct handling of requests, early arrival, or questions" },
+              ].map((b, i) => (
+                <div key={i} className="text-center p-4">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#203F3A] mx-auto mb-4" />
+                  <h4 className="font-serif text-lg text-[#203F3A] mb-1.5">{b.title}</h4>
+                  <p className="text-xs text-[#203F3A]/70 font-light leading-relaxed">{b.desc}</p>
                 </div>
-              </div>
-            </section>
+              ))}
+            </div>
+          </div>
+        </section>
 
-            <section className="py-24 px-6 bg-white">
-              <div className="max-w-6xl mx-auto">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="text-center mb-16"
-                >
-                  <h2 className="text-4xl md:text-5xl font-serif text-slate-900 mb-4">
-                    Why Book <span className="italic text-[#203F3A]">Direct?</span>
-                  </h2>
-                  <p className="text-slate-600 max-w-2xl mx-auto font-light">
-                    Experience the best of Taupō with exclusive benefits when you book directly with Carlson Properties
-                  </p>
-                </motion.div>
-
-                <div className="grid md:grid-cols-4 gap-8">
-                  {[
-                    { title: "Best Rate", desc: "Save on booking fees" },
-                    { title: "Flexible Service", desc: "Personalized check-in" },
-                    { title: "Local Expertise", desc: "Insider recommendations" },
-                    { title: "Direct Contact", desc: "Speak with owners" }
-                  ].map((benefit, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.1 * i }}
-                      className="text-center"
-                    >
-                      <div className="w-3 h-3 rounded-full bg-[#203F3A] mx-auto mb-4" />
-                      <h4 className="font-serif text-lg text-slate-900 mb-2">{benefit.title}</h4>
-                      <p className="text-sm text-slate-600 font-light">{benefit.desc}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            <Footer />
-          </>
-        )}
+        {/* Massive Awwwards Statement Footer */}
+        <Footer />
       </div>
     </>
   );

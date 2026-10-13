@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Star, Quote, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
 import Slider from "react-slick";
@@ -10,51 +11,57 @@ interface Review {
   rating: number;
   text: string;
   date: string;
-  avatar?: string;
+  highlight?: string;
 }
 
 const REVIEWS: Review[] = [
   {
-    id: "1",
+    id: "charles",
+    author: "Charles",
+    rating: 5,
+    text: "The house was incredible, the pool was the perfect temperature even for night swims on a cold evening. Would recommend this to all my friends and family.",
+    date: "Verified Guest",
+    highlight: "Night swims in heated pool",
+  },
+  {
+    id: "sam",
+    author: "Sam",
+    rating: 5,
+    text: "The house is spacious, clean, and incredibly well appointed. Zero complaints. We had ten guests and never felt on top of each other.",
+    date: "Verified Guest",
+    highlight: "10 guests, never crowded",
+  },
+  {
+    id: "rajiv",
+    author: "Rajiv",
+    rating: 5,
+    text: "The pool and sauna area made it really hard to leave. The mountain air, the quiet street, and having our own wellness sanctuary right outside the door was unforgettable.",
+    date: "Verified Guest",
+    highlight: "Pool & sauna sanctuary",
+  },
+  {
+    id: "viv",
     author: "Viv Bunny",
     rating: 5,
-    text: "Stunning views and a beautifully designed home that made the most of the site. The home is very luxurious and our group loved the indoor outdoor flow, the heated pool and all the modern conveniences. The furniture was tasteful and beds very comfortable. It was sited on a very quiet street - A great place to stay when visiting Taupo.",
-    date: "3 months ago",
+    text: "Stunning views and a beautifully designed home that made the most of the site. Our group loved the indoor outdoor flow, the heated pool and all the modern conveniences. Sited on a very quiet street—a great place to stay when visiting Taupō.",
+    date: "Google Verified Review",
+    highlight: "Indoor-outdoor flow",
   },
   {
-    id: "2",
+    id: "nina",
     author: "Nina Pineaha",
     rating: 5,
-    text: "This home was absolutely breathtaking. It was the perfect place to celebrate my 40th birthday with my whānau. We loved our stay and wish we could've stayed longer. This place really does have everything. Heated pool, sauna, spa, lake view...",
-    date: "4 months ago",
+    text: "This home was absolutely breathtaking. It was the perfect place to celebrate my 40th birthday with my whānau. We loved our stay and wish we could've stayed longer. Heated pool, sauna, spa, lake view...",
+    date: "Google Verified Review",
+    highlight: "Celebrated with whānau",
   },
   {
-    id: "3",
+    id: "luke",
     author: "Luke and Krissy Shadbolt",
     rating: 5,
-    text: "This place is absolute perfection. Immaculately clean, absolutely modern, gorgeous decor, every single appliance you can think of. The views are breathtaking, neighbourhood is quiet, town is a 5 minute drive away. I would totally recommend.",
-    date: "5 months ago",
-  },
-  {
-    id: "4",
-    author: "Hiral Patel",
-    rating: 5,
-    text: "Super cosy and relaxing get away! We were absolutely blown away by this accommodation. The house is spacious and thoughtfully set up: generous bedrooms with wall-mounted TVs, and three rooms with their own ensuites.",
-    date: "3 months ago",
-  },
-  {
-    id: "5",
-    author: "Feeny Savage",
-    rating: 5,
-    text: "100% would recommend. Enough rooms for each of us in the group. Each pretty much had our own bathroom which we all loved. Stunning views. The gym even got used from one of our girls. The heated pool, spa & sauna were definitely a highlight.",
-    date: "6 months ago",
-  },
-  {
-    id: "6",
-    author: "Alyssa Royal",
-    rating: 5,
-    text: "Ashleigh & Matt's stay was absolutely wonderful, we went as a big family for a trip for the kids too enjoy for the last week of the holidays, it was amazing & beautiful. The house had a lot of amenities that were really handy, the heated pool was a hit!",
-    date: "4 months ago",
+    text: "This place is absolute perfection. Immaculately clean, modern, gorgeous decor, every single appliance you can think of. The views are breathtaking, neighbourhood is quiet, town is a 5 minute drive away.",
+    date: "Google Verified Review",
+    highlight: "5 mins to town",
   },
 ];
 
@@ -68,41 +75,47 @@ export function Testimonials() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 5500,
     arrows: false,
     adaptiveHeight: true,
     fade: true,
-    cssEase: 'cubic-bezier(0.87, 0, 0.13, 1)',
+    cssEase: "cubic-bezier(0.87, 0, 0.13, 1)",
   };
 
   return (
-    <section className="py-24 md:py-32 px-6 bg-white overflow-hidden">
-      <div className="max-w-4xl mx-auto">
+    <section className="py-24 md:py-36 px-6 bg-[#F4F1EA] text-[#203F3A] overflow-hidden border-t border-[#D7C8B4]/50">
+      <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
-          <div className="max-w-2xl">
-            <span className="text-[10px] md:text-[12px] uppercase tracking-[0.4em] font-bold text-[#203F3A] block mb-4">Guest Experience</span>
-            <h2 className="text-4xl md:text-7xl font-serif text-slate-900 leading-tight">
+          <div className="max-w-2xl text-left">
+            <span className="text-[11px] uppercase tracking-[0.35em] font-bold text-[#9B7955] block mb-3">
+              56 Reviews · 5.0 Star Rating
+            </span>
+            <h2 className="text-4xl md:text-7xl font-serif font-light text-[#203F3A] leading-tight">
               A Stay Worth <br />
-              <span className="italic">Remembering</span>
+              <span className="italic font-normal text-[#9B7955]">Remembering</span>
             </h2>
           </div>
           <div className="flex flex-col items-start md:items-end">
-            <div className="flex items-center gap-1 mb-2">
+            <div className="flex items-center gap-1.5 mb-2">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} size={18} fill="#203F3A" className="text-[#203F3A]" />
               ))}
+              <span className="text-sm font-mono font-bold ml-2">5.0 / 5.0</span>
             </div>
-            <div className="flex items-center gap-2 mb-4">
-               <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-               <p className="text-slate-500 font-bold text-[8px] md:text-[10px] uppercase tracking-widest">Live Sync: Google Maps</p>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 rounded-full bg-[#203F3A]" />
+              <p className="text-[#203F3A]/70 font-semibold text-[10px] uppercase tracking-widest">
+                Airbnb Superhost &amp; Google Reviews
+              </p>
             </div>
-            <a 
-              href={googleMapsUrl} 
-              target="_blank" 
+            <a
+              href={googleMapsUrl}
+              target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-slate-900 font-bold text-[10px] md:text-xs uppercase tracking-widest hover:text-[#203F3A] transition-colors"
+              className="group flex items-center gap-2 text-[#203F3A] font-semibold text-xs uppercase tracking-widest hover:text-[#9B7955] transition-colors"
             >
-              View all Google Reviews <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <span>Read All Verified Reviews</span>
+              <ExternalLink size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
           </div>
         </div>
@@ -111,28 +124,30 @@ export function Testimonials() {
           <Slider {...settings}>
             {REVIEWS.map((review) => (
               <div key={review.id} className="pb-12 outline-none">
-                <motion.div
-                  className="bg-slate-50 p-8 md:p-16 rounded-[40px] border border-slate-100 relative group flex flex-col items-center text-center"
-                >
-                  <div className="mb-10 opacity-10">
-                    <Quote size={60} fill="#203F3A" />
+                <motion.div className="bg-white p-8 md:p-16 rounded-[40px] border border-[#D7C8B4]/70 shadow-lg relative flex flex-col items-center text-center">
+                  <div className="mb-6 text-[#D7C8B4]">
+                    <Quote size={48} fill="#D7C8B4" className="mx-auto" />
                   </div>
-                  
-                  <div className="flex items-center justify-center gap-1 mb-8">
+
+                  <div className="flex items-center justify-center gap-1 mb-6">
                     {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} size={16} fill="#203F3A" className="text-[#203F3A]" />
+                      <Star key={i} size={16} fill="#9B7955" className="text-[#9B7955]" />
                     ))}
                   </div>
-                  
-                  <p className="text-slate-700 text-lg md:text-2xl font-light leading-relaxed mb-12 italic max-w-2xl">"{review.text}"</p>
-                  
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-14 h-14 rounded-full bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A] font-bold text-lg border-2 border-white shadow-sm">
+
+                  <p className="text-[#203F3A] text-lg md:text-2xl font-light font-serif leading-relaxed mb-10 italic max-w-3xl">
+                    “{review.text}”
+                  </p>
+
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 rounded-full bg-[#203F3A] text-[#F4F1EA] flex items-center justify-center font-serif text-lg font-medium shadow-md">
                       {review.author.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-serif text-xl text-slate-900">{review.author}</h4>
-                      <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mt-1">{review.date}</p>
+                      <h4 className="font-serif text-lg text-[#203F3A]">{review.author}</h4>
+                      <p className="text-[10px] text-[#9B7955] uppercase tracking-widest font-semibold mt-0.5">
+                        {review.date}
+                      </p>
                     </div>
                   </div>
                 </motion.div>
@@ -141,8 +156,8 @@ export function Testimonials() {
           </Slider>
           <style>{`
             .testimonial-carousel-container .slick-dots { bottom: -20px; }
-            .testimonial-carousel-container .slick-dots li button:before { color: #203F3A; font-size: 8px; }
-            .testimonial-carousel-container .slick-dots li.slick-active button:before { color: #1a1c16; }
+            .testimonial-carousel-container .slick-dots li button:before { color: #203F3A; font-size: 8px; opacity: 0.3; }
+            .testimonial-carousel-container .slick-dots li.slick-active button:before { color: #203F3A; opacity: 1; }
             .testimonial-carousel-container .slick-list { overflow: visible; }
           `}</style>
         </div>
