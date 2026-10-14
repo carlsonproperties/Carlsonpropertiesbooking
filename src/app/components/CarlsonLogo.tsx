@@ -8,26 +8,24 @@ interface CarlsonLogoProps {
 }
 
 /**
- * Carlson Properties — Official Brand SVG Logo
- * Outlined vector with Figtree endorsement
- * Lake Green (#203F3A) & Warm Ivory (#F4F1EA)
+ * Carlson Properties — Japandi Organic Soft Modern Logo
+ * Charcoal (#292D2D) for light grounds & Warm Ivory (#F3F0E9) for dark grounds
  */
 export const CarlsonLogo: React.FC<CarlsonLogoProps> = ({
   dark = false,
   className = "",
-  showSubtitle = true,
   size = 180,
 }) => {
   const colorSuffix = dark ? "lake" : "cream";
   const src = `/brand/logo/carlson-properties-${colorSuffix}.svg`;
 
   return (
-    <div className={`inline-flex items-center select-none group transition-opacity duration-300 hover:opacity-95 ${className}`}>
+    <div className={`inline-flex items-center select-none group transition-opacity duration-300 hover:opacity-90 ${className}`}>
       <img
         src={src}
         alt="Carlson Properties"
         width={size}
-        className="h-auto object-contain"
+        className="h-auto object-contain max-h-12 w-auto"
         loading="eager"
       />
     </div>

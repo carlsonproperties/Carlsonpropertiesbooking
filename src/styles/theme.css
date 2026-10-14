@@ -3,111 +3,111 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ─────────────────────────────────────────────────────────────
-   Lake & Stone — One Eleven on the Mile
-   Lake Green #203F3A · Warm Ivory #F4F1EA
-   Sandstone  #D7C8B4 · Muted Bronze #9B7955 (decorative only)
+   Japandi Architectural Identity — One Eleven on the Mile
+   Warm Ivory #F3F0E9 · Soft Charcoal #292D2D
+   Pale Chalk #E2DED5 · Smoked Oak #C9C3B8 · Golden Oak #B68D62
    ───────────────────────────────────────────────────────────── */
 :root {
   --font-size: 16px;
 
-  /* Brand source of truth — reference these, don't paste hex */
-  --brand-green: #203F3A;
-  --brand-green-deep: #16302B;
-  --brand-green-light: #5E7F77;
-  --brand-ivory: #F4F1EA;
-  --brand-sandstone: #D7C8B4;
-  --brand-bronze: #9B7955;
+  /* Architectural Japandi Palette */
+  --brand-ivory: #F3F0E9;
+  --brand-charcoal: #292D2D;
+  --brand-charcoal-deep: #1C1D1F;
+  --brand-chalk: #E2DED5;
+  --brand-smoked-oak: #C9C3B8;
+  --brand-ebony-oak: #47433E;
+  --brand-golden-oak: #B68D62;
+  --brand-dark-oak: #625348;
+  --brand-border: #D5CFC4;
 
-  --background: #F4F1EA;
-  --foreground: #203F3A;
+  --background: #F3F0E9;
+  --foreground: #292D2D;
   --card: #FFFFFF;
-  --card-foreground: #203F3A;
+  --card-foreground: #292D2D;
   --popover: #FFFFFF;
-  --popover-foreground: #203F3A;
-  --primary: #203F3A;
-  --primary-foreground: #F4F1EA;
-  --secondary: #D7C8B4;
-  --secondary-foreground: #203F3A;
-  --muted: #EDE8DE;
-  --muted-foreground: #6B6459;
-  --accent: #9B7955;
-  --accent-foreground: #F4F1EA;
+  --popover-foreground: #292D2D;
+  --primary: #292D2D;
+  --primary-foreground: #F3F0E9;
+  --secondary: #E2DED5;
+  --secondary-foreground: #292D2D;
+  --muted: #E2DED5;
+  --muted-foreground: #62655F;
+  --accent: #B68D62;
+  --accent-foreground: #F3F0E9;
   --destructive: #A8432F;
-  --destructive-foreground: #F4F1EA;
-  --border: #DED6C8;
-  --input: #DED6C8;
+  --destructive-foreground: #F3F0E9;
+  --border: #D5CFC4;
+  --input: #D5CFC4;
   --input-background: #FFFFFF;
-  --switch-background: #D7C8B4;
+  --switch-background: #C9C3B8;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #203F3A;
-  --chart-1: #203F3A;
-  --chart-2: #9B7955;
-  --chart-3: #D7C8B4;
-  --chart-4: #5E7F77;
-  --chart-5: #B9A88F;
-  --radius: 0.25rem;
-  --sidebar: #F4F1EA;
-  --sidebar-foreground: #203F3A;
-  --sidebar-primary: #203F3A;
-  --sidebar-primary-foreground: #F4F1EA;
-  --sidebar-accent: #EDE8DE;
-  --sidebar-accent-foreground: #203F3A;
-  --sidebar-border: #DED6C8;
-  --sidebar-ring: #203F3A;
+  --ring: #292D2D;
+  --chart-1: #292D2D;
+  --chart-2: #B68D62;
+  --chart-3: #C9C3B8;
+  --chart-4: #47433E;
+  --chart-5: #625348;
+  --radius: 0.5rem; /* Clean 8px-12px architectural radius */
+  --sidebar: #F3F0E9;
+  --sidebar-foreground: #292D2D;
+  --sidebar-primary: #292D2D;
+  --sidebar-primary-foreground: #F3F0E9;
+  --sidebar-accent: #E2DED5;
+  --sidebar-accent-foreground: #292D2D;
+  --sidebar-border: #D5CFC4;
+  --sidebar-ring: #292D2D;
 }
 
-.dark {
-  --background: #16211E;
-  --foreground: #F4F1EA;
-  --card: #1D2B27;
-  --card-foreground: #F4F1EA;
-  --popover: #1D2B27;
-  --popover-foreground: #F4F1EA;
-  --primary: #D7C8B4;
-  --primary-foreground: #16211E;
-  --secondary: #26352F;
-  --secondary-foreground: #F4F1EA;
-  --muted: #26352F;
-  --muted-foreground: #A9B5AE;
-  --accent: #C49A6E;
-  --accent-foreground: #16211E;
+.dark,
+.theme-night {
+  --background: #1C1D1F;
+  --foreground: #F3F0E9;
+  --card: #252628;
+  --card-foreground: #F3F0E9;
+  --popover: #252628;
+  --popover-foreground: #F3F0E9;
+  --primary: #F3F0E9;
+  --primary-foreground: #1C1D1F;
+  --secondary: #2E3033;
+  --secondary-foreground: #F3F0E9;
+  --muted: #2E3033;
+  --muted-foreground: #D8D3CB;
+  --accent: #B68D62;
+  --accent-foreground: #1C1D1F;
   --destructive: #C96A51;
-  --destructive-foreground: #16211E;
-  --border: #2F413A;
-  --input: #2F413A;
-  --input-background: #1D2B27;
-  --switch-background: #2F413A;
+  --destructive-foreground: #1C1D1F;
+  --border: rgba(243, 240, 233, 0.14);
+  --input: rgba(243, 240, 233, 0.14);
+  --input-background: #252628;
+  --switch-background: #2E3033;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #D7C8B4;
-  --chart-1: #8FB3A8;
-  --chart-2: #C49A6E;
-  --chart-3: #D7C8B4;
-  --chart-4: #5E7F77;
-  --chart-5: #B9A88F;
-  --sidebar: #16211E;
-  --sidebar-foreground: #F4F1EA;
-  --sidebar-primary: #D7C8B4;
-  --sidebar-primary-foreground: #16211E;
-  --sidebar-accent: #26352F;
-  --sidebar-accent-foreground: #F4F1EA;
-  --sidebar-border: #2F413A;
-  --sidebar-ring: #D7C8B4;
+  --ring: #B68D62;
+  --sidebar: #1C1D1F;
+  --sidebar-foreground: #F3F0E9;
+  --sidebar-primary: #F3F0E9;
+  --sidebar-primary-foreground: #1C1D1F;
+  --sidebar-accent: #2E3033;
+  --sidebar-accent-foreground: #F3F0E9;
+  --sidebar-border: rgba(243, 240, 233, 0.14);
+  --sidebar-ring: #B68D62;
 }
 
 @theme inline {
-  /* Typefaces — makes `font-serif` / `font-sans` resolve to the brand faces */
   --font-serif: var(--brand-font-display);
   --font-sans: var(--brand-font-body);
 
-  /* Brand colours as utilities: bg-brand-green, text-brand-bronze, … */
-  --color-brand-green: var(--brand-green);
-  --color-brand-green-deep: var(--brand-green-deep);
-  --color-brand-green-light: var(--brand-green-light);
   --color-brand-ivory: var(--brand-ivory);
-  --color-brand-sandstone: var(--brand-sandstone);
-  --color-brand-bronze: var(--brand-bronze);
+  --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-charcoal-deep: var(--brand-charcoal-deep);
+  --color-brand-chalk: var(--brand-chalk);
+  --color-brand-smoked-oak: var(--brand-smoked-oak);
+  --color-brand-ebony-oak: var(--brand-ebony-oak);
+  --color-brand-golden-oak: var(--brand-golden-oak);
+  --color-brand-dark-oak: var(--brand-dark-oak);
+  --color-brand-border: var(--brand-border);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -130,23 +130,11 @@
   --color-input-background: var(--input-background);
   --color-switch-background: var(--switch-background);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-2xl: calc(var(--radius) + 8px);
 }
 
 @layer base {
@@ -156,56 +144,57 @@
 
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
 
   html {
     font-size: var(--font-size);
+    scroll-behavior: smooth;
   }
+}
 
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
+/* ─────────────────────────────────────────────────────────────
+   Tactile Material Utilities (Restrained & Architectural)
+   ───────────────────────────────────────────────────────────── */
 
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
+/* Ebony grain surround for final booking invitation */
+.bg-ebony-grain {
+  background-color: #292D2D;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.015) 3px,
+      rgba(255, 255, 255, 0.015) 6px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(71, 67, 62, 0.3) 0%,
+      rgba(41, 45, 45, 0.8) 100%
+    );
+}
 
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
+/* Pale Smoked Oak panel texture */
+.bg-smoked-oak {
+  background-color: #C9C3B8;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, 0.04) 4px,
+      rgba(255, 255, 255, 0.04) 8px
+    );
+}
 
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
+/* Restrained 2700K evening hearth glow */
+.evening-hearth-glow {
+  box-shadow: 0 0 50px -15px rgba(182, 141, 98, 0.25);
+}
 
-  label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
-  }
+/* Restrained contact shadow */
+.card-shadow-restrained {
+  box-shadow: 0 8px 24px -8px rgba(41, 45, 45, 0.08);
 }
