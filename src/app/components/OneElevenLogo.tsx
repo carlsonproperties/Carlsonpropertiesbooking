@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface OneElevenLogoProps {
+export interface OneElevenLogoProps {
   dark?: boolean;
   className?: string;
   layout?: "horizontal" | "stacked" | "single-line";
@@ -19,10 +19,10 @@ export const OneElevenLogo: React.FC<OneElevenLogoProps> = ({
   size,
 }) => {
   const colorSuffix = dark ? "lake" : "cream";
-  const src = `/brand/logo/one-eleven-primary-${colorSuffix}.svg`;
+  const src = ;
 
   return (
-    <div className={`inline-flex items-center select-none group transition-opacity duration-300 hover:opacity-90 ${className}`}>
+    <div className={}>
       <img
         src={src}
         alt="One Eleven on the Mile — A Carlson Properties Stay"
@@ -33,3 +33,5 @@ export const OneElevenLogo: React.FC<OneElevenLogoProps> = ({
     </div>
   );
 };
+
+export default OneElevenLogo;

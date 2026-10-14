@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface CarlsonLogoProps {
+export interface CarlsonLogoProps {
   dark?: boolean;
   className?: string;
   showSubtitle?: boolean;
@@ -13,14 +13,14 @@ interface CarlsonLogoProps {
  */
 export const CarlsonLogo: React.FC<CarlsonLogoProps> = ({
   dark = false,
-  className = "",
+  className = ,
   size = 180,
 }) => {
   const colorSuffix = dark ? "lake" : "cream";
-  const src = `/brand/logo/carlson-properties-${colorSuffix}.svg`;
+  const src = ;
 
   return (
-    <div className={`inline-flex items-center select-none group transition-opacity duration-300 hover:opacity-90 ${className}`}>
+    <div className={}>
       <img
         src={src}
         alt="Carlson Properties"
@@ -31,3 +31,5 @@ export const CarlsonLogo: React.FC<CarlsonLogoProps> = ({
     </div>
   );
 };
+
+export default CarlsonLogo;
