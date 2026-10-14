@@ -9,7 +9,7 @@ export const faqSchema = {
       "name": "What is the check-in time at One Eleven Taupo?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Check-in time is 3:00 PM. While we would love to offer an earlier check-in, our team requires the full allocated time to ensure the property is meticulously prepared to our luxury standards. We will message you immediately if the property is available sooner than 3:00 PM."
+        "text": "Check-in time is 3:00 PM. The team needs the full window between guests to clean, reset the pool and spa, and check every room. We will message you straight away if the house is ready earlier than 3:00 PM."
       }
     },
     {

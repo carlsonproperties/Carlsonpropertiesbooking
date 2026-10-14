@@ -15,9 +15,9 @@ interface SEOProps {
 }
 
 const DEFAULT_SEO = {
-  siteName: 'One Eleven on the Mile | Taupō Luxury Accommodation',
-  defaultTitle: 'Luxury Accommodation in Taupō | One Eleven on the Mile — 5-Bed Lake House with Pool, Spa & Sauna',
-  defaultDescription: 'Book luxury accommodation in Taupō, New Zealand at One Eleven on the Mile — a five-bedroom, four-bathroom lake house with heated pool, spa, sauna, gym and panoramic Lake Taupō views. Sleeps 10. Ideal family and group accommodation in Taupō NZ, bookable direct.',
+  siteName: 'One Eleven on the Mile | Taupō Holiday Accommodation',
+  defaultTitle: 'Taupō Holiday Accommodation | One Eleven on the Mile — 5-Bed House with Pool, Spa & Sauna',
+  defaultDescription: 'Book accommodation in Taupō at One Eleven on the Mile — a five-bedroom, four-bathroom Taupō holiday home with a year-round heated pool, spa, cedar sauna, gym and wide lake views. Sleeps 10, hosted locally by Matt and Ashleigh Carlson.',
   defaultKeywords: 'accommodation in taupo, taupo accommodation, accommodation taupo nz, luxury accommodation taupo, holiday home taupo, lake view taupo, taupo holiday homes, vacation rental taupo, taupo rentals, lake taupo accommodation, luxury holiday homes taupo, family accommodation taupo, group accommodation taupo, large holiday home taupo, five bedroom taupo, spa accommodation taupo, sauna taupo, gym accommodation taupo, taupo airbnb alternative, direct booking taupo, taupo luxury rentals, new zealand accommodation, taupo nz accommodation, taupo stays, boutique accommodation taupo, one eleven on the mile',
   siteUrl: typeof window !== 'undefined' ? window.location.origin : 'https://carlsonproperties.co.nz',
   image: '/og-image.jpg',
@@ -93,8 +93,8 @@ export function SEO({
         '@type': ['LodgingBusiness', 'VacationRental'],
         '@id': `${DEFAULT_SEO.siteUrl}/#accommodation`,
         'name': 'One Eleven on the Mile',
-        'alternateName': 'One Eleven Taupo — Luxury Accommodation in Taupō',
-        'description': 'Luxury five-bedroom, four-bathroom holiday home accommodation in Taupō, New Zealand with a heated pool, spa, sauna, gym and panoramic Lake Taupō views. Sleeps up to 10 guests. Direct booking available.',
+        'alternateName': 'One Eleven Taupo — Holiday Accommodation in Taupō',
+        'description': 'A five-bedroom, four-bathroom Taupō holiday home with a heated pool, spa, cedar sauna, gym and wide Lake Taupō views. Sleeps up to 10 guests, hosted locally by Matt and Ashleigh Carlson.',
         'url': `${DEFAULT_SEO.siteUrl}/`,
         'image': PROPERTY_IMAGES,
         'logo': PROPERTY_IMAGES[0],
@@ -164,7 +164,7 @@ export function SEO({
       {
         '@type': 'VideoObject',
         'name': 'One Eleven on the Mile — Drone Tour',
-        'description': 'Aerial drone tour of One Eleven on the Mile, luxury accommodation in Taupō, New Zealand.',
+        'description': 'Aerial drone tour of One Eleven on the Mile, holiday accommodation in Taupō, New Zealand.',
         'thumbnailUrl': PROPERTY_IMAGES[0],
         'contentUrl': 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4',
         'embedUrl': 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4',
@@ -174,7 +174,7 @@ export function SEO({
         '@type': 'LocalBusiness',
         '@id': `${DEFAULT_SEO.siteUrl}/#business`,
         'name': 'Carlson Properties — One Eleven on the Mile',
-        'description': 'Premium short-term rental accommodation management in Taupō, New Zealand.',
+        'description': 'Holiday home accommodation in Taupō, New Zealand, run by Matt and Ashleigh Carlson.',
         'url': DEFAULT_SEO.siteUrl,
         'telephone': '+64 27 697 7961',
         'email': 'bookings@carlsonproperties.co.nz',

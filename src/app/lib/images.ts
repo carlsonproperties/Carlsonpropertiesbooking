@@ -44,7 +44,7 @@ export const DRONE_VIDEO = getImageUrl("One eleven drone (1).mp4");
 // ============================================
 export const HOME_IMAGES = {
   // Using your professional Open2View photography
-  hero: getImageUrl("029_Open2view_ID584542-111_Jarden_Mile.jpg"), // Stunning exterior view
+  hero: getImageUrl("029_Open2view_ID584542-111_Jarden_Mile.jpg"), // Street-facing exterior
   wellness: getImageUrl("poolview.jpg"), // Pool/wellness area - Updated per user request
 };
 

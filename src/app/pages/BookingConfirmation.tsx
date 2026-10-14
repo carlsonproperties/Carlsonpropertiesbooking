@@ -83,7 +83,7 @@ export function BookingConfirmation() {
     <div className="min-h-screen bg-[#F4F1EA] flex items-center justify-center px-6 py-20">
       <SEO 
         title="Booking Confirmed - Thank You!"
-        description="Your booking at One Eleven Taupo has been confirmed. Check your email for booking details and check-in information."
+        description="Your stay at One Eleven on the Mile in Taupō is confirmed. Check your email for booking details and check-in information."
         url="/booking-success"
         schemaData={bookingConfirmationBreadcrumbSchema}
       />

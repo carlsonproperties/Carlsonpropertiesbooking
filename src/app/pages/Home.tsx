@@ -92,7 +92,7 @@ export function Home() {
         canonicalUrl="https://carlsonproperties.co.nz"
       />
 
-      {/* Bespoke Awwwards Cursor */}
+      {/* Custom cursor */}
       <CustomCursor />
 
       {/* Editorial Preloader */}

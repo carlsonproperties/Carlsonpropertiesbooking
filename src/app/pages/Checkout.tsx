@@ -11,6 +11,7 @@ import { SEO } from "../components/SEO";
 import { trackBookingStarted } from "../lib/analytics";
 import { checkoutBreadcrumbSchema } from "../lib/schemas";
 import { PROPERTY_CARD_IMAGE as PROPERTY_IMAGE } from "../lib/images";
+import { REVIEW_AGGREGATE } from "../lib/reviews";
 
 
 export function CheckoutPage() {
@@ -190,7 +191,7 @@ export function CheckoutPage() {
     <div className="min-h-screen bg-[#FDFCFB] text-[#203F3A] font-sans pb-20 relative">
       <SEO 
         title="Checkout - Complete Your Booking"
-        description="Complete your booking for One Eleven Taupo luxury accommodation. Secure payment processing with Stripe."
+        description="Finish your booking at One Eleven on the Mile in Taupō. Card payment handled securely by Stripe."
         url="/checkout"
         schemaData={checkoutBreadcrumbSchema}
       />
@@ -445,13 +446,13 @@ export function CheckoutPage() {
                   />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-1">Luxury Residence</p>
+                  <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-1">Taupō Holiday Home</p>
                   <h3 className="font-serif text-lg leading-tight">One Eleven | On The Mile</h3>
                   <div className="flex items-center gap-1 mt-1">
                     {[1,2,3,4,5].map(i => (
                       <span key={i} className="text-[#203F3A] text-xs">★</span>
                     ))}
-                    <span className="text-xs text-stone-400 ml-1">5.0 Luxury Experience</span>
+                    <span className="text-xs text-stone-400 ml-1">{REVIEW_AGGREGATE.ratingValue} from {REVIEW_AGGREGATE.reviewCount} guest reviews</span>
                   </div>
                 </div>
               </div>

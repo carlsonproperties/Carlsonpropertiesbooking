@@ -226,17 +226,17 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
       <div className="lg:col-span-8 bg-white p-8 md:p-12 rounded-[48px] shadow-2xl border border-slate-100">
         <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
-            <h3 className="text-3xl font-serif text-slate-900 mb-1">Select Dates</h3>
-            <p className="text-slate-500 text-sm">Choose your preferred stay in Taupō</p>
+            <h3 className="text-3xl font-serif text-slate-900 mb-1">Select your dates</h3>
+            <p className="text-slate-500 text-sm">Pick your nights and we will confirm straight away</p>
           </div>
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-2 text-[#203F3A] bg-[#203F3A]/10 px-6 py-3 rounded-full border border-[#203F3A]/20">
               <div className="flex flex-col items-end">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">Live Google Sync</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest">Live availability</span>
                 </div>
-                {lastSynced && <span className="text-[9px] opacity-70 uppercase tracking-tighter">Verified {lastSynced}</span>}
+                {lastSynced && <span className="text-[9px] opacity-70 uppercase tracking-tighter">Updated {lastSynced}</span>}
               </div>
             </div>
           </div>
@@ -285,12 +285,12 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
           <div className="relative z-10">
             <div className="flex justify-between items-start mb-10">
               <div>
-                <span className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.3em] block mb-2">Luxury Residence</span>
-                <h4 className="text-3xl font-serif leading-tight">One Eleven <br /><span className="italic">On the Mile</span></h4>
+                <span className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.3em] block mb-2">Taupō holiday home</span>
+                <h4 className="text-3xl font-serif leading-tight">One Eleven <br /><span className="italic">on the Mile</span></h4>
               </div>
               <div className="text-right">
                 <p className="text-3xl font-serif text-[#D7C8B4]">${actualPrice}</p>
-                <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Per Night</p>
+                <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">per night</p>
               </div>
             </div>
 
@@ -299,13 +299,13 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
                 <div className="flex items-center gap-3">
                   <CalendarIcon size={18} className="text-[#D7C8B4]" />
                   <div>
-                    <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Check-In</p>
+                    <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Check-in</p>
                     <p className="text-sm font-bold">{range?.from ? format(range.from, 'MMM dd, yyyy') : 'Select date'}</p>
                   </div>
                 </div>
                 <ArrowRight size={16} className="text-white/20" />
                 <div className="text-right">
-                  <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Check-Out</p>
+                  <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Check-out</p>
                   <p className="text-sm font-bold">{range?.to ? format(range.to, 'MMM dd, yyyy') : 'Select date'}</p>
                 </div>
               </div>
@@ -315,7 +315,7 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
                   <Users size={18} className="text-[#D7C8B4]" />
                   <div>
                     <p className="text-[10px] text-[#F4F1EA]/55 uppercase tracking-widest">Guests</p>
-                    <p className="text-sm font-bold">{guests} Guests</p>
+                    <p className="text-sm font-bold">{guests} {guests === 1 ? "guest" : "guests"}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -338,7 +338,7 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
                 
                 <div className="flex justify-between text-sm items-center">
                   <div className="flex items-center gap-2">
-                    <span className="text-[#16302B] font-bold uppercase tracking-widest text-[10px] bg-[#D7C8B4] px-2 py-0.5 rounded">Direct Booking 10% Off</span>
+                    <span className="text-[#16302B] font-bold uppercase tracking-widest text-[10px] bg-[#D7C8B4] px-2 py-0.5 rounded">Direct booking · 10% off</span>
                   </div>
                   <span className="font-bold text-[#D7C8B4] flex items-center gap-1">
                     <span className="text-[10px] uppercase font-bold">-</span>
@@ -347,7 +347,7 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#F4F1EA]/70 font-medium">Cleaning & Service Fee</span>
+                  <span className="text-[#F4F1EA]/70 font-medium">Cleaning and service fee</span>
                   <span className="font-bold text-[#D7C8B4]">Included</span>
                 </div>
 
@@ -391,7 +391,7 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
                 : "bg-[#F4F1EA]/10 text-[#F4F1EA]/55 cursor-not-allowed"
               }`}
             >
-              Continue to Checkout <ArrowRight size={20} />
+              Continue to checkout <ArrowRight size={20} />
             </button>
           </div>
         </div>
@@ -401,8 +401,8 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
             <Info size={20} />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-1">Instant Confirmation</p>
-            <p className="text-[11px] text-slate-500 leading-relaxed">Your reservation is directly synced with our management system. No double-bookings, guaranteed.</p>
+            <p className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-1">Instant confirmation</p>
+            <p className="text-[11px] text-slate-500 leading-relaxed">Your dates are checked against our live calendar as you book, so you will never arrive to a double booking.</p>
           </div>
         </div>
       </div>

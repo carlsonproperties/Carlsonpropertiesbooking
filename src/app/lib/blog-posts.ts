@@ -19,8 +19,8 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'supercars-taupo-fan-guide-2026',
-    title: 'ITM Taupō Super 440 (April 10–12): Your Ultimate Fan Guide',
-    excerpt: 'For one weekend each year, Taupō trades alpine quiet for V8 thunder. Your complete guide to the ITM Taupō Super 440 at Taupō International Motorsport Park.',
+    title: 'ITM Taupō Super 440 (10–12 April): Race Weekend Guide',
+    excerpt: 'For one weekend each year, Taupō trades alpine quiet for V8 thunder. What to expect at the ITM Taupō Super 440 at Taupō International Motorsport Park.',
     heroImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-supercars-hero.jpg',
     heroImageAlt: 'An empty racetrack at golden-hour dawn with mist over the asphalt and pit garages glowing',
     secondaryImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-supercars-alternative.jpg',
@@ -73,8 +73,8 @@ For a full list of recommendations, see our [Top 6 Things to Do in Taupō](/blog
 
 Forget battling traffic before and after each session. One Eleven on the Mile is minutes from Taupō International Motorsport Park, with everything you need to recover between race days:
 
-- Heated pool, year-round — perfect after a long day in the sun
-- Private spa pool — ideal for two glasses of red and the Sunday-night race recap
+- Heated pool, year-round — warm water after a long day in the sun
+- Private spa pool — good for two glasses of red and the Sunday-night race recap
 - Five bedrooms — sleeps up to ten, so you can split the rate across the whole crew
 - Chef's kitchen + BBQ — cook in or eat out, your call
 - Sound-dampened bedrooms — proper sleep before Sunday's main event
@@ -84,12 +84,12 @@ Race weekend books out fast. If you are planning ahead, lock your accommodation 
     ctaLabel: 'Check Availability for Supercars Weekend',
     ctaUrl: '/book',
     metaTitle: 'ITM Taupō Super 440 2027 Guide & Accommodation | Carlson Properties',
-    metaDescription: 'Schedule, fan tips and the best place to stay for the ITM Taupō Super 440. Your complete guide to Supercars at Taupō International Motorsport Park.'
+    metaDescription: 'Schedule, fan tips and where to stay for the ITM Taupō Super 440. What to expect at Supercars, Taupō International Motorsport Park.'
   },
   {
     slug: 'ironman-new-zealand-taupo-2026',
-    title: 'Ironman New Zealand: Why One Eleven on the Mile Is Your Ultimate Race HQ (March 7)',
-    excerpt: 'Few events transform a town the way Ironman New Zealand transforms Taupō. Your complete guide to race day, recovery, and the ideal Taupō accommodation for athletes and support crews.',
+    title: 'Ironman New Zealand: Staying at One Eleven on the Mile (7 March)',
+    excerpt: 'Few events change a town the way Ironman New Zealand changes Taupō. Race day, recovery, and accommodation that works for athletes and support crews.',
     heroImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-ironman-hero.jpg',
     heroImageAlt: 'Lake Taupō at dawn with mist drifting across the still water — Ironman swim start',
     secondaryImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-ironman-alternative.jpg',
@@ -98,13 +98,13 @@ Race weekend books out fast. If you are planning ahead, lock your accommodation 
     publishDate: '2027-02-28',
     readingTime: 6,
     bodyMarkdown: `
-Few events transform a town the way Ironman New Zealand transforms Taupō. For one electric weekend in early March, the lakeside town becomes the focal point of the country's endurance racing calendar — 1,500+ athletes from 40+ nations swimming, biking, and running their way through one of the most beautiful courses on the global Ironman circuit. Whether you are racing, supporting, or just here to watch, this is your guide.
+Few events change a town the way Ironman New Zealand changes Taupō. For one weekend in early March, the lakeside town becomes the centre of the country's endurance racing calendar — 1,500+ athletes from 40+ nations swimming, biking, and running through one of the tougher courses on the Ironman circuit. Whether you are racing, supporting, or here to watch, this is what to expect.
 
 ## Race-day breakdown
 
 **The Swim — 7:15 am, Lake Taupō**
 
-The day kicks off with a 3.8 km mass swim start in the crystal-clear waters of the lake. The water temperature in March hovers around 18–19°C — wetsuit-legal in all but the warmest years. Spectators line the foreshore from 6:30 am; bring a coffee, layers, and a clear view from the lake terrace.
+The day kicks off with a 3.8 km mass swim start in the lake. The water temperature in March sits around 18–19°C — wetsuit-legal in all but the warmest years. Spectators line the foreshore from 6:30 am; bring a coffee, layers, and a spot on the lake terrace.
 
 **The Bike — 180 km loop**
 
@@ -112,7 +112,7 @@ The bike course sweeps north out of Taupō through rolling farmland, past Reid F
 
 **The Run — 42.2 km along the lakefront**
 
-The marathon weaves along the Taupō lakefront path with three loops past the spectator zone — perfect for catching your athlete multiple times. The crowd energy along the foreshore is the X-factor that gets athletes through the inevitable hurt-locker around km 30.
+The marathon follows the Taupō lakefront path with three loops past the spectator zone — you can catch your athlete three times without moving far. The crowd along the foreshore is what carries people through the hard patch around km 30.
 
 For full schedule and registration: 👉 [ironman.com/im-new-zealand](https://www.ironman.com/im-new-zealand)
 
@@ -142,7 +142,7 @@ For both athletes and supporters, the right accommodation is part of race strate
 - Quiet location for proper sleep — five bedrooms, sound-dampened, blackout curtains
 - Year-round heated pool + spa for legs that have just done a marathon
 - Chef's kitchen for race-day meal prep on your terms
-- Sleeps up to 10 — perfect for the athlete plus extended support crew
+- Sleeps up to 10 — room for the athlete plus support crew
 - Quick access to transition zones at Tongariro Domain
 - Private gym for the morning shake-out routine before race day
 
@@ -150,15 +150,15 @@ The food side of race weekend matters too. Our [Best Restaurants & Cafés in Tau
 
 Ironman weekend is the single busiest weekend on the Taupō accommodation calendar. Athletes book a year in advance for a reason — book early or miss out.
     `,
-    ctaLabel: 'Reserve Your Stay for Ironman',
+    ctaLabel: 'Book for Ironman Weekend',
     ctaUrl: '/book',
     metaTitle: 'Ironman NZ 2027 Accommodation & Race Guide | One Eleven Taupō',
-    metaDescription: 'Race-day breakdown, recovery essentials, and the ideal Taupō accommodation for Ironman New Zealand athletes and support crews.'
+    metaDescription: 'Race-day breakdown, recovery essentials, and Taupō accommodation for Ironman New Zealand athletes and support crews.'
   },
   {
     slug: 'taupo-summer-concert-guide-2026',
-    title: 'Taupō Summer Concert: Your Day-of Survival Guide',
-    excerpt: 'Each January Taupō hosts one of New Zealand\'s biggest outdoor music festivals. Your guide to the day, plus the best place to stay nearby.',
+    title: 'Taupō Summer Concert: A Day-of Guide',
+    excerpt: 'Each January Taupō hosts one of New Zealand\'s biggest outdoor music festivals. What the day looks like, and where to stay nearby.',
     heroImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-summerconcert-hero.jpg',
     heroImageAlt: 'A grass amphitheatre at golden hour with soft stage lights and picnic blankets',
     secondaryImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-summerconcert-alternative.jpg',
@@ -208,24 +208,24 @@ For more recommendations, see our [Top 6 Things to Do in Taupō](/blog/best-thin
 
 ## Where to stay
 
-Concert weekend turns Taupō hotels into chaos — lobbies overflow, staff are rushed, and rooms book out months ahead. One Eleven on the Mile offers a different experience:
+Concert weekend fills every Taupō hotel — lobbies overflow, staff are rushed, and rooms book out months ahead. Here is what you get instead:
 
 - Walking distance from the venue and town nightlife
 - Far enough from the main strip for a peaceful sleep when the party winds down
-- Heated pool, year-round — perfect for the morning after
+- Heated pool, year-round — good for the morning after
 - BBQ + outdoor dining — relive the day's setlist with a glass of red under the stars
-- Five bedrooms — split the rate across friends and make it a proper getaway
+- Five bedrooms — split the rate across friends
 
-Summer Concert weekend is one of the earliest-booking weekends of the Taupō calendar. If you want a luxury home for your group, lock it in.
+Summer Concert weekend is one of the earliest-booking weekends of the Taupō calendar. If you want a whole house for your group, book early.
     `,
-    ctaLabel: 'Book Your Summer Concert Escape',
+    ctaLabel: 'Book for Summer Concert Weekend',
     ctaUrl: '/book',
     metaTitle: 'Taupō Summer Concert Accommodation | Where to Stay & What to Bring',
-    metaDescription: 'Each January Taupō hosts one of New Zealand\'s biggest outdoor music festivals. Your guide to the day, plus the best place to stay nearby.'
+    metaDescription: 'Each January Taupō hosts one of New Zealand\'s biggest outdoor music festivals. What the day looks like, and where to stay nearby.'
   },
   {
     slug: 'taupo-winter-festival-guide-2026',
-    title: 'Experience the Magic: Your Guide to the Taupō Winter Festival (July 3–19)',
+    title: 'Taupō Winter Festival (3–19 July): What Is On',
     excerpt: 'While the rest of New Zealand hibernates through July, Taupō does the opposite. Three weeks of art, food, and family fun in Taupō during winter.',
     heroImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-winterfest-hero.jpg',
     heroImageAlt: 'Misty Lake Taupō at dusk with warm winter light installations along the foreshore',
@@ -244,7 +244,7 @@ The Festival is a programme rather than a single event — different things happ
 - **Light Up Taupō** — the lakefront and Tongariro Domain lit with art installations after dark
 - **Winter Festival Family Fun Zone** — Tongariro Domain hosts inflatables, bumper balls, carnival games, and kids' entertainment, usually presented by local sponsors
 - **Tongariro Domain Markets** — winter food vendors, hot mulled wine, and live music on weekends
-- **Special chef's-table dinners** at top Taupō restaurants — fixed-menu winter-warming long-table experiences
+- **Special chef's-table dinners** at top Taupō restaurants — fixed-menu long-table dinners
 - **Free cultural events** — kapa haka performances, art trails through Taupō galleries, and ticketed evening shows in Great Lake Centre
 
 For the current year's full programme: 👉 [winterfestivaltaupo.co.nz](https://winterfestivaltaupo.co.nz/)
@@ -282,7 +282,7 @@ Many of Taupō's best restaurants run special winter menus during the Festival w
 
 ## Where to stay
 
-Winter by the lake is genuinely magical — but only if you have somewhere warm to come home to. One Eleven on the Mile is built for winter:
+Winter by the lake is worth the trip — but only if you have somewhere warm to come home to. One Eleven on the Mile is built for winter:
 
 - Heated pool, year-round — yes, even in July at 6°C outside
 - Heat pump + underfloor heating — wake up to a warm house
@@ -292,14 +292,14 @@ Winter by the lake is genuinely magical — but only if you have somewhere warm 
 
 The Winter Festival overlaps with school holidays, so accommodation goes fast. Book before mid-June to lock in the best weekend.
     `,
-    ctaLabel: 'Plan Your Winter Festival Getaway',
+    ctaLabel: 'Book for Winter Festival',
     ctaUrl: '/book',
     metaTitle: 'Taupō Winter Festival 2026 Guide & Accommodation | One Eleven on the Mile',
     metaDescription: 'Three weeks of art, food, and family fun in Taupō during winter. Your local guide to the best of the Winter Festival, plus where to stay.'
   },
   {
     slug: 'best-things-to-do-in-taupo',
-    title: 'Top 6 Unmissable Things to Do in Taupō (Locals\' Guide)',
+    title: 'Six Things to Do in Taupō, by Locals',
     excerpt: 'From hot-water streams to alpine crossings and indoor golf simulators, here are the six Taupō activities your hosts at One Eleven recommend year-round.',
     heroImage: 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/blog-thingstodo-hero.jpg',
     heroImageAlt: 'Sunrise over Lake Taupō with mountains in the distance',
@@ -309,11 +309,11 @@ The Winter Festival overlaps with school holidays, so accommodation goes fast. B
     publishDate: '2026-05-14',
     readingTime: 6,
     bodyMarkdown: `
-Taupō is one of those towns where you can barely scratch the surface in a long weekend. We have hosted hundreds of guests at One Eleven on the Mile and these six experiences are the ones that come up again and again in our reviews. Whether the weather is on your side or not, there is something here for every visitor.
+Taupō is one of those towns where you can barely scratch the surface in a long weekend. We have hosted hundreds of guests at One Eleven on the Mile, and these six keep coming up in our reviews. Most of them work whatever the weather does.
 
 ## 1. 12th Tee Golf Simulator
 
-Indoor golf, year-round, rain or shine. The 12th Tee runs high-end TrackMan simulators where you can play 200+ world courses including Pebble Beach and St Andrews. Perfect for an afternoon when the Taupō weather turns, or as a competitive group activity for stag-dos and family weekends. Book ahead — bays fill fast on weekends and rainy days.
+Indoor golf, year-round, rain or shine. The 12th Tee runs TrackMan simulators where you can play 200+ world courses including Pebble Beach and St Andrews. Good for an afternoon when the Taupō weather turns, or as a group activity for stag-dos and family weekends. Book ahead — bays fill fast on weekends and rainy days.
 
 👉 [12thteegolf.com](https://www.12thteegolf.com/)
 
@@ -347,9 +347,9 @@ Taupō has become a running hub. The Pillar to Pou trail run is the local cult f
 
 👉 [pillartopou.com](https://www.pillartopou.com/) · [taupomarathon.co.nz](https://www.taupomarathon.co.nz/)
 
-## Ready for Your Taupō Adventure?
+## Making a Trip of It
 
-Whether you are here for adventure or recovery, One Eleven on the Mile is the perfect base — minutes from the lake, with a heated pool, sauna and gym for tired muscles after a big day.
+Whether you are here for adventure or recovery, One Eleven on the Mile is an easy base — minutes from the lake, with a heated pool, sauna and gym for tired muscles after a big day.
     `,
     ctaLabel: 'Check Availability at One Eleven on the Mile',
     ctaUrl: '/book',
@@ -368,7 +368,7 @@ Whether you are here for adventure or recovery, One Eleven on the Mile is the pe
     publishDate: '2026-05-21',
     readingTime: 5,
     bodyMarkdown: `
-Taupō's food scene has come a long way in the last five years. What used to be a "fish and chips by the lake" town now has serious fine-dining destinations, world-class cafés, and proper craft beer bars. Here is where we send our One Eleven guests when they ask "where should we eat tonight?"
+Taupō's food scene has changed a lot in five years. The town that used to be fish and chips by the lake now has fine-dining rooms, good cafés, and craft beer bars. Here is where we send our One Eleven guests when they ask "where should we eat tonight?"
 
 ## For a Special Night Out — Embra
 
@@ -386,13 +386,13 @@ Taupō's only bar literally on the lake. Bar menu is limited (mostly pizzas) but
 
 ## Modern Comfort Food — Plateau Bar & Eatery
 
-Established 2004 and still locally owned. Plateau is the reliable mid-range pick — generous mains, great burgers, classic pub atmosphere with elevated execution. Good for groups and families. Sky Sport on the screens for race weekends.
+Established 2004 and still locally owned. Plateau is the reliable mid-range pick — generous mains, good burgers, classic pub atmosphere done well. Good for groups and families. Sky Sport on the screens for race weekends.
 
 👉 [plateautaupo.co.nz](https://plateautaupo.co.nz/)
 
 ## Newest Hilton Pick — Lionels
 
-The newest restaurant in town and the reviews are speaking for themselves. Located inside the Hilton, Lionels does a refined a la carte lunch and dinner, plus a high tea ($45–$65) that has become a popular reason to dress up on a Sunday. Great atmosphere, exceptional plating.
+The newest restaurant in town and the reviews are speaking for themselves. Located inside the Hilton, Lionels does a refined a la carte lunch and dinner, plus a high tea ($45–$65) that has become a popular reason to dress up on a Sunday. Great atmosphere, careful plating.
 
 👉 [lionels.co.nz](https://www.lionels.co.nz/)
 

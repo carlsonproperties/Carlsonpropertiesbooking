@@ -59,7 +59,7 @@ export function CartPage() {
     <div className="min-h-screen bg-[#FDFCFB] text-[#203F3A] font-sans">
       <SEO 
         title="Cart - Review Your Booking"
-        description="Review your booking for One Eleven Taupo luxury accommodation. Confirm your dates and proceed to secure checkout."
+        description="Review your booking at One Eleven on the Mile in Taupō. Confirm your dates and head to checkout."
         url="/cart"
         schemaData={cartBreadcrumbSchema}
       />
@@ -106,7 +106,7 @@ export function CartPage() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-2xl font-serif mb-1 uppercase tracking-tight">One Eleven | On the Mile</h3>
-                      <p className="text-stone-500 text-sm italic font-light">Luxury Residence • Entire Home</p>
+                      <p className="text-stone-500 text-sm italic font-light">Entire home • 5 bedrooms, 4 bathrooms</p>
                     </div>
                     <button 
                       onClick={handleRemove}
