@@ -125,7 +125,7 @@ export function StatementFooter() {
               </a>
               <p className="flex min-h-12 items-center gap-4 border-t border-[#D7C8B4]/20 py-3.5 text-sm text-[#F4F1EA]/75">
                 <MapPin size={15} className="shrink-0 text-[#D7C8B4]" />
-                111 Jarden Mile, Taupō 3330, New Zealand
+                111 Jarden Mile, Taupō 3351, New Zealand
               </p>
             </div>
           </div>

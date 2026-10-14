@@ -149,7 +149,7 @@ DOOR CODE: [Last 4 digits of phone] followed by the # key
 - Activates at 3:00 PM on [Check-in Date]
 - Expires at 10:00 AM on [Check-out Date]
 
-ADDRESS: 111 Jarden Mile, Taupō, Waikato 3330, New Zealand
+ADDRESS: 111 Jarden Mile, Taupō, Waikato 3351, New Zealand
 
 WI-FI:
 - Network: Carlson & Co. Guest

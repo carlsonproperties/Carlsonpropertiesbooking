@@ -1,4 +1,5 @@
 // Schema.org markup helpers for SEO
+import { BUSINESS_SAME_AS } from "./accommodation-schema";
 
 export const faqSchema = {
   "@context": "https://schema.org",
@@ -153,18 +154,13 @@ export const refundBreadcrumbSchema = createBreadcrumbSchema([
 // ============================================
 // Business identity (sameAs) + per-page schemas
 // ============================================
-export const BUSINESS_SAME_AS = [
-  "https://www.instagram.com/oneelevenonthemile",
-  "https://www.facebook.com/p/One-Eleven-On-The-Mile-61563014557673/",
-  "https://g.page/r/CZuTLT-YqNStEBM/review",
-  "https://share.google/t0KAo2MAm0a41hEg3",
-];
+export { BUSINESS_SAME_AS };
 
 const businessEntity = {
   "@type": "LocalBusiness",
   "@id": "https://carlsonproperties.co.nz/#business",
   "name": "Carlson Properties — One Eleven on the Mile",
-  "description": "Premium luxury accommodation in Taupō, New Zealand.",
+  "description": "Holiday home accommodation in Taupō, New Zealand, run by Matt and Ashleigh Carlson.",
   "url": "https://carlsonproperties.co.nz/",
   "image": "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Street%20facing.jpg",
   "telephone": "+64 27 697 7961",
@@ -174,10 +170,10 @@ const businessEntity = {
     "streetAddress": "111 Jarden Mile",
     "addressLocality": "Taupō",
     "addressRegion": "Waikato",
-    "postalCode": "3330",
+    "postalCode": "3351",
     "addressCountry": "NZ"
   },
-  "geo": { "@type": "GeoCoordinates", "latitude": -38.6857, "longitude": 176.0702 },
+  "geo": { "@type": "GeoCoordinates", "latitude": -38.678066, "longitude": 176.0486473 },
   "sameAs": BUSINESS_SAME_AS
 };
 

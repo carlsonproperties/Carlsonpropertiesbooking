@@ -465,7 +465,7 @@ export async function sendPreArrivalEmail(booking: any) {
                     <tr>
                       <td style="padding: 12px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: ${BODY_GREY};">
                         <strong style="display: block; color: ${INK}; margin-bottom: 4px;">Address</strong>
-                        111 Jarden Mile, Taupō, Waikato 3330, New Zealand
+                        111 Jarden Mile, Taupō, Waikato 3351, New Zealand
                       </td>
                     </tr>
                     <tr>
