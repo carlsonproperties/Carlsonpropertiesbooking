@@ -27,7 +27,7 @@ const RITUALS: Ritual[] = [
   {
     time: '07:30',
     title: 'Coffee on the cedar deck',
-    desc: 'The espresso machine goes on, the mist lifts off the lake, and the deck takes the early sun. Nobody is anywhere they have to be.',
+    desc: 'Start with coffee from the espresso setup, then take it outside while the house and the day are still quiet.',
     icon: Coffee,
     badge: 'Barista Espresso Bar',
     image: getImageUrl('Coffee on the cedar deck.jpg'),
@@ -35,7 +35,7 @@ const RITUALS: Ritual[] = [
   {
     time: '11:00',
     title: 'A swim, even in July',
-    desc: 'The pool is heated the whole year round. Cold mountain air on your face, steam coming off the water, Mount Tauhara across the lake.',
+    desc: 'The pool is heated year-round, so a swim stays on the agenda even when the Taupō air turns crisp.',
     icon: Waves,
     badge: 'Heated Year-Round',
     image: getImageUrl('A swim, even in July.jpg'),
@@ -43,7 +43,7 @@ const RITUALS: Ritual[] = [
   {
     time: '16:30',
     title: 'Sauna, then the spa',
-    desc: 'The 4-person rectangular cedar sauna warms up in the courtyard and the hydrotherapy spa sits just steps away. Guests keep telling us this is the part that makes the house hard to leave.',
+    desc: 'The four-person cedar sauna warms up in the courtyard, with the spa and heated pool only a few steps away.',
     icon: Thermometer,
     badge: '4-Person Sauna · Spa · Pool',
     image: getImageUrl('Sauna, then the spa.jpg'),
@@ -51,7 +51,7 @@ const RITUALS: Ritual[] = [
   {
     time: '20:00',
     title: 'The table and the fire',
-    desc: 'Ten seats gather around the dining table, the double-sided fireplace warms the living room, and the lake goes dark outside the glass. Town is five minutes away if you want it.',
+    desc: 'Bring everyone together around the ten-seat dining table, with the double-sided gas fire warming the living space beside it.',
     icon: Flame,
     badge: 'Double-Sided Fire · Seats 10',
     image: getImageUrl('The table and the fire.jpg'),
@@ -95,9 +95,8 @@ export const ClubhouseGuestWorld: React.FC = () => {
               <span className="font-normal italic">rhythm here.</span>
             </h2>
             <p className="mt-4 max-w-2xl font-sans text-base font-light leading-relaxed text-[#203F3A]/80 md:text-lg">
-              No reception desk, no schedule to keep. An espresso machine, a pool that is warm in
-              July, a sauna out in the garden and ten seats around one table. This is roughly how a
-              day here goes.
+              An espresso machine, a pool heated year-round, a cedar sauna in the courtyard and ten
+              seats around one table. The details are in place; how you spend the day is up to you.
             </p>
           </div>
 
@@ -175,7 +174,7 @@ export const ClubhouseGuestWorld: React.FC = () => {
                   Experience One Eleven in Person
                 </h3>
                 <p className="mt-0.5 font-sans text-xs text-[#F4F1EA]/75 md:text-sm">
-                  Reserve direct with local hosts Matt &amp; Ashleigh for the best dates and rates.
+                  Reserve directly with local hosts Matt &amp; Ashleigh and ask us anything before you arrive.
                 </p>
               </div>
             </div>

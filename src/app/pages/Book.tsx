@@ -39,8 +39,8 @@ export function Book() {
   return (
     <div className="min-h-screen bg-[#F4F1EA] selection:bg-[#203F3A] selection:text-white pb-20">
       <SEO
-        title="Book Direct - Best Rates"
-        description="Book One Eleven Taupo luxury accommodation directly and save. $1275/night for 5-bedroom holiday home with spa, sauna, gym, and panoramic lake views. Secure booking with flexible cancellation. Best rates guaranteed."
+        title="Check Availability | One Eleven on the Mile"
+        description="Check available dates and book One Eleven on the Mile directly: five bedrooms, four bathrooms, a heated pool, spa, sauna, gym and lake views in Taupō."
         keywords="book accommodation taupo, taupo booking direct, reserve taupo holiday home, book luxury taupo, taupo vacation rental booking, one eleven taupo booking, taupo holiday home rates, book lake view taupo, direct booking taupo, taupo accommodation booking, taupo rental reservation"
         url="/book"
         type="website"
@@ -67,7 +67,7 @@ export function Book() {
             >
               <Star size={14} className="text-[#203F3A] fill-[#203F3A]" />
               <span className="text-xs font-bold text-slate-700">5.0</span>
-              <span className="text-slate-400 text-xs">(Recent reviews)</span>
+              <span className="text-slate-400 text-xs">on Google</span>
             </a>
             <div className="h-4 w-px bg-slate-200" />
             <div className="flex items-center gap-2">
@@ -93,7 +93,10 @@ export function Book() {
             <MapPin size={16} />
             <span className="text-xs font-bold uppercase tracking-widest">Taupō, New Zealand</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight">Book Your <br /><span className="italic text-[#203F3A]">Sanctuary</span></h1>
+          <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight">Plan Your <br /><span className="italic text-[#203F3A]">Taupō Stay</span></h1>
+          <p className="mt-5 max-w-xl text-base font-light leading-relaxed text-slate-500">
+            Choose your dates below. The whole house is reserved exclusively for your group of up to ten guests.
+          </p>
         </div>
 
         <BookingEngine pricePerNight={1275} />
@@ -104,22 +107,22 @@ export function Book() {
             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg text-[#203F3A]">
               <Shield size={24} />
             </div>
-            <h4 className="text-lg font-serif text-slate-900">Price Match Guarantee</h4>
-            <p className="text-sm text-slate-500 leading-relaxed">Book directly with us for the best rate. We guarantee you won't find One Eleven cheaper on any other platform.</p>
+            <h4 className="text-lg font-serif text-slate-900">Book Direct</h4>
+            <p className="text-sm text-slate-500 leading-relaxed">Choose your dates and reserve securely through Carlson Properties, with no third-party hand-off.</p>
           </div>
           <div className="space-y-4">
             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg text-[#203F3A]">
               <CalendarIcon size={24} />
             </div>
-            <h4 className="text-lg font-serif text-slate-900">Flexible Cancellation</h4>
-            <p className="text-sm text-slate-500 leading-relaxed">Plans change. Enjoy full refund eligibility up to 30 days before your scheduled arrival.</p>
+            <h4 className="text-lg font-serif text-slate-900">Clear Cancellation Terms</h4>
+            <p className="text-sm text-slate-500 leading-relaxed">Review the cancellation terms before payment so you know exactly what applies to your booking.</p>
           </div>
           <div className="space-y-4">
             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg text-[#203F3A]">
               <Info size={24} />
             </div>
-            <h4 className="text-lg font-serif text-slate-900">Concierge Support</h4>
-            <p className="text-sm text-slate-500 leading-relaxed">Our local team in Taupō is available 24/7 to ensure your stay is absolutely perfect.</p>
+            <h4 className="text-lg font-serif text-slate-900">Local Host Support</h4>
+            <p className="text-sm text-slate-500 leading-relaxed">Matt and Ashleigh live nearby and are available if you need help during your stay.</p>
           </div>
         </div>
       </main>

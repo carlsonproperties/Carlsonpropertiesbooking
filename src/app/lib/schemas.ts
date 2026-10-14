@@ -57,7 +57,7 @@ export const faqSchema = {
       "name": "How do I get the door code?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Your unique 4-digit door code will be messaged to you 3 days before check-in. The code is always the last 4 digits of the cellphone number used to make the booking and provides secure access to the property."
+        "text": "Your unique 4-digit door code will be sent to you 3 days before check-in and will provide access for the duration of your stay."
       }
     },
     {

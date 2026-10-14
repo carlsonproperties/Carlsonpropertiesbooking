@@ -26,8 +26,8 @@ export function Blog() {
   return (
     <>
       <SEO
-        title="Journal - Stories from Taupō | One Eleven on the Mile"
-        description="Discover the best of Taupō with our local guide. Events, activities, dining recommendations, and insider tips from your hosts at One Eleven on the Mile."
+        title="The Taupō Journal | One Eleven on the Mile"
+        description="Local notes from Matt and Ashleigh on what to do, where to eat and what is happening around Taupō."
         keywords="Taupō blog, Taupō events, things to do in Taupō, Taupō restaurants, Taupō guide, Lake Taupō"
         canonicalUrl="https://carlsonproperties.co.nz/blog"
         schemaData={blogSchema}
@@ -45,7 +45,7 @@ export function Blog() {
               Journal
             </h1>
             <p className="text-xl md:text-2xl font-serif italic text-[#203F3A]">
-              Stories from Taupō
+              Local notes on what to do, where to eat and what&rsquo;s on in Taupō.
             </p>
           </motion.div>
         </section>

@@ -87,7 +87,7 @@ export function Home() {
     <>
       <SEO
         title="One Eleven on the Mile — Taupō Holiday Accommodation | Heated Pool, Sauna & Lake Views"
-        description="A five-bedroom Taupō lake house on Jarden Mile with year-round heated pool, cedar sauna, spa, gym, and expansive Lake Taupō views. Warm personal hosting by Matt and Ashleigh Carlson."
+        description="A five-bedroom Taupō holiday home on Jarden Mile with a year-round heated pool, cedar sauna, spa, gym and wide Lake Taupō views. Hosted locally by Matt and Ashleigh Carlson."
         keywords="Taupō holiday accommodation, One Eleven on the Mile, Lake Taupō holiday home, heated pool Taupō, cedar sauna accommodation, 5 bedroom Taupō house"
         canonicalUrl="https://carlsonproperties.co.nz"
       />
@@ -233,7 +233,7 @@ export function Home() {
               transition={{ delay: 1, duration: 0.8 }}
               className="max-w-xl mx-auto text-sm sm:text-base md:text-lg text-[#F4F1EA]/85 font-light leading-relaxed mb-10"
             >
-              Beautiful places to stay, warm personal hosting, and time together. Five bedrooms, heated pool, cedar sauna, and panoramic lake vistas.
+              A five-bedroom Taupō home made for time together, with space for ten, a heated pool, spa, cedar sauna and wide lake views.
             </motion.p>
 
             <motion.div
@@ -254,7 +254,7 @@ export function Home() {
                 data-cursor="explore"
                 className="w-full sm:w-auto border border-[#F4F1EA]/40 text-[#F4F1EA] px-8 py-4 rounded-full text-[11px] uppercase tracking-[0.22em] font-medium hover:bg-white/10 transition-all flex items-center justify-center gap-2"
               >
-                <span>Tour The Spaces</span>
+                <span>Explore the house</span>
                 <ArrowDown size={14} />
               </a>
             </motion.div>
@@ -353,7 +353,7 @@ export function Home() {
                     </span>
                     <h4 className="font-serif text-xl font-normal">Heated Pool, Spa &amp; Cedar Sauna</h4>
                     <p className="text-xs text-[#F4F1EA]/70 mt-1 font-light">
-                      Warm enough to swim in even in the depths of July. Designed for total privacy and effortless relaxation.
+                      The heated pool, spa and cedar sauna make this private courtyard as inviting in winter as it is in summer.
                     </p>
                   </div>
                 </div>
@@ -374,7 +374,7 @@ export function Home() {
                 </h2>
 
                 <p className="text-base md:text-lg text-[#203F3A]/85 font-light leading-relaxed">
-                  One Eleven on the Mile was designed from the ground up to host ten people with generous ease. Five private bedrooms and four bathrooms mean everyone enjoys their own space, while expansive shared living rooms, a barista coffee bar, and broad lake views bring everyone naturally together.
+                  Built for groups of up to ten, One Eleven pairs five bedrooms and four bathrooms with generous shared spaces. The open-plan kitchen, coffee station and lake-facing living areas make it easy to come together without giving up room to yourself.
                 </p>
 
                 {/* Key Facts Grid */}
@@ -447,7 +447,7 @@ export function Home() {
                 Thoughtful <span className="italic text-[#D7C8B4]">Amenities</span>
               </h2>
               <p className="text-[#F4F1EA]/75 max-w-xl mx-auto text-sm md:text-base font-light mt-4 leading-relaxed">
-                Every amenity is already here when you arrive, so you can settle in immediately without needing to hunt down essentials.
+                The practical details are covered before you arrive, leaving more time for the pool, the view and each other.
               </p>
             </div>
 
@@ -457,13 +457,13 @@ export function Home() {
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
               {[
                 { iconName: "pool", title: "Heated Pool & Spa", desc: "Heated year-round, swim even in July", image: "pool featurephoto.png", span: "col-span-2 lg:col-span-2 lg:row-span-2" },
-                { iconName: "sauna", title: "Outdoor Cedar Sauna", desc: "Private dry cedar sauna framed by native greenery" },
-                { iconName: "gym", title: "Private Fitness Gym", desc: "In-house weights and dedicated training equipment" },
-                { iconName: "coffee", title: "Barista Espresso", desc: "Fresh beans, grinder, and espresso bar ready on arrival" },
-                { iconName: "wifi", title: "High-Speed Wi-Fi", desc: "Fast coverage throughout indoor & outdoor living areas" },
-                { iconName: "views", title: "Lake & Mountain Views", desc: "Elevated vistas across Lake Taupō and Mt Ruapehu", image: "lake views.jpg", span: "col-span-2 lg:col-span-2" },
-                { iconName: "keyless", title: "Keyless Self Check-in", desc: "Effortless arrival with your personalized digital code" },
-                { iconName: "location", title: "Five Minutes to Town", desc: "Lakefront strolls, cafes, and Taupō town centre" },
+                { iconName: "sauna", title: "Outdoor Cedar Sauna", desc: "A four-person cedar sauna beside the pool courtyard" },
+                { iconName: "gym", title: "Private Fitness Gym", desc: "A dedicated space for a workout without leaving the house" },
+                { iconName: "coffee", title: "Barista Espresso", desc: "An espresso setup for easy first cups and slow mornings" },
+                { iconName: "wifi", title: "Wi-Fi Throughout", desc: "Stay connected across the home" },
+                { iconName: "views", title: "Lake & Mountain Views", desc: "Wide views across Lake Taupō and the surrounding ranges", image: "lake views.jpg", span: "col-span-2 lg:col-span-2" },
+                { iconName: "keyless", title: "Keyless Self Check-in", desc: "A unique four-digit code is sent before arrival" },
+                { iconName: "location", title: "Five Minutes to Town", desc: "An easy drive to Taupō town centre, cafés and the lakefront" },
               ].map((item, i) => (
                 <motion.div
                   key={i}

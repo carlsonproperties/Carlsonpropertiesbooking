@@ -99,7 +99,7 @@ export function BlogPost() {
               className="inline-flex items-center gap-2 text-sm text-[#203F3A] hover:text-[#203F3A] transition-colors mb-8"
             >
               <ArrowLeft className="w-4 h-4" />
-              All Stories
+              Back to the Journal
             </Link>
 
             <motion.div

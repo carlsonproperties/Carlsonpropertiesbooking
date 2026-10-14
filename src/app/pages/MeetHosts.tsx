@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Menu, Quote, Heart, Target, Instagram, Facebook } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { MobileMenu } from "../components/MobileMenu";
 import { StatementFooter as Footer } from "../components/StatementFooter";
 import { CarlsonLogo } from "../components/CarlsonLogo";
@@ -26,8 +26,6 @@ export function MeetHosts() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const textY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
   
-  const navigate = useNavigate();
-
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
@@ -36,6 +34,11 @@ export function MeetHosts() {
 
   return (
     <div className="bg-[#F4F1EA] min-h-screen font-sans selection:bg-[#203F3A]/30">
+      <SEO
+        title="Meet Your Hosts | Matt & Ashleigh Carlson"
+        description="Meet Matt and Ashleigh Carlson, the local family behind One Eleven on the Mile in Taupō, and discover why they built the house for easy group stays."
+        url="/meet-hosts"
+      />
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${isScrolled ? "py-4 bg-white/90 backdrop-blur-2xl border-b border-slate-100 shadow-sm" : "py-8 bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
@@ -48,12 +51,6 @@ export function MeetHosts() {
             <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>About</Link>
             <Link to="/meet-hosts" className="text-[#203F3A]">Meet Your Hosts</Link>
             <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Guest Info</Link>
-            <Link 
-              to="/owner-login"
-              className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}
-            >
-              Owner Portal
-            </Link>
             <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-black hover:bg-[#D7C8B4] transition-all shadow-xl shadow-[#203F3A]/20">
               Book Now
             </Link>
@@ -84,13 +81,13 @@ export function MeetHosts() {
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-8"
           >
-            <span className="text-[11px] uppercase tracking-[0.6em] font-bold text-[#D7C8B4] bg-white/10 px-6 py-2 rounded-full border border-[#D7C8B4]/30 backdrop-blur-sm inline-block">The Creators</span>
+            <span className="text-[11px] uppercase tracking-[0.6em] font-bold text-[#D7C8B4] bg-white/10 px-6 py-2 rounded-full border border-[#D7C8B4]/30 backdrop-blur-sm inline-block">Your Local Hosts</span>
             <h1 className="text-7xl md:text-[11rem] font-serif leading-[0.8] tracking-tighter text-[#F4F1EA]">
               Matt & <br />
               <span className="italic text-[#D7C8B4]">Ashleigh.</span>
             </h1>
             <p className="text-xl md:text-3xl font-light tracking-[0.2em] text-[#F4F1EA]/85 max-w-2xl mx-auto mt-12 font-serif uppercase">
-              The Heart of Carlson Properties
+              Local hosts, just around the corner
             </p>
           </motion.div>
         </motion.div>
@@ -120,7 +117,7 @@ export function MeetHosts() {
             <div className="space-y-12">
               <Quote className="text-[#D7C8B4] w-20 h-20 opacity-30" />
               <h2 className="text-4xl md:text-6xl font-serif text-white/95 leading-[1.15] italic font-light">
-                We wanted to create a space that truly <span className="text-[#D7C8B4]">felt like home</span>, where you had everything at your fingertips—no need to pop out for scissors.
+                We wanted to create the kind of stay where <span className="text-[#D7C8B4]">everything feels considered</span>—right down to the scissors in the drawer.
               </h2>
               <div className="flex items-center gap-6">
                 <div className="w-16 h-px bg-[#D7C8B4]" />
@@ -142,19 +139,19 @@ export function MeetHosts() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start text-left">
             <div className="lg:col-span-5 space-y-12 lg:sticky lg:top-40">
               <div className="space-y-8">
-                <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.6em] block">The First Chapter</span>
+                <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.6em] block">How It Began</span>
                 <h3 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight">
-                  Poured our <br />
-                  <span className="italic underline decoration-[#203F3A]/30 underline-offset-12 text-[#203F3A]">hearts in.</span>
+                  Built with family <br />
+                  <span className="italic underline decoration-[#203F3A]/30 underline-offset-12 text-[#203F3A]">stays in mind.</span>
                 </h3>
               </div>
               
               <div className="space-y-8 text-xl text-slate-500 font-light leading-relaxed">
                 <p>
-                  This is our first Airbnb build. We have poured our hearts into creating a space that combines comfort, luxury, and the natural beauty of Taupō. 
+                  One Eleven was our first purpose-built holiday home. We designed it around the things we value when we travel as a family: room to be together, space to retreat, and the practical details already taken care of.
                 </p>
                 <p>
-                  We are fortunate to live in this neighbourhood and feel privileged to share it. Our goal is to create enough of a memorable experience that you’ll be eager to return and make it part of your <span className="text-slate-900 font-medium">yearly travel plans.</span>
+                  We live in the neighbourhood, so guests have local support when they need it. Our hope is simple: that the house feels easy to settle into and <span className="text-slate-900 font-medium">worth returning to.</span>
                 </p>
               </div>
 
@@ -163,13 +160,13 @@ export function MeetHosts() {
                   <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-[#203F3A] transition-all shadow-sm">
                     <Heart className="text-[#203F3A] group-hover:text-white" size={24} />
                   </div>
-                  <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mt-4 text-center">Built with Love</p>
+                  <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mt-4 text-center">Family Hosted</p>
                 </div>
                 <div className="group cursor-pointer">
                   <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-[#203F3A] transition-all shadow-sm">
                     <Target className="text-[#203F3A] group-hover:text-white" size={24} />
                   </div>
-                  <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mt-4 text-center">Bespoke Design</p>
+                  <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mt-4 text-center">Purpose Built</p>
                 </div>
               </div>
             </div>
@@ -200,22 +197,22 @@ export function MeetHosts() {
       {/* Focus Section */}
       <section className="relative h-[80vh] flex items-center overflow-hidden bg-[#16302B]">
         <div className="absolute inset-0 opacity-40">
-           <img src={familyFieldWalk} className="w-full h-full object-cover" alt="Walking in the field" />
+           <img src={familyFieldWalk} className="w-full h-full object-cover" alt="Open-plan kitchen and breakfast bar at One Eleven" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1c16] via-[#1a1c16]/80 to-transparent" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 w-full text-left">
           <div className="max-w-3xl space-y-12">
             <div className="space-y-6">
-              <span className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.7em] block">Our Focus</span>
+              <span className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.7em] block">Designed for Real Stays</span>
               <h3 className="text-5xl md:text-8xl font-serif text-white leading-tight">
-                Excellence <br />
-                <span className="italic text-[#D7C8B4]">in every detail.</span>
+                Everything you need, <br />
+                <span className="italic text-[#D7C8B4]">where you need it.</span>
               </h3>
             </div>
             
             <p className="text-2xl text-white/90 font-light leading-relaxed">
-              Our ambition has shifted from expansion to refinement. We are dedicated to making One Eleven the premier destination in Taupō, focusing every effort on providing a world-class experience that brings you back year after year.
+              The kitchen opens directly to outdoor dining, the living spaces give groups room to spread out, and practical details are in place before you arrive. We keep refining the house through the feedback our guests share.
             </p>
 
             <Link 
@@ -226,8 +223,8 @@ export function MeetHosts() {
                 <Target className="text-[#203F3A]" size={20} />
               </div>
               <div className="text-left">
-                <span className="text-white font-serif text-lg block">The Carlson Commitment</span>
-                <span className="text-[#D7C8B4] text-[10px] uppercase tracking-[0.35em] font-bold">Book Your Stay</span>
+                <span className="text-white font-serif text-lg block">Plan your Taupō stay</span>
+                <span className="text-[#D7C8B4] text-[10px] uppercase tracking-[0.35em] font-bold">Check availability</span>
               </div>
             </Link>
           </div>
@@ -253,14 +250,14 @@ export function MeetHosts() {
 
             <div className="space-y-12">
               <div className="space-y-6">
-                <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.5em] block">The Legacy</span>
+                <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.5em] block">Why It Matters</span>
                 <h3 className="text-4xl md:text-6xl font-serif text-slate-900 leading-tight">
-                  A place for <br />
-                  <span className="italic text-[#203F3A]">travel stories.</span>
+                  Made for <br />
+                  <span className="italic text-[#203F3A]">time together.</span>
                 </h3>
               </div>
               <p className="text-xl text-slate-500 font-light leading-relaxed">
-                We hope to be a part of your travel stories for years to come. We are excited to welcome you to our neighbourhood and help you create memories that last a lifetime.
+                As parents, we know the best group stays are the ones that feel easy. One Eleven gives families and friends room to settle in, spread out and enjoy Taupō together.
               </p>
               
               <div className="flex flex-wrap gap-8 items-center pt-6">

@@ -147,10 +147,9 @@ export function Testimonials() {
           </h2>
 
           <p className="mt-8 max-w-2xl text-base font-light leading-relaxed text-[#203F3A]/85 md:text-lg">
-            Guests keep telling us the same thing — they meant to head into town, and then
-            didn&rsquo;t. Five bedrooms and room for ten, a pool that stays warm through July, a
-            4-person cedar sauna out in the courtyard, and the lake doing its thing through every
-            window.
+            Guests often tell us the same thing: they planned to head into town, then decided to
+            stay put. With five bedrooms, room for ten, a pool heated year-round, a four-person
+            cedar sauna and lake views from the main living spaces, there is plenty of reason to linger.
           </p>
           <p className="mt-4 max-w-2xl text-base font-light italic leading-relaxed text-[#7A5E41] md:text-lg">
             Taupō is five minutes away, for whenever you finally want it.
@@ -176,7 +175,7 @@ export function Testimonials() {
               {REVIEW_AGGREGATE.ratingValue} / 5.0
             </span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-[#203F3A]/75">
-              {REVIEW_AGGREGATE.reviewCount} reviews · Airbnb Superhost &amp; Google
+              {REVIEW_AGGREGATE.reviewCount} reviews · Airbnb &amp; Google
             </span>
           </div>
           <a
@@ -186,7 +185,7 @@ export function Testimonials() {
             data-cursor="reviews"
             className="group inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#203F3A] underline-offset-8 hover:underline"
           >
-            Read all verified reviews
+            Review One Eleven on Google
             <ExternalLink
               size={13}
               className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"

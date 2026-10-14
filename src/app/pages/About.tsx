@@ -131,8 +131,8 @@ export function About() {
   return (
     <div className="bg-[#F4F1EA] min-h-screen">
       <SEO 
-        title="About Our Luxury Property"
-        description="Discover One Eleven Taupo - a purpose-built luxury holiday home featuring 5 bedrooms, 4 bathrooms, heated pool, sauna, gym, and stunning Lake Taupo views. Perfect Taupo accommodation for families and groups."
+        title="About One Eleven on the Mile"
+        description="Explore One Eleven on the Mile, a five-bedroom Taupō holiday home for up to ten guests with four bathrooms, a heated pool, spa, cedar sauna, gym and lake views."
         keywords="accommodation taupo, about one eleven taupo, taupo luxury holiday home, taupo vacation rental details, five bedroom taupo, lake taupo property, taupo spa accommodation, taupo sauna, heated pool taupo, taupo family accommodation, luxury rental taupo, taupo accommodation features"
         url="/about"
         schemaData={aboutSchema}
@@ -181,12 +181,6 @@ export function About() {
             <Link to="/about" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>About</Link>
             <Link to="/meet-hosts" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Meet Your Hosts</Link>
             <Link to="/guest-info" className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}>Guest Info</Link>
-            <Link 
-              to="/owner-login"
-              className={`${isScrolled ? "text-slate-800" : "text-white"} hover:text-[#203F3A] transition-colors`}
-            >
-              Owner Portal
-            </Link>
             <Link to="/book" className="bg-[#203F3A] text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#D7C8B4] transition-all shadow-lg shadow-[#203F3A]/20">
               Book Now
             </Link>
@@ -215,7 +209,7 @@ export function About() {
             animate={{ opacity: 1, y: 0 }}
             className="text-[12px] uppercase tracking-[0.5em] font-bold opacity-80"
           >
-            The Story of One Eleven
+            111 Jarden Mile · Taupō
           </motion.span>
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
@@ -223,7 +217,7 @@ export function About() {
             transition={{ delay: 0.2 }}
             className="text-6xl md:text-9xl font-serif"
           >
-            About the <br /><span className="italic">Property</span>
+            A house designed <br /><span className="italic">around the view.</span>
           </motion.h1>
         </div>
       </header>
@@ -239,8 +233,8 @@ export function About() {
                 viewport={{ once: true }}
                 className="text-4xl md:text-6xl font-serif text-slate-900 leading-tight"
               >
-                A purpose-built sanctuary <br />
-                <span className="italic text-[#203F3A]">designed for excellence.</span>
+                Room for everyone. <br />
+                <span className="italic text-[#203F3A]">Space to come together.</span>
               </motion.h2>
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -250,17 +244,13 @@ export function About() {
                 className="text-xl md:text-2xl text-slate-600 leading-relaxed font-light space-y-8"
               >
                 <p>
-                  Nestled in a safe, new subdivision only 5 minutes drive from town.
+                  Set on a quiet residential street five minutes&rsquo; drive from central Taupō, One Eleven sleeps up to ten across five bedrooms, with four bathrooms and generous indoor–outdoor living.
                 </p>
                 <p>
-                  Our purpose built Airbnb offers 5 bedrooms, 4 bathrooms and breathtaking lake and mountain views. 
-                  Enjoy a year-round heated pool, spa, sauna, outdoor shower and gym.
+                  The heated pool, spa, cedar sauna, outdoor shower and gym create a private place to unwind in every season.
                 </p>
                 <p>
-                  Keep warm with a double-sided fireplace and ducted heating throughout.
-                </p>
-                <p>
-                  There is a playground down the road, along with two tennis courts and basketball hoops.
+                  Inside, ducted heating and the double-sided gas fire keep the house warm through winter. A playground, tennis courts and basketball hoops are a short walk down the road.
                 </p>
               </motion.div>
             </div>
@@ -272,13 +262,13 @@ export function About() {
               >
                 <Masonry gutter="40px">
                   {[
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/view%20from%20dining%20table.jpg", title: "modern architecture", speed: 0.1 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/gas%20fire.jpg", title: "Double sided gas fireplace", speed: -0.1 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Open%20plan%20living.jpg", title: "Open Plan Living", speed: 0.2 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/pool%20featurephoto.png", title: "heated pool", speed: -0.05 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg", title: "panoramic lake views", speed: 0.15 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/sauanaspa.jpg", title: "Outdoor Sauna & Spa Pool", speed: -0.12 },
-                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/outdoor%20lounge.png", title: "Al Fresco Dining & BBQ", speed: 0.08 }
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/view%20from%20dining%20table.jpg", title: "Lake Views from the Dining Room", speed: 0.1 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/gas%20fire.jpg", title: "Double-Sided Gas Fire", speed: -0.1 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Open%20plan%20living.jpg", title: "Open-Plan Living", speed: 0.2 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/pool%20featurephoto.png", title: "Heated Pool", speed: -0.05 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/lake%20views.jpg", title: "Lake & Mountain Views", speed: 0.15 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/sauanaspa.jpg", title: "Sauna & Spa", speed: -0.12 },
+                    { img: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/outdoor%20lounge.png", title: "Poolside Outdoor Living", speed: 0.08 }
                   ].map((item, i) => (
                     <GalleryItem key={i} item={item} index={i} onOpen={setSelectedImage} />
                   ))}
@@ -302,7 +292,7 @@ export function About() {
                   viewport={{ once: true }}
                   className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.4em] block"
                 >
-                  Rest & Rejuvenate
+                  Five Bedrooms · Sleeps 10
                 </motion.span>
                 <motion.h2 
                   initial={{ opacity: 0, y: 20 }}
@@ -310,7 +300,7 @@ export function About() {
                   viewport={{ once: true }}
                   className="text-4xl md:text-6xl font-serif text-white leading-tight"
                 >
-                  The <span className="italic">Sleeping</span> Quarters
+                  Where You&rsquo;ll <span className="italic">Sleep</span>
                 </motion.h2>
               </div>
               
@@ -324,24 +314,24 @@ export function About() {
                   onClick={() => setShowEnsuites(false)}
                   className={`px-8 py-3 rounded-xl text-[10px] uppercase tracking-[0.25em] font-bold transition-all duration-300 ${!showEnsuites ? "bg-[#F4F1EA] text-[#203F3A] shadow-xl" : "text-[#F4F1EA]/70 hover:text-white hover:bg-white/10"}`}
                 >
-                  The Bedrooms
+                  Bedrooms
                 </button>
                 <button 
                   onClick={() => setShowEnsuites(true)}
                   className={`px-8 py-3 rounded-xl text-[10px] uppercase tracking-[0.25em] font-bold transition-all duration-300 ${showEnsuites ? "bg-[#F4F1EA] text-[#203F3A] shadow-xl" : "text-[#F4F1EA]/70 hover:text-white hover:bg-white/10"}`}
                 >
-                  The Ensuites
+                  Bathrooms
                 </button>
               </motion.div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
               {[
-                { img: bedroom1, ensuiteImg: ensuite1, title: "Bedroom 1", type: "Master Suite", desc: ["1x Super King Bed", "Full Private Ensuite"] },
-                { img: bedroom2, ensuiteImg: ensuite2, title: "Bedroom 2", type: "Guest Suite", desc: ["1x Super King Bed", "Full Private Ensuite"] },
-                { img: bedroom3, ensuiteImg: ensuite3, title: "Bedroom 3", type: "Guest Suite", desc: ["1x King Bed", "Full Private Ensuite"] },
-                { img: bedroom4, ensuiteImg: ensuite4, title: "Bedroom 4", type: "Garden View", desc: ["1x King Bed", "Full Private Ensuite"] },
-                { img: bedroom5, ensuiteImg: ensuite5, title: "Bedroom 5", type: "Twin Room", desc: ["2x King Single Beds", "Full Private Ensuite"] }
+                { img: bedroom1, ensuiteImg: ensuite1, title: "Bedroom 1", type: "Super King", desc: ["1 Super King Bed"] },
+                { img: bedroom2, ensuiteImg: ensuite2, title: "Bedroom 2", type: "Super King", desc: ["1 Super King Bed"] },
+                { img: bedroom3, ensuiteImg: ensuite3, title: "Bedroom 3", type: "King", desc: ["1 King Bed"] },
+                { img: bedroom4, ensuiteImg: ensuite4, title: "Bedroom 4", type: "King", desc: ["1 King Bed"] },
+                { img: bedroom5, ensuiteImg: ensuite5, title: "Bedroom 5", type: "Twin", desc: ["2 King Single Beds"] }
               ].map((room, i) => (
                 <motion.div 
                   key={i}
@@ -414,7 +404,7 @@ export function About() {
                     viewport={{ once: true }}
                     className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.5em] block"
                   >
-                    The Distinction
+                    At a Glance
                   </motion.span>
                   <motion.h3 
                     initial={{ opacity: 0, y: 20 }}
@@ -422,20 +412,20 @@ export function About() {
                     viewport={{ once: true }}
                     className="text-4xl md:text-6xl font-serif text-slate-900 leading-tight"
                   >
-                    Why guests choose <br />
-                    <span className="italic text-[#203F3A]">One Eleven | On The Mile.</span>
+                    Everything your group needs, <br />
+                    <span className="italic text-[#203F3A]">all in one place.</span>
                   </motion.h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
-                    { icon: Waves, title: "Curated Wellness", desc: "Heated pool, outdoor sauna, spa, and signature outdoor shower experience." },
-                    { icon: Zap, title: "Pristine Design", desc: "Completed in late 2024. A fresh, architectural sanctuary with modern finishes." },
-                    { icon: MapPin, title: "Elite Location", desc: "The perfect balance: minutes from town center, yet tucked in a quiet, high-end enclave." },
-                    { icon: Eye, title: "Scenic Mastery", desc: "Uninterrupted lake and mountain vistas designed to be the backdrop of your stay." },
-                    { icon: Maximize2, title: "Versatile Living", desc: "Bespoke sleeping arrangements for up to 10 guests—perfect for multi-gen groups." },
-                    { icon: Shield, title: "Family Sanctuary", desc: "Fully fenced grounds, a garage 'play zone', and a neighborhood playground." },
-                    { icon: Info, title: "Exceptional Value", desc: "Resort-level amenities with private villa exclusivity, offering superior value per guest." }
+                    { icon: Waves, title: "Pool, Spa & Sauna", desc: "A year-round heated pool, spa and four-person cedar sauna in the private courtyard." },
+                    { icon: Zap, title: "Purpose-Built", desc: "Open-plan living, practical storage and warm, modern finishes designed for group stays." },
+                    { icon: MapPin, title: "Quiet, Close to Town", desc: "A residential Taupō setting around five minutes by car from the town centre." },
+                    { icon: Eye, title: "Lake & Mountain Views", desc: "Wide outlooks across Lake Taupō and the surrounding ranges from the main living areas." },
+                    { icon: Maximize2, title: "Made for Groups", desc: "Five bedrooms and four bathrooms give up to ten guests room to gather and retreat." },
+                    { icon: Shield, title: "Family-Friendly Layout", desc: "Fully fenced grounds, generous shared spaces and a neighbourhood playground nearby." },
+                    { icon: Info, title: "Everything Under One Roof", desc: "A well-equipped kitchen, BBQ, gym and private wellness area make longer stays easy." }
                   ].map((item, i) => (
                     <motion.div 
                       key={i}
@@ -468,23 +458,16 @@ export function About() {
                       
                       <div className="space-y-8">
                         <div className="group">
-                          <h6 className="font-serif text-lg text-slate-900 mb-2">Pardon Our Progress</h6>
-                          <p className="text-sm text-slate-500 leading-relaxed italic">
-                            As a new development, you may hear daytime construction on weekdays. Evenings remain beautifully tranquil.
+                          <h6 className="font-serif text-lg text-slate-900 mb-2">Self Check-In</h6>
+                          <p className="text-sm text-slate-500 leading-relaxed">
+                            Your four-digit door code is sent three days before check-in.
                           </p>
                         </div>
 
                         <div className="group">
-                          <h6 className="font-serif text-lg text-slate-900 mb-2">Seamless Access</h6>
+                          <h6 className="font-serif text-lg text-slate-900 mb-2">Your Guest Guide</h6>
                           <p className="text-sm text-slate-500 leading-relaxed">
-                            Your bespoke entry code will arrive 72 hours before your journey begins.
-                          </p>
-                        </div>
-
-                        <div className="group">
-                          <h6 className="font-serif text-lg text-slate-900 mb-2">The Concierge Manual</h6>
-                          <p className="text-sm text-slate-500 leading-relaxed">
-                            A curated guide awaits inside, detailing everything from climate control to the local's favorite cafes.
+                            Your digital guide covers arrival, Wi-Fi, house instructions and local recommendations.
                           </p>
                         </div>
                       </div>
@@ -497,7 +480,7 @@ export function About() {
                           <h4 className="font-bold text-[9px] uppercase tracking-widest">Safety & Privacy</h4>
                         </div>
                         <p className="text-[11px] text-red-900/60 leading-relaxed">
-                          We prioritize your well-being. Please supervise children near the pool and pool cover. Our singular exterior security camera ensures neighborhood safety without compromising your indoor privacy.
+                          Please supervise children near the pool and pool cover. One exterior security camera is present; it does not monitor any indoor area.
                         </p>
                       </div>
                     </div>

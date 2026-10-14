@@ -69,7 +69,7 @@ const SECTIONS = [
     icon: <Heart size={20} />,
     content: {
       header: "A Warm Welcome",
-      text: "We're thrilled to welcome you as our guest, our mission is to make you feel at home, even when you're away.\n\nWe're here to ensure your time in Taupō is nothing short of amazing. We look forward to welcoming you or answering any questions you may have prior to your stay.",
+      text: "Welcome to One Eleven. We hope the house feels easy to settle into from the moment you arrive.\n\nThis guide covers the essentials; if you need anything before or during your stay, call or email us.",
       signature: "Matt & Ash",
       image: GUEST_INFO_IMAGES.welcome,
       contact: [
@@ -87,10 +87,10 @@ const SECTIONS = [
       address: "111 Jarden Mile, Taupō",
       network: "One Eleven Guest",
       password: "****",
-      wifiDisclaimer: "The WiFi password is sent out to you 3 days prior to your check-in date along with your door code (which is always the last 4 digits of the cellphone used to make the booking).",
+      wifiDisclaimer: "We’ll send the Wi-Fi password and your door code three days before check-in.",
       checkInTime: "3:00 PM",
-      pinInfo: "Your Unique 4 Digit Pin will be messaged to you before check in. This code provides secure access to the property and will expire upon your departure.",
-      earlyCheckInBlurb: "While we would love to offer an earlier check-in, our team requires the full allocated time to ensure the property is meticulously prepared to our luxury standards. We will, however, message you immediately if the property is available sooner than 3:00 PM."
+      pinInfo: "Your four-digit PIN provides access from check-in and expires after departure.",
+      earlyCheckInBlurb: "Check-in is from 3:00 PM. We use the full changeover window to prepare the house, but we’ll message you if it is ready earlier."
     }
   },
   {
@@ -98,7 +98,7 @@ const SECTIONS = [
     title: "How-To Guides",
     icon: <Play size={20} />,
     content: {
-      header: "Interactive Instructions",
+      header: "How to Use the House",
       tabs: ["Pool Cover", "Sauna", "Air Con & Fire", "Smart Lock"],
       data: {
         "Pool Cover": {
@@ -106,8 +106,8 @@ const SECTIONS = [
           video: HOWTO_MEDIA.poolCover.video, 
           steps: [
             "Insert and Unlock: Insert the key into the control panel.",
-            "Open the Cover: Turn the key one time towards the I (1).",
-            "Remove all toys before closing: To ensure the cover closes correctly remove everything from pool.",
+            "Open the Cover: Turn the key once towards I (1).",
+            "Before Closing: Remove everything from the pool so the cover can close correctly.",
             "Close the Cover: Turn the key towards II (2) and hold until the cover reaches the end."
           ]
         },
@@ -116,7 +116,7 @@ const SECTIONS = [
           video: HOWTO_MEDIA.sauna.video, 
           steps: [
             "Preheat the Sauna: Turn on the sauna heater and set the temperature dial. Allow 15 minutes for preheating.",
-            "Enjoy Your Sauna session: Enter the sauna with a towel to sit on. Use the control panel for lights and bluetooth.",
+            "Enjoy Your Sauna Session: Enter with a towel to sit on. Use the control panel for the lights and Bluetooth.",
             "Cool Down and Turn Off: Exit the sauna and cool down with a cold shower. Turn off the heater after use."
           ]
         },
@@ -126,7 +126,7 @@ const SECTIONS = [
           steps: [
             "AC Panel: Located in the hallway. Select mode and temperature.",
             "Modes: Sunlight icon for heat, Snowflake icon for cooling.",
-            "Gas Fire: Remote is in the kitchen cutlery drawer. Takes ~1 min to ignite. Turn off overnight for silence."
+            "Gas Fire: The remote is in the kitchen cutlery drawer. It takes about one minute to ignite. Turn it off overnight."
           ]
         },
         "Smart Lock": {
@@ -246,7 +246,7 @@ const SECTIONS = [
     content: {
       header: "House Rules",
       image: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/looking%20into%20kitchen.png",
-      text: "Welcome to our first Airbnb build. Your respect and care for our home play a vital role in its success; by fostering a positive experience together, we can keep this journey going for many guests to enjoy.",
+      text: "A few simple rules help keep the house safe, comfortable and ready for every guest.",
       rules: [
         { title: "Respect the Property", desc: "Treat the home and its furnishings with care." },
         { title: "No Smoking", desc: "Smoking is not permitted inside the property." },
@@ -292,7 +292,7 @@ const SECTIONS = [
     content: {
       header: "Thank You",
       image: GUEST_INFO_IMAGES.checkout,
-      text: "Thank you for choosing to stay with us. We hope you have a wonderful time in Taupō and create memories that last a lifetime.",
+      text: "Thank you for staying at One Eleven. We hope you leave rested, well fed and with a few new favourite places in Taupō.",
       contact: [
         { icon: <Phone size={18} />, value: "027 697 7961" },
         { icon: <Mail size={18} />, value: "bookings@carlsonproperties.co.nz" }
@@ -355,8 +355,8 @@ export function GuestInformation() {
   return (
     <div className="bg-[#F4F1EA] min-h-screen selection:bg-[#203F3A] selection:text-white font-sans">
       <SEO 
-        title="Guest Information & Digital Guidebook"
-        description="Complete guest guide for One Eleven Taupo accommodation. WiFi details, check-in instructions, local attractions, dining recommendations, and property amenities. Your digital guide to Taupo."
+        title="Guest Guide | One Eleven on the Mile"
+        description="Arrival details, house instructions and local favourites for an easy stay at One Eleven on the Mile in Taupō."
         keywords="taupo guest information, one eleven guide, taupo accommodation guide, taupo travel guide, things to do taupo, taupo restaurants, taupo attractions, taupo wifi, taupo check in, taupo digital guidebook, taupo holiday home guide"
         url="/guest-info"
         schemaData={guestInfoSchema}
@@ -455,13 +455,13 @@ export function GuestInformation() {
             <div className="max-w-3xl">
               <div className="flex items-center gap-4 mb-6">
                 <span className="h-[1px] w-12 bg-[#203F3A]" />
-                <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.6em]">Premium Digital Companion</span>
+                <span className="text-[#203F3A] text-[10px] font-black uppercase tracking-[0.6em]">One Eleven on the Mile</span>
               </div>
               <h1 className="text-5xl md:text-8xl font-serif text-slate-900 leading-[0.9] tracking-tighter">
-                Guest <span className="italic text-[#203F3A]">Info.</span>
+                Guest <span className="italic text-[#203F3A]">Guide.</span>
               </h1>
               <p className="mt-8 text-lg md:text-xl text-slate-500 font-light max-w-xl leading-relaxed">
-                Everything you need for a seamless stay at One Eleven, from check-in details to our hand-picked local favorites.
+                Arrival details, house instructions and local favourites for an easy stay at One Eleven.
               </p>
 
               {/* Interactive Quick Essentials Bar */}
@@ -479,7 +479,7 @@ export function GuestInformation() {
 
                 <button
                   onClick={() => {
-                    alert("Door Code: The last 4 digits of the cell phone used when booking your stay.");
+                    alert("Your unique four-digit door code is sent three days before check-in.");
                   }}
                   className="group inline-flex items-center gap-2 rounded-2xl border border-[#203F3A]/15 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#203F3A] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#203F3A] hover:shadow-md"
                 >
