@@ -776,53 +776,61 @@ export function GuestInformation() {
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                      <div className="space-y-10">
-                        <h3 className="text-4xl font-serif text-slate-900">{instructionSubTab} Guide</h3>
-                        <div className="space-y-6">
-                          {activeSection.content.data[instructionSubTab].steps.map((step: string, i: number) => (
-                            <div key={i} className="flex gap-6 p-8 bg-white rounded-[32px] border border-slate-100 hover:shadow-xl transition-all duration-500 group">
-                              <span className="text-4xl font-serif text-[#203F3A]/20 group-hover:text-[#203F3A] transition-colors">{i + 1}</span>
-                              <p className="text-slate-600 leading-relaxed font-light">{step}</p>
+                    <div className="space-y-10">
+                      <h3 className="text-4xl font-serif text-slate-900">{instructionSubTab} Guide</h3>
+
+                      {/* Keep the complete recording visible at its natural aspect ratio.
+                          The previous fixed 16:9 crop hid the edges of some guide videos. */}
+                      <div className="w-full overflow-hidden rounded-[32px] bg-[#111C1A] p-2 shadow-2xl sm:rounded-[48px] sm:p-3">
+                        {activeSection.content.data[instructionSubTab].video ? (
+                          <video
+                            key={instructionSubTab}
+                            controls
+                            playsInline
+                            preload="metadata"
+                            className="block h-auto max-h-[78vh] w-full rounded-[24px] bg-black object-contain sm:rounded-[38px]"
+                            poster={activeSection.content.data[instructionSubTab].image ?? undefined}
+                            aria-label={`${instructionSubTab} how-to video`}
+                          >
+                            <source src={activeSection.content.data[instructionSubTab].video} type="video/mp4" />
+                          </video>
+                        ) : activeSection.content.data[instructionSubTab].image ? (
+                          <img
+                            src={activeSection.content.data[instructionSubTab].image}
+                            className="block h-auto max-h-[78vh] w-full rounded-[24px] bg-black object-contain sm:rounded-[38px]"
+                            alt={`${instructionSubTab} guide`}
+                          />
+                        ) : (
+                          /* No media for this step yet — show a calm placeholder
+                             rather than a broken image. The written steps below
+                             it are the real instructions either way. */
+                          <div className="flex min-h-[18rem] w-full flex-col items-center justify-center gap-3 rounded-[24px] bg-slate-50 px-8 text-center sm:min-h-[28rem] sm:rounded-[38px]">
+                            <div className="w-14 h-14 rounded-full bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A]">
+                              <PlayCircle size={26} />
                             </div>
-                          ))}
-                        </div>
+                            <p className="text-sm font-bold text-slate-700">Video guide coming shortly</p>
+                            <p className="text-xs text-slate-400 max-w-[18rem] leading-relaxed">
+                              Follow the written steps, or call us on {PHONE_DISPLAY} and we&rsquo;ll
+                              talk you through it.
+                            </p>
+                          </div>
+                        )}
                       </div>
-                      <div className="space-y-8">
-                        <div className="rounded-[48px] overflow-hidden shadow-2xl bg-slate-100 aspect-video relative group">
-                          {activeSection.content.data[instructionSubTab].video ? (
-                            <video
-                              key={instructionSubTab}
-                              controls
-                              className="w-full h-full object-cover"
-                              poster={activeSection.content.data[instructionSubTab].image ?? undefined}
-                            >
-                              <source src={activeSection.content.data[instructionSubTab].video} type="video/mp4" />
-                            </video>
-                          ) : activeSection.content.data[instructionSubTab].image ? (
-                            <img src={activeSection.content.data[instructionSubTab].image} className="w-full h-full object-cover" alt="Guide" />
-                          ) : (
-                            /* No media for this step yet — show a calm placeholder
-                               rather than a broken image. The written steps beside
-                               it are the real instructions either way. */
-                            <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-3 text-center px-8">
-                              <div className="w-14 h-14 rounded-full bg-[#203F3A]/10 flex items-center justify-center text-[#203F3A]">
-                                <PlayCircle size={26} />
-                              </div>
-                              <p className="text-sm font-bold text-slate-700">Video guide coming shortly</p>
-                              <p className="text-xs text-slate-400 max-w-[18rem] leading-relaxed">
-                                Follow the written steps, or call us on {PHONE_DISPLAY} and we&rsquo;ll
-                                talk you through it.
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                        <div className="p-8 bg-blue-50 rounded-[32px] border border-blue-100 flex gap-6">
-                          <Info className="text-blue-500 flex-shrink-0" size={24} />
-                          <p className="text-blue-900/60 text-sm leading-relaxed">
-                            Need live assistance? Use the contact details in the sidebar to call Matt or Ashleigh for a guided walkthrough.
-                          </p>
-                        </div>
+
+                      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        {activeSection.content.data[instructionSubTab].steps.map((step: string, i: number) => (
+                          <div key={i} className="flex gap-6 p-8 bg-white rounded-[32px] border border-slate-100 hover:shadow-xl transition-all duration-500 group">
+                            <span className="text-4xl font-serif text-[#203F3A]/20 group-hover:text-[#203F3A] transition-colors">{i + 1}</span>
+                            <p className="text-slate-600 leading-relaxed font-light">{step}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="p-8 bg-blue-50 rounded-[32px] border border-blue-100 flex gap-6">
+                        <Info className="text-blue-500 flex-shrink-0" size={24} />
+                        <p className="text-blue-900/60 text-sm leading-relaxed">
+                          Need live assistance? Use the contact details in the sidebar to call Matt or Ashleigh for a guided walkthrough.
+                        </p>
                       </div>
                     </div>
                   </div>
