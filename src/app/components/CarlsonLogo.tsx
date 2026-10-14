@@ -7,20 +7,16 @@ export interface CarlsonLogoProps {
   size?: number;
 }
 
-/**
- * Carlson Properties — Japandi Organic Soft Modern Logo
- * Charcoal (#292D2D) for light grounds & Warm Ivory (#F3F0E9) for dark grounds
- */
 export const CarlsonLogo: React.FC<CarlsonLogoProps> = ({
   dark = false,
-  className = ,
+  className = "",
   size = 180,
 }) => {
   const colorSuffix = dark ? "lake" : "cream";
-  const src = ;
+  const src = "/brand/logo/carlson-properties-" + colorSuffix + ".svg";
 
   return (
-    <div className={}>
+    <div className={"inline-flex items-center select-none group transition-opacity duration-300 hover:opacity-90 " + className}>
       <img
         src={src}
         alt="Carlson Properties"

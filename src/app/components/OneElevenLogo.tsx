@@ -9,20 +9,16 @@ export interface OneElevenLogoProps {
   size?: number;
 }
 
-/**
- * One Eleven on the Mile — Japandi Organic Soft Modern Logo
- * Stacked 'one eleven' with 'on the mile' and 'A Carlson Properties Stay' endorsement
- */
 export const OneElevenLogo: React.FC<OneElevenLogoProps> = ({
   dark = false,
   className = "",
   size,
 }) => {
   const colorSuffix = dark ? "lake" : "cream";
-  const src = ;
+  const src = "/brand/logo/one-eleven-primary-" + colorSuffix + ".svg";
 
   return (
-    <div className={}>
+    <div className={"inline-flex items-center select-none group transition-opacity duration-300 hover:opacity-90 " + className}>
       <img
         src={src}
         alt="One Eleven on the Mile — A Carlson Properties Stay"
