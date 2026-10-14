@@ -1,7 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { faqSchema } from '../lib/schemas';
-import { SITE_URL, PROPERTY_IMAGES, BUSINESS_SAME_AS, buildAccommodationNode } from '../lib/accommodation-schema';
+import { SITE_URL } from '../lib/accommodation-schema';
 
 interface SEOProps {
   title?: string;
@@ -50,41 +49,18 @@ export function SEO({
     ? `${DEFAULT_SEO.siteUrl}${image}` 
     : DEFAULT_SEO.imageUrl;
 
-  // Default structured data for the property
+  // Default structured data for the page.
+  //
+  // The property-level entities (VacationRental, VideoObject, LocalBusiness,
+  // FAQPage and the home breadcrumb) are baked into index.html at build time so
+  // non-JS crawlers see them without running the app. Re-emitting them here made
+  // Google's renderer see two copies on the homepage — two aggregateRatings for
+  // the same @id (→ "Review has multiple aggregate ratings"), plus a duplicate
+  // FAQ block and video. Only the WebSite/SearchAction node is rendered here,
+  // because it is the one entity the static graph does not already carry.
   const defaultSchema = {
     '@context': 'https://schema.org',
     '@graph': [
-      buildAccommodationNode(),
-      {
-        '@type': 'VideoObject',
-        'name': 'One Eleven on the Mile — Drone Tour',
-        'description': 'Aerial drone tour of One Eleven on the Mile, holiday accommodation in Taupō, New Zealand.',
-        'thumbnailUrl': PROPERTY_IMAGES[0],
-        'contentUrl': 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4',
-        'embedUrl': 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/One%20eleven%20drone%20(1).mp4',
-        'uploadDate': '2026-01-01',
-      },
-      {
-        '@type': 'LocalBusiness',
-        '@id': `${DEFAULT_SEO.siteUrl}/#business`,
-        'name': 'Carlson Properties — One Eleven on the Mile',
-        'description': 'Holiday home accommodation in Taupō, New Zealand, run by Matt and Ashleigh Carlson.',
-        'url': DEFAULT_SEO.siteUrl,
-        'telephone': '+64 27 697 7961',
-        'email': 'bookings@carlsonproperties.co.nz',
-        'address': {
-          '@type': 'PostalAddress',
-          'streetAddress': '111 Jarden Mile',
-          'addressLocality': 'Taupō',
-          'addressRegion': 'Waikato',
-          'postalCode': '3351',
-          'addressCountry': 'NZ',
-        },
-        'geo': { '@type': 'GeoCoordinates', 'latitude': -38.678066, 'longitude': 176.0486473 },
-        'priceRange': '$$$',
-        'image': fullImage,
-        'sameAs': BUSINESS_SAME_AS,
-      },
       {
         '@type': 'WebSite',
         '@id': `${DEFAULT_SEO.siteUrl}/#website`,
@@ -96,14 +72,6 @@ export function SEO({
           'target': { '@type': 'EntryPoint', 'urlTemplate': `${DEFAULT_SEO.siteUrl}/?q={search_term_string}` },
           'query-input': 'required name=search_term_string',
         },
-      },
-      faqSchema,
-      {
-        '@type': 'BreadcrumbList',
-        'itemListElement': [
-          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': `${DEFAULT_SEO.siteUrl}/` },
-          { '@type': 'ListItem', 'position': 2, 'name': title || 'One Eleven on the Mile', 'item': fullUrl },
-        ],
       },
     ],
   };
