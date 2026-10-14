@@ -57,10 +57,15 @@ import { StatementFooter as Footer } from "../components/StatementFooter";
 import { CarlsonLogo } from "../components/CarlsonLogo";
 import { SEO } from "../components/SEO";
 import { guestInfoSchema } from "../lib/schemas";
-import { GUEST_INFO_IMAGES, HOWTO_MEDIA, EXPLORE_IMAGE, GUIDE_BOOK_PDF, getImageUrl } from "../lib/images";
+import { GUEST_INFO_IMAGES, HOWTO_MEDIA, GUIDE_BOOK_PDF, getImageUrl } from "../lib/images";
 import { GOOGLE_REVIEW_URL, PHONE_DISPLAY, PHONE_HREF, BOOKINGS_EMAIL } from "../lib/links";
 
-const LAST_UPDATED = "February 26, 2026";
+declare const __GUEST_INFO_UPDATED__: string; // ISO date injected at build time (vite.config.ts)
+
+const GUEST_INFO_UPDATED_ISO = __GUEST_INFO_UPDATED__;
+const _MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const _dateParts = GUEST_INFO_UPDATED_ISO.split("-").map(Number);
+const LAST_UPDATED = `${_MONTHS[_dateParts[1] - 1]} ${_dateParts[2]}, ${_dateParts[0]}`;
 
 const SECTIONS = [
   {
@@ -187,7 +192,7 @@ const SECTIONS = [
             { name: "Toddler Time Gymnastics", link: "https://www.taupogymnastics.co.nz", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDN-3efS7tQCgAiltZGor0MzE3bsC3QIaMw&s", desc: "Gymnastics classes for pre-schoolers." },
             { name: "Mind Junction", link: "https://www.mindjunction.co.nz", image: "https://www.lovetaupo.com/media/2961883/mind-junction-hero.jpg?width=1920&format=jpg&quality=70", desc: "Activity park with puzzles, mazes, and more." },
             { name: "Lilliput Farm", link: "https://www.lilliputfarm.co.nz", image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/3f/6b/de/photo3jpg.jpg?w=1200&h=-1&s=1", desc: "Farm park with animals to feed." },
-            { name: "Fairy Garden Walk", link: "https://www.tauponz.com/explore/walks-and-hikes/whangamata-stream-walk/", image: "https://scontent.fhlz4-1.fna.fbcdn.net/v/t39.30808-6/476369419_2715110355337867_4690484090148010971_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=13d280&_nc_ohc=ocCNYrEJIl8Q7kNvwGlWv0I&_nc_oc=Adn5VHl0ALBkwK40_apna5zx6woYu41_sL1P-ddzf8lWRgtjNPfyY3SHGBLknyqx82A&_nc_zt=23&_nc_ht=scontent.fhlz4-1.fna&_nc_gid=3tHJRXgbjFPnVwWGUXJEkA&oh=00_AftMrSOWGnoCR8vZboXE4MMfpQomYTcngcapWGODFzxSDw&oe=699B4B97", desc: "Easy walk along the Whangamata Stream." },
+            { name: "Fairy Garden Walk", link: "https://www.tauponz.com/explore/walks-and-hikes/whangamata-stream-walk/", image: "https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/fairygardenwalk.jpg", desc: "Easy walk along the Whangamata Stream." },
             { name: "Huka Prawn Park", link: "https://hukaprawnpark.co.nz", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl9PO_an7v7KReSljKYAGPceMaW4Y9JSvDDw&s", desc: "Prawn fishing and water-based fun." },
             { name: "Lions Walk Taupo", link: "https://www.tauponz.com/explore/walks-and-hikes/lions-walk/", image: "https://www.taupo.info/sites/www.taupo.info/files/styles/slideshow__smartport/public/pics/listings/images/lionswalk.jpg?itok=NVUhYhnO", desc: "Flat lakefront path that suits buggies." }
           ]
@@ -275,12 +280,13 @@ const SECTIONS = [
     icon: <LogOut size={20} />,
     content: {
       header: "Departure Guide",
-      image: EXPLORE_IMAGE,
+      image: getImageUrl("exterior lights.png"),
       checklist: [
         "Load & start the dishwasher",
         "Turn off lights and appliances",
         "Please take rubbish out to the bins",
-        "Ensure all windows/doors are locked"
+        "Ensure all windows/doors are locked",
+        "It is not expected that you strip the sheets but if you do, please leave the mattress protectors on as well as the duvet inner protectors."
       ],
       doorCode: "Your unique door code will expire shortly after your 10:00 AM check-out time."
     }
@@ -1073,7 +1079,7 @@ export function GuestInformation() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 text-center">
         <p className="text-xs text-stone-400">
-          Last Updated: <time dateTime="2026-02-26">{LAST_UPDATED}</time>
+          Last Updated: <time dateTime={GUEST_INFO_UPDATED_ISO}>{LAST_UPDATED}</time>
         </p>
       </div>
 

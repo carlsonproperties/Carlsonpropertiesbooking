@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import fs from 'fs'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
@@ -34,7 +35,25 @@ function accommodationSchemaInjector() {
   }
 }
 
+/**
+ * "Last Updated" stamp on the Guest Info page. Tied to the guide file's own
+ * modified time so it moves automatically whenever the guide is edited and
+ * redeployed, instead of relying on someone remembering to bump a hard-coded
+ * string. On a fresh CI clone the mtime is the checkout time, so in practice
+ * this reads as the deploy date.
+ */
+const guestInfoUpdated = (() => {
+  try {
+    return fs.statSync(path.resolve(__dirname, 'src/app/pages/GuestInfo.tsx')).mtime.toISOString().slice(0, 10)
+  } catch {
+    return new Date().toISOString().slice(0, 10)
+  }
+})()
+
 export default defineConfig({
+  define: {
+    __GUEST_INFO_UPDATED__: JSON.stringify(guestInfoUpdated),
+  },
   plugins: [
     figmaAssetResolver(),
     accommodationSchemaInjector(),
