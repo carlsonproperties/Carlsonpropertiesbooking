@@ -1,3 +1,5 @@
+> Superseded by [RESEND_EMAILS.md](RESEND_EMAILS.md): the scheduled emails now run hourly from Supabase pg_cron and send through Resend Templates.
+
 # ✅ Scheduled Email System - COMPLETE!
 
 ## 🎉 All Done! Here's What's Working

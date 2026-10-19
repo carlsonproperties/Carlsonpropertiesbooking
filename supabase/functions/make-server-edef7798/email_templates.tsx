@@ -279,8 +279,13 @@ const calculateNights = (checkIn: string, checkOut: string) => {
   return nights;
 };
 
+// ─── Built-in designs (fallback) ─────────────────────────────────────────────
+// The six functions below are the original inline-HTML emails. They are only
+// used when a Resend Template is missing or unpublished (see sendViaTemplate),
+// so a booking never goes without its emails while templates are being set up.
+
 // 1. Booking Confirmation Email
-export async function sendBookingConfirmation(booking: any): Promise<EmailOutcome> {
+async function legacyBookingConfirmation(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
   if (!b.email) {
     console.error('❌ Skipped "booking confirmation": the booking has no guest email.');
@@ -378,7 +383,7 @@ export async function sendBookingConfirmation(booking: any): Promise<EmailOutcom
 }
 
 // 2. Owner Notification Email
-export async function sendOwnerNotification(booking: any): Promise<EmailOutcome> {
+async function legacyOwnerNotification(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
   const checkInShort = formatDateShort(b.checkIn);
   const bookingRef = (b.id || '').substring(0, 8).toUpperCase() || 'NEW';
@@ -485,7 +490,7 @@ export async function sendOwnerNotification(booking: any): Promise<EmailOutcome>
 }
 
 // 3. Pre-Arrival Email
-export async function sendPreArrivalEmail(booking: any): Promise<EmailOutcome> {
+async function legacyPreArrivalEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
   if (!b.email) {
     return { name: 'pre-arrival email', ok: false, skipped: true, error: 'Booking has no guest email address' };
@@ -572,7 +577,7 @@ export async function sendPreArrivalEmail(booking: any): Promise<EmailOutcome> {
 }
 
 // 4. Check-In Day Email
-export async function sendCheckInDayEmail(booking: any): Promise<EmailOutcome> {
+async function legacyCheckInDayEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
   if (!b.email) {
     return { name: 'check-in day email', ok: false, skipped: true, error: 'Booking has no guest email address' };
@@ -629,7 +634,7 @@ export async function sendCheckInDayEmail(booking: any): Promise<EmailOutcome> {
 }
 
 // 5. Check-Out Day Email
-export async function sendCheckOutDayEmail(booking: any): Promise<EmailOutcome> {
+async function legacyCheckOutDayEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
   if (!b.email) {
     return { name: 'check-out day email', ok: false, skipped: true, error: 'Booking has no guest email address' };
@@ -681,7 +686,7 @@ export async function sendCheckOutDayEmail(booking: any): Promise<EmailOutcome> 
 }
 
 // 6. Review Request Email
-export async function sendReviewRequestEmail(booking: any): Promise<EmailOutcome> {
+async function legacyReviewRequestEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
   if (!b.email) {
     return { name: 'review request email', ok: false, skipped: true, error: 'Booking has no guest email address' };
@@ -720,6 +725,234 @@ export async function sendReviewRequestEmail(booking: any): Promise<EmailOutcome
         ${footer()}
       `, 'Two minutes that mean the world to us.')
   });
+}
+
+// ─── Resend Templates ────────────────────────────────────────────────────────
+// The guest emails are designed and worded in Resend (Dashboard → Templates),
+// so copy can be edited there without a deploy. Each send names a template by
+// its alias and passes the booking's details as variables.
+//
+// If a template has not been created or published yet, Resend refuses the
+// send and we fall back to the built-in design above, so nothing goes missing
+// while templates are being set up. Set EMAIL_USE_RESEND_TEMPLATES=false to
+// skip templates entirely.
+
+export const TEMPLATE_ALIASES = {
+  bookingConfirmation: 'booking-confirmation',
+  ownerNotification: 'owner-notification',
+  preArrival: 'pre-arrival',
+  checkInDay: 'check-in-day',
+  checkOutDay: 'check-out-day',
+  reviewRequest: 'review-request',
+} as const;
+
+type TemplateAlias = typeof TEMPLATE_ALIASES[keyof typeof TEMPLATE_ALIASES];
+
+/** The variables each template declares. Only these are sent with it. */
+const TEMPLATE_VARIABLES: Record<TemplateAlias, string[]> = {
+  'booking-confirmation': ['GUEST_NAME', 'CHECK_IN_DATE', 'CHECK_OUT_DATE', 'NIGHTS', 'GUESTS', 'TOTAL'],
+  'owner-notification': ['BOOKING_REF', 'GUEST_FULL_NAME', 'GUEST_EMAIL', 'GUEST_PHONE', 'CHECK_IN_DATE',
+    'CHECK_OUT_DATE', 'NIGHTS', 'GUESTS', 'TOTAL', 'CHANNEL', 'DOOR_CODE', 'NOTES'],
+  'pre-arrival': ['GUEST_NAME', 'DOOR_CODE', 'CHECK_IN_DATE', 'CHECK_OUT_DATE', 'WIFI_PASSWORD'],
+  'check-in-day': ['GUEST_NAME', 'DOOR_CODE'],
+  'check-out-day': ['GUEST_NAME'],
+  'review-request': ['GUEST_NAME'],
+};
+
+const SCHEDULED_ALIASES = new Set<TemplateAlias>(['pre-arrival', 'check-in-day', 'check-out-day', 'review-request']);
+
+const USE_TEMPLATES = (Deno.env.get('EMAIL_USE_RESEND_TEMPLATES') ?? 'true').trim().toLowerCase() !== 'false';
+
+// Optional. When set, it overrides the Wi-Fi password saved in the
+// pre-arrival template, so a password change needs no template edit.
+const WIFI_PASSWORD = (Deno.env.get('WIFI_PASSWORD') ?? '').trim();
+
+/** Template variables are inserted as raw HTML, so guest-typed text is escaped. */
+const escapeHtml = (value: unknown) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+/** "2026-03-20" → "Friday 20 March 2026". Dates are calendar dates, so no timezone shift. */
+const longDate = (dateString: string) => {
+  const d = new Date(`${String(dateString).slice(0, 10)}T00:00:00Z`);
+  if (isNaN(d.getTime())) return String(dateString ?? '');
+  const part = (o: Intl.DateTimeFormatOptions) => d.toLocaleDateString('en-NZ', { ...o, timeZone: 'UTC' });
+  return `${part({ weekday: 'long' })} ${part({ day: 'numeric' })} ${part({ month: 'long' })} ${part({ year: 'numeric' })}`;
+};
+
+/** "2026-03-20" → "20 Mar", for the owner's subject line. */
+const shortDate = (dateString: string) => {
+  const d = new Date(`${String(dateString).slice(0, 10)}T00:00:00Z`);
+  if (isNaN(d.getTime())) return String(dateString ?? '');
+  return `${d.getUTCDate()} ${d.toLocaleDateString('en-NZ', { month: 'short', timeZone: 'UTC' })}`;
+};
+
+/** The door code is the last four digits of the guest's mobile, then #. */
+export const doorCodeFor = (booking: any) => {
+  const saved = String(booking.doorCode ?? '').trim().replace(/#+$/, '');
+  if (saved) return `${saved}#`;
+  const digits = String(booking.phone ?? '').replace(/\D/g, '');
+  return digits.length >= 4 ? `${digits.slice(-4)}#` : 'The last 4 digits of your mobile, then #';
+};
+
+/** Every value a template might use, worked out once from the booking. */
+function templateValues(b: any): Record<string, string> {
+  const nights = calculateNights(b.checkIn, b.checkOut);
+  return {
+    GUEST_NAME: String(b.guest).trim().split(/\s+/)[0] || 'there',
+    GUEST_FULL_NAME: String(b.guest).trim() || 'Guest',
+    GUEST_EMAIL: b.email || 'Not provided',
+    GUEST_PHONE: b.phone || 'Not provided',
+    CHECK_IN_DATE: longDate(b.checkIn),
+    CHECK_OUT_DATE: longDate(b.checkOut),
+    NIGHTS: `${nights} ${nights === 1 ? 'night' : 'nights'}`,
+    GUESTS: `${b.guests} ${b.guests === 1 ? 'guest' : 'guests'}`,
+    TOTAL: `$${b.total.toLocaleString('en-NZ')} NZD`,
+    DOOR_CODE: doorCodeFor(b),
+    BOOKING_REF: String(b.id || '').substring(0, 8).toUpperCase() || 'NEW',
+    CHANNEL: b.channel || 'Direct website',
+    NOTES: b.notes || 'None',
+    ...(WIFI_PASSWORD ? { WIFI_PASSWORD } : {}),
+  };
+}
+
+function variablesFor(alias: TemplateAlias, b: any): Record<string, string> {
+  const all = templateValues(b);
+  const out: Record<string, string> = {};
+  for (const key of TEMPLATE_VARIABLES[alias]) {
+    if (all[key] !== undefined) out[key] = escapeHtml(all[key]);
+  }
+  return out;
+}
+
+/**
+ * Sends one email using a published Resend Template, and reports the outcome.
+ * Uses the REST API directly: the pinned SDK predates template sends.
+ * `templateMissing` is set when Resend refused because of the template itself,
+ * which is the cue to fall back to the built-in design.
+ */
+async function sendTemplate(
+  name: string,
+  alias: TemplateAlias,
+  message: { to: string[]; from: string; subject?: string; variables: Record<string, string>; idempotencyKey?: string },
+): Promise<EmailOutcome & { templateMissing?: boolean }> {
+  if (!RESEND_API_KEY) {
+    console.error(`❌ Skipped "${name}": RESEND_API_KEY is not configured.`);
+    return { name, ok: false, skipped: true, error: 'RESEND_API_KEY is not configured on this function' };
+  }
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+        ...(message.idempotencyKey ? { 'Idempotency-Key': message.idempotencyKey.slice(0, 256) } : {}),
+      },
+      body: JSON.stringify({
+        from: message.from,
+        to: message.to,
+        reply_to: REPLY_TO_ADDRESS,
+        ...(message.subject ? { subject: message.subject } : {}),
+        template: { id: alias, variables: message.variables },
+      }),
+    });
+    const body: any = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const detail = body?.message ? describeError(body) : `HTTP ${res.status}`;
+      const templateMissing = res.status === 404 || /template/i.test(detail);
+      console.error(`❌ Resend refused "${name}" (template ${alias}): ${detail}`);
+      return { name, ok: false, error: detail, templateMissing };
+    }
+    console.log(`✅ Sent "${name}" (template ${alias}) to ${message.to.join(', ')} · id ${body?.id ?? 'unknown'}`);
+    return { name, ok: true, id: body?.id };
+  } catch (err) {
+    const detail = describeError(err);
+    console.error(`❌ Could not reach Resend for "${name}": ${detail}`);
+    return { name, ok: false, error: detail };
+  }
+}
+
+/** Template first; the built-in design only if the template isn't there. */
+async function sendViaTemplate(
+  name: string,
+  alias: TemplateAlias,
+  booking: any,
+  message: { to: string[]; from: string; subject?: string },
+  legacy: (booking: any) => Promise<EmailOutcome>,
+): Promise<EmailOutcome> {
+  if (!USE_TEMPLATES) return legacy(booking);
+  const b = norm(booking);
+  const outcome = await sendTemplate(name, alias, {
+    ...message,
+    variables: variablesFor(alias, b),
+    // Scheduled emails go once per stay, even if two runs overlap. Confirmations
+    // carry no key, so the dashboard's "resend confirmation" always sends.
+    idempotencyKey: SCHEDULED_ALIASES.has(alias) && b.id ? `${alias}/${b.id}/${b.checkIn}` : undefined,
+  });
+  if (outcome.ok || !outcome.templateMissing) {
+    const { templateMissing: _ignored, ...rest } = outcome;
+    return rest;
+  }
+  console.warn(`⚠️ Template "${alias}" is not available in Resend yet. Sending "${name}" with the built-in design.`);
+  return legacy(booking);
+}
+
+const noEmail = (name: string): EmailOutcome => {
+  console.error(`❌ Skipped "${name}": the booking has no guest email.`);
+  return { name, ok: false, skipped: true, error: 'Booking has no guest email address' };
+};
+
+// 1. Booking confirmation · straight after payment
+export async function sendBookingConfirmation(booking: any): Promise<EmailOutcome> {
+  const b = norm(booking);
+  if (!b.email) return noEmail('booking confirmation');
+  return sendViaTemplate('booking confirmation', TEMPLATE_ALIASES.bookingConfirmation, b,
+    { to: [b.email], from: sender('One Eleven on the Mile') }, legacyBookingConfirmation);
+}
+
+// 2. New booking notice to the owners · straight after payment
+export async function sendOwnerNotification(booking: any): Promise<EmailOutcome> {
+  const b = norm(booking);
+  return sendViaTemplate('owner notification', TEMPLATE_ALIASES.ownerNotification, b, {
+    to: [OWNER_EMAIL],
+    from: sender('One Eleven Bookings'),
+    subject: `New booking · ${b.guest} · ${shortDate(b.checkIn)}`,
+  }, legacyOwnerNotification);
+}
+
+// 3. Arrival details · 3 days before check-in
+export async function sendPreArrivalEmail(booking: any): Promise<EmailOutcome> {
+  const b = norm(booking);
+  if (!b.email) return noEmail('pre-arrival email');
+  return sendViaTemplate('pre-arrival email', TEMPLATE_ALIASES.preArrival, b,
+    { to: [b.email], from: sender('One Eleven on the Mile') }, legacyPreArrivalEmail);
+}
+
+// 4. Welcome · check-in day
+export async function sendCheckInDayEmail(booking: any): Promise<EmailOutcome> {
+  const b = norm(booking);
+  if (!b.email) return noEmail('check-in day email');
+  return sendViaTemplate('check-in day email', TEMPLATE_ALIASES.checkInDay, b,
+    { to: [b.email], from: sender('One Eleven on the Mile') }, legacyCheckInDayEmail);
+}
+
+// 5. Check-out morning · check-out day
+export async function sendCheckOutDayEmail(booking: any): Promise<EmailOutcome> {
+  const b = norm(booking);
+  if (!b.email) return noEmail('check-out day email');
+  return sendViaTemplate('check-out day email', TEMPLATE_ALIASES.checkOutDay, b,
+    { to: [b.email], from: sender('One Eleven on the Mile') }, legacyCheckOutDayEmail);
+}
+
+// 6. Review request · 2 days after check-out
+export async function sendReviewRequestEmail(booking: any): Promise<EmailOutcome> {
+  const b = norm(booking);
+  if (!b.email) return noEmail('review request email');
+  return sendViaTemplate('review request email', TEMPLATE_ALIASES.reviewRequest, b,
+    { to: [b.email], from: sender('One Eleven on the Mile') }, legacyReviewRequestEmail);
 }
 
 // Test all email templates
