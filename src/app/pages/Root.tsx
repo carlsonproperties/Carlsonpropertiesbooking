@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router";
 import { ScrollToTop } from "../components/ScrollToTop";
+import { ThemePreviewToggle } from "../components/ThemePreviewToggle";
 import { trackPageView } from "../lib/analytics";
 
 export function Root() {
@@ -15,6 +16,8 @@ export function Root() {
     <div className="min-h-screen bg-[#F4F1EA]">
       <ScrollToTop />
       <Outlet />
+      {/* Preview branch only — see ThemePreviewToggle. */}
+      <ThemePreviewToggle />
     </div>
   );
 }

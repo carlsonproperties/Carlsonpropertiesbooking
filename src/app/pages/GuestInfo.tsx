@@ -556,8 +556,10 @@ export function GuestInformation() {
                     }}
                     className="w-full flex items-center justify-between p-4 rounded-2xl transition-all group active:scale-[0.98]"
                     style={{
-                      backgroundColor: activeTab === section.id ? '#203F3A08' : 'transparent',
-                      border: activeTab === section.id ? '1px solid #203F3A20' : '1px solid transparent'
+                      // Via variables so the preview theme can reach them —
+                      // an inline value is not addressable from a stylesheet.
+                      backgroundColor: activeTab === section.id ? 'var(--tab-active-bg)' : 'transparent',
+                      border: activeTab === section.id ? '1px solid var(--tab-active-border)' : '1px solid transparent'
                     }}
                   >
                     <div className="flex items-center gap-4">

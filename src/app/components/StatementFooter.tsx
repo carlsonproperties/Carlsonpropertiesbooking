@@ -65,7 +65,7 @@ export function StatementFooter() {
   const reduced = useReducedMotion() ?? false;
 
   return (
-    <footer className="relative overflow-hidden bg-[#203F3A] pt-16 text-[#F4F1EA] sm:pt-20">
+    <footer className="j-batten j-grain relative overflow-hidden bg-[#203F3A] pt-16 text-[#F4F1EA] sm:pt-20">
       <div className="pointer-events-none absolute -right-40 top-0 h-[34rem] w-[34rem] rounded-full bg-[#9DA07E]/10 blur-3xl" />
       <div className="pointer-events-none absolute -left-48 bottom-20 h-[30rem] w-[30rem] rounded-full bg-[#D7C8B4]/5 blur-3xl" />
 
