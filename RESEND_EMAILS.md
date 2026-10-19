@@ -15,6 +15,8 @@ All times are New Zealand time. Bookings marked as Airbnb (or another booking si
 
 ## 1. Put the templates in Resend
 
+The logos (the letterbox roundel and the Carlson Properties wordmark) load from `carlsonproperties.co.nz/brand/email/`, which this change adds. Merge it first so they're live before the templates go in. Merging first is safe: until a template is published, its email keeps the old design.
+
 **Option A, quickest.** From the repo folder, run:
 
 ```
@@ -87,3 +89,7 @@ The booking system fills these in. Values are HTML-escaped before they're sent.
 | `CHANNEL` | Direct website |
 | `NOTES` | the guest's notes, or "None" |
 | `WIFI_PASSWORD` | from the `WIFI_PASSWORD` secret, otherwise the template's fallback |
+
+## Email signature
+
+`emails/resend/signature-ashleigh.html` is the signature for the bookings@ mailbox: the letterbox roundel linked to the website, then Ashleigh Carlson, Owner/Operator, phone, email and website. Open it in Chrome, select all, copy, and paste it into Gmail under Settings → General → Signature. The same details sit in the footer of every guest email.
