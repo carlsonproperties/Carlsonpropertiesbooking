@@ -30,7 +30,8 @@ import {
   FolderOpen,
   Mail as MailIcon,
   PieChart as PieChartIcon,
-  CreditCard
+  CreditCard,
+  Info
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CarlsonLogo } from "../components/CarlsonLogo";
@@ -236,6 +237,37 @@ export function DashboardComplete() {
   const [showAddBooking, setShowAddBooking] = useState(false);
   const [addBookingForm, setAddBookingForm] = useState({ guest: '', email: '', phone: '', checkIn: '', checkOut: '', guests: '2', total: '1275', notes: '', status: 'upcoming', sendEmails: false });
   const [addBookingLoading, setAddBookingLoading] = useState(false);
+
+  // Email delivery diagnostics. `emailReport` holds whatever the function last
+  // returned, rendered verbatim, so the reason Resend gave is never hidden.
+  const [emailReport, setEmailReport] = useState<any>(null);
+  const [emailBusy, setEmailBusy] = useState<'health' | 'test' | null>(null);
+  const [testAddress, setTestAddress] = useState('');
+
+  const callEmailEndpoint = async (which: 'health' | 'test') => {
+    setEmailBusy(which);
+    setEmailReport(null);
+    try {
+      const base = `https://${projectId.trim()}.supabase.co/functions/v1/make-server-edef7798`;
+      const url = which === 'health'
+        ? `${base}/email-health`
+        : `${base}/test-emails?email=${encodeURIComponent(testAddress.trim())}`;
+
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${await getOwnerToken()}` } });
+      const body = await res.json().catch(() => ({ error: `Server returned ${res.status} with no JSON body` }));
+      setEmailReport({ status: res.status, ...body });
+
+      if (which === 'test') {
+        if (body?.success) toast.success('Resend accepted every test email');
+        else toast.error('Some emails were not sent — see the report below');
+      }
+    } catch (err: any) {
+      setEmailReport({ error: err?.message || String(err) });
+      toast.error('Could not reach the email endpoint', { description: err?.message });
+    } finally {
+      setEmailBusy(null);
+    }
+  };
 
   useEffect(() => {
     checkAuth();
@@ -1536,6 +1568,69 @@ export function DashboardComplete() {
                 Automated email communications sent to guests
               </p>
             </div>
+
+            {/* Delivery diagnostics — answers "why am I not getting booking emails?" */}
+            <section className="mb-10 rounded-2xl border border-[#203F3A]/20 overflow-hidden">
+              <div className="bg-[#203F3A]/5 p-5 border-b border-[#203F3A]/20">
+                <h3 className="text-lg font-semibold text-[#203F3A] mb-1">Email delivery</h3>
+                <p className="text-sm text-[#203F3A]/80">
+                  Check whether this site can send email, and what the mail provider says when it tries.
+                </p>
+              </div>
+
+              <div className="p-5 bg-white space-y-4">
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => callEmailEndpoint('health')}
+                    disabled={emailBusy !== null}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#203F3A] text-white text-sm font-semibold transition-all hover:bg-[#16302B] disabled:opacity-50"
+                  >
+                    {emailBusy === 'health' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Info className="w-4 h-4" />}
+                    Check configuration
+                  </button>
+                  <span className="text-xs text-[#203F3A]/60 self-center">Sends nothing.</span>
+                </div>
+
+                <div className="pt-2 border-t border-[#203F3A]/10">
+                  <label htmlFor="email-test-address" className="block text-xs font-bold uppercase tracking-widest text-[#203F3A] mb-2">
+                    Send six test emails to
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    <input
+                      id="email-test-address"
+                      type="email"
+                      value={testAddress}
+                      onChange={(e) => setTestAddress(e.target.value)}
+                      placeholder="an inbox you can actually read"
+                      className="flex-1 min-w-[16rem] px-4 py-2.5 rounded-full border border-[#203F3A]/30 text-sm text-[#203F3A] focus:outline-none focus:ring-2 focus:ring-[#203F3A]/40"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => callEmailEndpoint('test')}
+                      disabled={emailBusy !== null || !testAddress.trim()}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-[#203F3A]/30 text-[#203F3A] text-sm font-semibold transition-all hover:bg-[#203F3A]/10 disabled:opacity-50"
+                    >
+                      {emailBusy === 'test' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      Send test
+                    </button>
+                  </div>
+                  <p className="mt-2 text-xs text-[#203F3A]/60">
+                    Use a Gmail or other working address first. If those arrive but
+                    bookings@carlsonproperties.co.nz does not, the problem is that mailbox, not the site.
+                  </p>
+                </div>
+
+                {emailReport && (
+                  <div className="pt-4 border-t border-[#203F3A]/10">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#203F3A] mb-2">Report</p>
+                    <pre className="max-h-80 overflow-auto rounded-xl bg-[#203F3A]/5 p-4 text-xs leading-relaxed text-[#203F3A] whitespace-pre-wrap break-words">
+                      {JSON.stringify(emailReport, null, 2)}
+                    </pre>
+                  </div>
+                )}
+              </div>
+            </section>
 
             <div className="space-y-6">
               {EMAIL_TEMPLATES.map((template, index) => (

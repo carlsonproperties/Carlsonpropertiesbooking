@@ -12,7 +12,8 @@ import {
   sendCheckOutDayEmail, 
   sendReviewRequestEmail,
   sendOwnerNotification,
-  sendTestEmails 
+  sendTestEmails,
+  getEmailConfig
 } from './email_templates.tsx'
 
 const app = new Hono()
@@ -174,12 +175,12 @@ async function sendAutomationEmails(booking: any) {
   try {
     // 1. Send immediate booking confirmation
     console.log(`📧 Sending booking confirmation to ${booking.email}...`);
-    await sendBookingConfirmation(booking);
-    
+    const confirmation = await sendBookingConfirmation(booking);
+
     // 2. Send owner notification
     console.log(`📧 Sending owner notification...`);
-    await sendOwnerNotification(booking);
-    
+    const ownerNotice = await sendOwnerNotification(booking);
+
     // 3. Schedule pre-arrival email (3 days before check-in)
     const checkInDate = new Date(booking.checkIn);
     const threeDaysBefore = new Date(checkInDate);
@@ -192,7 +193,18 @@ async function sendAutomationEmails(booking: any) {
       // For now, we'll just log it. The email template is ready in email_templates.tsx
     }
     
-    console.log(`✅ Booking emails sent successfully for ${booking.guest}`);
+    // Say which emails actually went out. The booking itself is already saved
+    // and must not fail over email, but a failure here needs to be findable in
+    // the log rather than reported as success.
+    const notSent = [confirmation, ownerNotice].filter((o) => !o.ok);
+    if (notSent.length === 0) {
+      console.log(`✅ Booking emails sent successfully for ${booking.guest}`);
+    } else {
+      console.error(
+        `❌ ${notSent.length} of 2 booking emails were NOT sent for ${booking.guest}: ` +
+        notSent.map((o) => `${o.name} — ${o.error}`).join(' | '),
+      );
+    }
   } catch (err) {
     console.error('❌ Email automation error:', err);
   }
@@ -1136,6 +1148,47 @@ registerRoute('post', '/create-booking', async (c: any) => {
   }
 });
 
+// Email configuration check. Sends nothing — reports whether this function is
+// capable of sending at all, and to where. This is the first thing to look at
+// when booking notifications are not arriving, because it separates "not
+// configured" from "configured but refused" from "sent but not delivered".
+registerRoute('get', '/email-health', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
+
+  const config = getEmailConfig();
+  const problems: string[] = [];
+
+  if (!config.resendConfigured) {
+    problems.push(
+      'RESEND_API_KEY is not set on this function, so no email can be sent at all. ' +
+      'Add it under Edge Functions → Secrets, then redeploy.',
+    );
+  }
+  if (config.ownerIsSelfAddressed) {
+    problems.push(
+      `Owner notifications are sent from ${config.sender} to the same address. That only ` +
+      `arrives if ${config.sendingDomain} has a real mailbox behind it, and a self-addressed ` +
+      'message is more likely to be filtered. Set OWNER_NOTIFICATION_EMAIL to an inbox you ' +
+      'know works to test the sending half on its own.',
+    );
+  }
+
+  return new Response(JSON.stringify({
+    canSend: config.resendConfigured,
+    config,
+    problems,
+    // Deliberately not a pass/fail verdict: whether the sending domain is
+    // verified is only knowable by attempting a send, which /test-emails does.
+    nextStep: config.resendConfigured
+      ? 'Call /test-emails?email=<an inbox you can read> to see what Resend says about an actual send.'
+      : 'Set RESEND_API_KEY first — nothing else can be diagnosed until it is present.',
+  }, null, 2), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+  });
+});
+
 // NEW: Test all email templates endpoint
 registerRoute('get', '/test-emails', async (c: any) => {
   const auth = await requireOwner(c);
@@ -1144,40 +1197,25 @@ registerRoute('get', '/test-emails', async (c: any) => {
 
   try {
     console.log(`🧪 Testing all email templates, sending to: ${testEmail}`);
-    
-    // Send all test emails
-    const testBooking = {
-      id: 'test-' + crypto.randomUUID(),
-      guest: 'Grant Ashleigh',
-      email: testEmail,
-      phone: '0276977961',
-      checkIn: '2026-03-20',
-      checkOut: '2026-03-25',
-      guests: 4,
-      total: 6375,
-      notes: 'Test booking for email verification'
-    };
-    
-    await sendBookingConfirmation(testBooking);
-    await sendOwnerNotification(testBooking);
-    await sendPreArrivalEmail(testBooking);
-    await sendCheckInDayEmail(testBooking);
-    await sendCheckOutDayEmail(testBooking);
-    await sendReviewRequestEmail(testBooking);
-    
-    return new Response(JSON.stringify({ 
-      success: true, 
-      message: `All 6 test emails sent to ${testEmail}. Check your inbox!`,
-      emails: [
-        '1. Booking Confirmation ✅',
-        '2. Owner Notification ✅',
-        '3. Pre-Arrival Email ✅',
-        '4. Check-In Day Welcome ✅',
-        '5. Check-Out Day Instructions ✅',
-        '6. Review Request ✅'
-      ]
+
+    // sendTestEmails reports the outcome of each send. This route used to
+    // await the six senders and then return `success: true` with every email
+    // marked ✅ — but the senders never throw, so that was reported whether or
+    // not a single message left the building. Report what Resend actually said.
+    const outcomes = await sendTestEmails(testEmail);
+    const failed = outcomes.filter((o) => !o.ok);
+    const config = getEmailConfig();
+
+    return new Response(JSON.stringify({
+      success: failed.length === 0,
+      message: failed.length === 0
+        ? `All ${outcomes.length} test emails were accepted by Resend for ${testEmail}. Check that inbox.`
+        : `${failed.length} of ${outcomes.length} test emails were NOT sent. See "emails" for the reason Resend gave.`,
+      sentTo: testEmail,
+      config,
+      emails: outcomes,
     }), {
-      status: 200,
+      status: failed.length === 0 ? 200 : 502,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (err: any) {
@@ -1361,19 +1399,29 @@ registerRoute('post', '/resend-confirmation', async (c: any) => {
     }
 
     console.log(`📧 Manually resending confirmation to ${booking.email}...`);
-    await sendBookingConfirmation(booking);
-    await sendOwnerNotification(booking);
+    const outcomes = [
+      await sendBookingConfirmation(booking),
+      await sendOwnerNotification(booking),
+    ];
+
+    // Report what actually happened. These senders do not throw when Resend
+    // refuses a message, so a 200 here used to claim success unconditionally.
+    const failed = outcomes.filter((o) => !o.ok);
+    const config = getEmailConfig();
 
     return new Response(JSON.stringify({
-      success: true,
-      message: `Confirmation emails sent to ${booking.email} and bookings@carlsonproperties.co.nz`,
+      success: failed.length === 0,
+      message: failed.length === 0
+        ? `Confirmation emails accepted by Resend for ${booking.email} and ${config.ownerNotificationTo}`
+        : `${failed.length} of ${outcomes.length} emails were not sent`,
+      emails: outcomes,
       booking: {
         guest: booking.guest,
         email: booking.email,
         total: booking.total
       }
     }), {
-      status: 200,
+      status: failed.length === 0 ? 200 : 502,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (err: any) {
