@@ -11,7 +11,7 @@ import {
   Star,
 } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import { ClubRoundel } from "./ClubMarks";
+import { LetterboxMark } from "./LetterboxMark";
 import { FooterSignOff } from "./FooterSignOff";
 import {
   BOOKINGS_EMAIL,
@@ -174,8 +174,11 @@ export function StatementFooter() {
                   <Facebook size={16} />
                 </a>
               </div>
-              <div className="oe-seal-spin shrink-0 text-[#D7C8B4]/75" aria-hidden="true">
-                <ClubRoundel size={88} />
+              {/* The letterbox at the end of the drive, in place of the
+                  spinning roundel. It stands still: a rotating letterbox reads
+                  as a glitch, where the mark reads as the object. */}
+              <div className="shrink-0 text-[#D7C8B4]/85" aria-hidden="true">
+                <LetterboxMark size={92} cutout="#203F3A" />
               </div>
             </div>
           </div>
@@ -194,11 +197,6 @@ export function StatementFooter() {
           <span>Hosted locally by Matt &amp; Ashleigh</span>
         </div>
 
-        <style>{`
-          @keyframes oe-seal-spin { to { transform: rotate(360deg); } }
-          .oe-seal-spin { animation: oe-seal-spin 26s linear infinite; will-change: transform; }
-          @media (prefers-reduced-motion: reduce) { .oe-seal-spin { animation: none; } }
-        `}</style>
       </div>
 
       <FooterSignOff />
