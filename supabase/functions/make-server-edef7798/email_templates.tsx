@@ -3,6 +3,19 @@ import { Resend } from 'npm:resend@3.1.0';
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
+if (!resend) {
+  console.error(
+    '❌ RESEND_API_KEY is not set on this function. Every email will be skipped ' +
+    'silently: no confirmation to the guest and no notification to the owner. ' +
+    'Set it under Edge Functions → Secrets and redeploy.',
+  );
+}
+
+/** Logs loudly instead of returning into the void when mail cannot be sent. */
+function emailDisabled(which: string) {
+  console.error(`❌ Skipped "${which}": RESEND_API_KEY is not configured.`);
+}
+
 // Brand colors
 const SAGE = '#9DA07E';
 const CREAM = '#FDFCF8';
@@ -187,7 +200,7 @@ const calculateNights = (checkIn: string, checkOut: string) => {
 // 1. Booking Confirmation Email
 export async function sendBookingConfirmation(booking: any) {
   if (!resend) {
-    console.error('Resend not initialized - missing API key');
+    emailDisabled("booking confirmation");
     return;
   }
 
@@ -292,7 +305,7 @@ export async function sendBookingConfirmation(booking: any) {
 
 // 2. Owner Notification Email
 export async function sendOwnerNotification(booking: any) {
-  if (!resend) return;
+  if (!resend) { emailDisabled("owner notification"); return; }
 
   const b = norm(booking);
   const checkInShort = formatDateShort(b.checkIn);
@@ -407,7 +420,7 @@ export async function sendOwnerNotification(booking: any) {
 
 // 3. Pre-Arrival Email
 export async function sendPreArrivalEmail(booking: any) {
-  if (!resend) return;
+  if (!resend) { emailDisabled("pre-arrival email"); return; }
 
   const b = norm(booking);
   if (!b.email) return;
@@ -500,7 +513,7 @@ export async function sendPreArrivalEmail(booking: any) {
 
 // 4. Check-In Day Email
 export async function sendCheckInDayEmail(booking: any) {
-  if (!resend) return;
+  if (!resend) { emailDisabled("check-in day email"); return; }
 
   const b = norm(booking);
   if (!b.email) return;
@@ -563,7 +576,7 @@ export async function sendCheckInDayEmail(booking: any) {
 
 // 5. Check-Out Day Email
 export async function sendCheckOutDayEmail(booking: any) {
-  if (!resend) return;
+  if (!resend) { emailDisabled("check-out day email"); return; }
 
   const b = norm(booking);
   if (!b.email) return;
@@ -621,7 +634,7 @@ export async function sendCheckOutDayEmail(booking: any) {
 
 // 6. Review Request Email
 export async function sendReviewRequestEmail(booking: any) {
-  if (!resend) return;
+  if (!resend) { emailDisabled("review request email"); return; }
 
   const b = norm(booking);
   if (!b.email) return;
