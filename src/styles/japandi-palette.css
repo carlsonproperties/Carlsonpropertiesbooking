@@ -1,0 +1,137 @@
+/* ── Japandi preview palette ────────────────────────────────────────────────
+ * PREVIEW ONLY. Inert unless <html data-theme="japandi"> is set.
+ *
+ * The brand colours live as Tailwind arbitrary values in ~900 call sites
+ * (#203F3A alone appears 705 times), so there is no token layer to swap.
+ * Instead these rules re-point the exact utility classes Tailwind already
+ * generates. Utilities sit in @layer utilities; this file is unlayered, so it
+ * wins on the cascade without !important and without touching any markup.
+ *
+ * Every replacement was luminance-checked: dark colours only ever get darker
+ * and light ones lighter, so no existing text pairing loses contrast.
+ *
+ * Regenerate after adding new brand-coloured utilities — see the PR body.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+/* Palette
+ *   #203f3a → #2b2e2f   brand green → charcoal cladding
+ *   #16302b → #1c1e1f   green deep → charred ebony
+ *   #16211e → #141516   green darkest → near-black
+ *   #2f413a → #303335   sidebar border → charcoal
+ *   #5e7f77 → #6e7174   muted green → stone grey
+ *   #9da07e → #949387   sage → lichen grey
+ *   #d7c8b4 → #d3ccc0   sandstone → smoked oak
+ *   #ded6c8 → #dcd6cb   sandstone light → pale oak
+ *   #9b7955 → #92785b   bronze → oak timber
+ *   #7a5e41 → #6b5842   bronze dark → walnut
+ */
+
+[data-theme="japandi"] .border-\[\#9DA07E\]{border-color:#949387}
+[data-theme="japandi"] .border-\[\#203F3A\]{border-color:#2b2e2f}
+[data-theme="japandi"] .border-\[\#203F3A\]\/10{border-color:#2b2e2f1a}
+[data-theme="japandi"] .border-\[\#203F3A\]\/15{border-color:#2b2e2f26}
+[data-theme="japandi"] .border-\[\#203F3A\]\/20{border-color:#2b2e2f33}
+[data-theme="japandi"] .border-\[\#203F3A\]\/30{border-color:#2b2e2f4d}
+[data-theme="japandi"] .border-\[\#D7C8B4\]{border-color:#d3ccc0}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/20{border-color:#d3ccc033}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/25{border-color:#d3ccc040}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/30{border-color:#d3ccc04d}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/35{border-color:#d3ccc059}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/40{border-color:#d3ccc066}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/50{border-color:#d3ccc080}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/60{border-color:#d3ccc099}
+[data-theme="japandi"] .border-\[\#D7C8B4\]\/70{border-color:#d3ccc0b3}
+[data-theme="japandi"] .bg-\[\#7A5E41\]\/60{background-color:#6b584299}
+[data-theme="japandi"] .bg-\[\#9B7955\]{background-color:#92785b}
+[data-theme="japandi"] .bg-\[\#9B7955\]\/10{background-color:#92785b1a}
+[data-theme="japandi"] .bg-\[\#9DA07E\]\/10{background-color:#9493871a}
+[data-theme="japandi"] .bg-\[\#203F3A\]{background-color:#2b2e2f}
+[data-theme="japandi"] .bg-\[\#203F3A\]\/5{background-color:#2b2e2f0d}
+[data-theme="japandi"] .bg-\[\#203F3A\]\/10{background-color:#2b2e2f1a}
+[data-theme="japandi"] .bg-\[\#203F3A\]\/40{background-color:#2b2e2f66}
+[data-theme="japandi"] .bg-\[\#203F3A\]\/70{background-color:#2b2e2fb3}
+[data-theme="japandi"] .bg-\[\#203F3A\]\/90{background-color:#2b2e2fe6}
+[data-theme="japandi"] .bg-\[\#16211E\]{background-color:#141516}
+[data-theme="japandi"] .bg-\[\#16302B\]{background-color:#1c1e1f}
+[data-theme="japandi"] .bg-\[\#16302B\]\/40{background-color:#1c1e1f66}
+[data-theme="japandi"] .bg-\[\#16302B\]\/70{background-color:#1c1e1fb3}
+[data-theme="japandi"] .bg-\[\#D7C8B4\]{background-color:#d3ccc0}
+[data-theme="japandi"] .bg-\[\#D7C8B4\]\/5{background-color:#d3ccc00d}
+[data-theme="japandi"] .bg-\[\#D7C8B4\]\/10{background-color:#d3ccc01a}
+[data-theme="japandi"] .bg-\[\#D7C8B4\]\/15{background-color:#d3ccc026}
+[data-theme="japandi"] .bg-\[\#D7C8B4\]\/40{background-color:#d3ccc066}
+[data-theme="japandi"] .bg-\[\#D7C8B4\]\/60{background-color:#d3ccc099}
+[data-theme="japandi"] .from-\[\#203F3A\]{--tw-gradient-from:#2b2e2f;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .from-\[\#203F3A\]\/10{--tw-gradient-from:rgb(43 46 47/.1);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .from-\[\#16302B\]{--tw-gradient-from:#1c1e1f;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .from-\[\#16302B\]\/70{--tw-gradient-from:rgb(28 30 31/.7);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .from-\[\#16302B\]\/85{--tw-gradient-from:rgb(28 30 31/.85);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .from-\[\#D7C8B4\]{--tw-gradient-from:#d3ccc0;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .via-\[\#203F3A\]{--tw-gradient-via:#2b2e2f;--tw-gradient-via-stops:var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-via)var(--tw-gradient-via-position),var(--tw-gradient-to)var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-via-stops)}
+[data-theme="japandi"] .via-\[\#16302B\]\/45{--tw-gradient-via:rgb(28 30 31/.45);--tw-gradient-via-stops:var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-via)var(--tw-gradient-via-position),var(--tw-gradient-to)var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-via-stops)}
+[data-theme="japandi"] .via-\[\#16302B\]\/70{--tw-gradient-via:rgb(28 30 31/.7);--tw-gradient-via-stops:var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-via)var(--tw-gradient-via-position),var(--tw-gradient-to)var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-via-stops)}
+[data-theme="japandi"] .to-\[\#9B7955\]{--tw-gradient-to:#92785b;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .to-\[\#16302B\]{--tw-gradient-to:#1c1e1f;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .to-\[\#16302B\]\/25{--tw-gradient-to:rgb(28 30 31/.25);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .to-\[\#16302B\]\/30{--tw-gradient-to:rgb(28 30 31/.3);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position),var(--tw-gradient-from)var(--tw-gradient-from-position),var(--tw-gradient-to)var(--tw-gradient-to-position))}
+[data-theme="japandi"] .fill-\[\#203F3A\]{fill:#2b2e2f}
+[data-theme="japandi"] .text-\[\#7A5E41\]{color:#6b5842}
+[data-theme="japandi"] .text-\[\#9B7955\]{color:#92785b}
+[data-theme="japandi"] .text-\[\#9DA07E\]{color:#949387}
+[data-theme="japandi"] .text-\[\#203F3A\]{color:#2b2e2f}
+[data-theme="japandi"] .text-\[\#203F3A\]\/20{color:#2b2e2f33}
+[data-theme="japandi"] .text-\[\#203F3A\]\/30{color:#2b2e2f4d}
+[data-theme="japandi"] .text-\[\#203F3A\]\/40{color:#2b2e2f66}
+[data-theme="japandi"] .text-\[\#203F3A\]\/50{color:#2b2e2f80}
+[data-theme="japandi"] .text-\[\#203F3A\]\/60{color:#2b2e2f99}
+[data-theme="japandi"] .text-\[\#203F3A\]\/70{color:#2b2e2fb3}
+[data-theme="japandi"] .text-\[\#203F3A\]\/75{color:#2b2e2fbf}
+[data-theme="japandi"] .text-\[\#203F3A\]\/80{color:#2b2e2fcc}
+[data-theme="japandi"] .text-\[\#203F3A\]\/85{color:#2b2e2fd9}
+[data-theme="japandi"] .text-\[\#16211E\]{color:#141516}
+[data-theme="japandi"] .text-\[\#16302B\]{color:#1c1e1f}
+[data-theme="japandi"] .text-\[\#D7C8B4\]{color:#d3ccc0}
+[data-theme="japandi"] .text-\[\#D7C8B4\]\/55{color:#d3ccc08c}
+[data-theme="japandi"] .text-\[\#D7C8B4\]\/70{color:#d3ccc0b3}
+[data-theme="japandi"] .text-\[\#D7C8B4\]\/75{color:#d3ccc0bf}
+[data-theme="japandi"] .text-\[\#D7C8B4\]\/85{color:#d3ccc0d9}
+[data-theme="japandi"] .decoration-\[\#203F3A\]\/30{text-decoration-color:#2b2e2f4d}
+[data-theme="japandi"] .accent-\[\#203F3A\]{accent-color:#2b2e2f}
+[data-theme="japandi"] .shadow-\[\#203F3A\]\/5{--tw-shadow-color:#2b2e2f0d}
+[data-theme="japandi"] .shadow-\[\#203F3A\]\/5{--tw-shadow-color:color-mix(in oklab,rgb(43 46 47/.05) var(--tw-shadow-alpha),transparent)}
+[data-theme="japandi"] .shadow-\[\#203F3A\]\/20{--tw-shadow-color:#2b2e2f33}
+[data-theme="japandi"] .shadow-\[\#203F3A\]\/20{--tw-shadow-color:color-mix(in oklab,rgb(43 46 47/.2) var(--tw-shadow-alpha),transparent)}
+[data-theme="japandi"] .shadow-\[\#203F3A\]\/30{--tw-shadow-color:#2b2e2f4d}
+[data-theme="japandi"] .shadow-\[\#203F3A\]\/30{--tw-shadow-color:color-mix(in oklab,rgb(43 46 47/.3) var(--tw-shadow-alpha),transparent)}
+[data-theme="japandi"] .group-hover\:border-\[\#D7C8B4\]:is(:where(.group):hover *){border-color:#d3ccc0}
+[data-theme="japandi"] .group-hover\:bg-\[\#203F3A\]:is(:where(.group):hover *){background-color:#2b2e2f}
+[data-theme="japandi"] .group-hover\:bg-\[\#D7C8B4\]\/25:is(:where(.group):hover *){background-color:#d3ccc040}
+[data-theme="japandi"] .group-hover\:text-\[\#203F3A\]:is(:where(.group):hover *){color:#2b2e2f}
+[data-theme="japandi"] .group-hover\:text-\[\#D7C8B4\]:is(:where(.group):hover *){color:#d3ccc0}
+[data-theme="japandi"] .group-hover\:text-\[\#D7C8B4\]\/80:is(:where(.group):hover *){color:#d3ccc0cc}
+[data-theme="japandi"] .selection\:bg-\[\#203F3A\] ::selection{background-color:#2b2e2f}
+[data-theme="japandi"] .selection\:bg-\[\#203F3A\]::selection{background-color:#2b2e2f}
+[data-theme="japandi"] .selection\:bg-\[\#203F3A\]\/30 ::selection{background-color:#2b2e2f4d}
+[data-theme="japandi"] .selection\:bg-\[\#203F3A\]\/30::selection{background-color:#2b2e2f4d}
+[data-theme="japandi"] .hover\:border-\[\#203F3A\]:hover{border-color:#2b2e2f}
+[data-theme="japandi"] .hover\:border-\[\#D7C8B4\]\/60:hover{border-color:#d3ccc099}
+[data-theme="japandi"] .hover\:bg-\[\#203F3A\]:hover{background-color:#2b2e2f}
+[data-theme="japandi"] .hover\:bg-\[\#203F3A\]\/5:hover{background-color:#2b2e2f0d}
+[data-theme="japandi"] .hover\:bg-\[\#203F3A\]\/10:hover{background-color:#2b2e2f1a}
+[data-theme="japandi"] .hover\:bg-\[\#203F3A\]\/20:hover{background-color:#2b2e2f33}
+[data-theme="japandi"] .hover\:bg-\[\#16302B\]:hover{background-color:#1c1e1f}
+[data-theme="japandi"] .hover\:bg-\[\#D7C8B4\]:hover{background-color:#d3ccc0}
+[data-theme="japandi"] .hover\:text-\[\#7A5E41\]:hover{color:#6b5842}
+[data-theme="japandi"] .hover\:text-\[\#203F3A\]:hover{color:#2b2e2f}
+[data-theme="japandi"] .hover\:text-\[\#D7C8B4\]:hover{color:#d3ccc0}
+[data-theme="japandi"] .hover\:shadow-\[\#203F3A\]\/5:hover{--tw-shadow-color:#2b2e2f0d}
+[data-theme="japandi"] .hover\:shadow-\[\#203F3A\]\/5:hover{--tw-shadow-color:color-mix(in oklab,rgb(43 46 47/.05) var(--tw-shadow-alpha),transparent)}
+[data-theme="japandi"] .hover\:shadow-\[\#203F3A\]\/20:hover{--tw-shadow-color:#2b2e2f33}
+[data-theme="japandi"] .hover\:shadow-\[\#203F3A\]\/20:hover{--tw-shadow-color:color-mix(in oklab,rgb(43 46 47/.2) var(--tw-shadow-alpha),transparent)}
+[data-theme="japandi"] .focus\:border-\[\#203F3A\]:focus{border-color:#2b2e2f}
+[data-theme="japandi"] .focus\:border-\[\#D7C8B4\]:focus{border-color:#d3ccc0}
+[data-theme="japandi"] .focus\:ring-\[\#203F3A\]:focus{--tw-ring-color:#2b2e2f}
+[data-theme="japandi"] .focus\:ring-\[\#203F3A\]\/40:focus{--tw-ring-color:rgb(43 46 47/.4)}
+[data-theme="japandi"] .focus-visible\:ring-\[\#9B7955\]:focus-visible{--tw-ring-color:#92785b}
+[data-theme="japandi"] .focus-visible\:ring-\[\#D7C8B4\]:focus-visible{--tw-ring-color:#d3ccc0}
+[data-theme="japandi"] .focus-visible\:ring-offset-\[\#203F3A\]:focus-visible{--tw-ring-offset-color:#2b2e2f}

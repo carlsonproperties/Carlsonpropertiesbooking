@@ -362,7 +362,7 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
 
       {/* Booking Side */}
       <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-32">
-        <div className="bg-[#16302B] text-[#F4F1EA] p-10 rounded-[48px] shadow-2xl relative overflow-hidden">
+        <div className="j-grain j-dusk bg-[#16302B] text-[#F4F1EA] p-10 rounded-[48px] shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#D7C8B4]/10 rounded-full -mr-16 -mt-16 blur-3xl" />
           
           <div className="relative z-10">

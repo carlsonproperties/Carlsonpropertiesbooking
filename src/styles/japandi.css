@@ -1,0 +1,134 @@
+/* ── Japandi preview theme ──────────────────────────────────────────────────
+ * PREVIEW ONLY — every rule here is scoped to [data-theme="japandi"] and is
+ * inert in the default theme. Nothing in this file changes the live site.
+ *
+ * Grounded in the building's real materials rather than an invented mood:
+ *   · charcoal board-and-batten cladding        (exterior)
+ *   · Forté Envello Shadow Line+ Ebony Grey     (ESL-EG)
+ *   · Forté Envello Board & Batten+ Smoked Oak  (EBB-S)
+ *   · ivory interior walls, pale oak floors, black steel joinery
+ *
+ * Deliberately NOT included, per review of the proposed direction:
+ *   · no site-wide animated grain — it muddies photography and small text,
+ *     and repaints on every scroll frame
+ *   · no cyan glow on pool cards — the water supplies its own blue
+ *   · no arched photo frames — the house is emphatically rectilinear, with
+ *     long low rooflines and vertical battens; arches fight the architecture
+ *   · no wood-grain headings — the textured logos already carry that, and
+ *     repeating it costs legibility
+ * ───────────────────────────────────────────────────────────────────────── */
+
+@import './japandi-palette.css';
+
+:root[data-theme="japandi"] {
+  /* Materials */
+  --j-charcoal:    #2B2E2F;  /* cladding */
+  --j-ebony:       #1C1E1F;  /* Forté ESL-EG */
+  --j-ink:         #141516;
+  --j-ivory:       #F4F1EA;  /* unchanged — the approved cream */
+  --j-smoked-oak:  #D3CCC0;  /* Forté EBB-S */
+  --j-pale-oak:    #DCD6CB;
+  --j-oak:         #92785B;
+  --j-walnut:      #6B5842;
+
+  /* Batten rhythm, matched to the cladding's proportion */
+  --j-batten: 58px;
+}
+
+/* ── Vertical batten rhythm ────────────────────────────────────────────────
+ * The single most characteristic thing about this building, and the one
+ * device neither proposal named. Fine vertical rules at cladding pitch, far
+ * below the threshold where they would compete with photography.
+ * Opt-in, so it lands only where it is wanted. */
+[data-theme="japandi"] .j-batten::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(var(--j-batten) - 1px),
+    rgb(255 255 255 / 0.030) calc(var(--j-batten) - 1px) var(--j-batten)
+  );
+  /* Fade out at the edges so the rhythm reads as cladding, not a grid. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12% 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12% 88%, transparent);
+}
+
+/* ── Static timber grain ───────────────────────────────────────────────────
+ * Turbulence stretched hard along one axis reads as grain rather than noise.
+ * Static: painted once, never animated. */
+[data-theme="japandi"] .j-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.055;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8 0.014' numOctaves='3' seed='11'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 320px 320px;
+}
+
+/* Paper tooth: the same idea at a much finer pitch, for light surfaces.
+ * Isotropic, so it reads as uncoated stock rather than timber. */
+[data-theme="japandi"] .j-tooth::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23t)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ── One restrained evening wash ───────────────────────────────────────────
+ * A single warm pool of light, not a glowing divider system. Used once, on
+ * the closing invitation. Suggests evening light; it does not claim to
+ * reproduce a colour temperature. */
+[data-theme="japandi"] .j-dusk::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    60% 50% at 50% 108%,
+    rgb(196 152 97 / 0.16) 0%,
+    rgb(196 152 97 / 0.06) 42%,
+    transparent 72%
+  );
+}
+
+/* ── Warm contact shadow ───────────────────────────────────────────────────
+ * Tinted toward timber instead of neutral black, so cards sit on the surface
+ * rather than float above it. */
+[data-theme="japandi"] .j-lift {
+  box-shadow: 0 18px 40px -22px rgb(43 46 47 / 0.28);
+}
+
+/* ── Brand marks ───────────────────────────────────────────────────────────
+ * The logos are <img> pointing at SVGs with the green baked in, so no amount
+ * of CSS colour can reach them. Charcoal counterparts are generated beside the
+ * originals and swapped in here, which keeps the logo components untouched.
+ *
+ * `content` on an <img> is the only way to do that without markup changes. It
+ * works in Chromium, WebKit and Firefox, which is enough for a preview —
+ * shipping this for real would pass the suffix through the logo components
+ * instead. The ivory (-cream) marks need no counterpart: ivory is unchanged. */
+[data-theme="japandi"] img[src$="one-eleven-primary-lake.svg"]       { content: url("/brand/logo/one-eleven-primary-charcoal.svg"); }
+[data-theme="japandi"] img[src$="one-eleven-wordmark-lake.svg"]      { content: url("/brand/logo/one-eleven-wordmark-charcoal.svg"); }
+[data-theme="japandi"] img[src$="one-eleven-single-line-lake.svg"]   { content: url("/brand/logo/one-eleven-single-line-charcoal.svg"); }
+[data-theme="japandi"] img[src$="one-eleven-place-lake.svg"]         { content: url("/brand/logo/one-eleven-place-charcoal.svg"); }
+[data-theme="japandi"] img[src$="carlson-properties-lake.svg"]       { content: url("/brand/logo/carlson-properties-charcoal.svg"); }
+[data-theme="japandi"] img[src$="one-eleven-logo-green.svg"]         { content: url("/brand/logo/one-eleven-logo-charcoal.svg"); }
+[data-theme="japandi"] img[src$="carlson-properties-logo-green.svg"] { content: url("/brand/logo/carlson-properties-logo-charcoal.svg"); }
+
+/* Guest-manual sidebar uses inline rgba built from the brand green, which a
+ * stylesheet cannot reach. These variables let both themes supply their own. */
+:root { --tab-active-bg: #203F3A08; --tab-active-border: #203F3A20; }
+:root[data-theme="japandi"] { --tab-active-bg: #2B2E2F0A; --tab-active-border: #2B2E2F24; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="japandi"] .j-batten::before,
+  [data-theme="japandi"] .j-grain::after,
+  [data-theme="japandi"] .j-tooth::after { transition: none; }
+}
