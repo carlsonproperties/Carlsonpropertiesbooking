@@ -371,7 +371,7 @@ export function CheckoutPage() {
                     type="text"
                     value={formData.couponCode}
                     onChange={(e) => setFormData({...formData, couponCode: e.target.value.toUpperCase()})}
-                    placeholder="Enter code (e.g. TEST100)"
+                    placeholder="Coupon code"
                     className="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#203F3A] outline-none transition-all uppercase"
                   />
                   <p className="text-[10px] text-stone-400">Have a promo code? Enter it here for a discount.</p>
