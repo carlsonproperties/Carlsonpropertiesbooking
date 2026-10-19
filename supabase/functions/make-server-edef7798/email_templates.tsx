@@ -3,6 +3,14 @@ import { Resend } from 'npm:resend@3.1.0';
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
+if (!resend) {
+  console.error(
+    '❌ RESEND_API_KEY is not set on this function. Every email will be skipped ' +
+    'silently: no confirmation to the guest and no notification to the owner. ' +
+    'Set it under Edge Functions → Secrets and redeploy.',
+  );
+}
+
 // Brand colors
 const SAGE = '#9DA07E';
 const CREAM = '#FDFCF8';
@@ -12,8 +20,95 @@ const BODY_GREY = '#666666';
 const MUTED = '#AFAFAF';
 const HAIRLINE = '#F1F1EE';
 
-// Owner / notification address for new bookings
-const OWNER_EMAIL = 'bookings@carlsonproperties.co.nz';
+// ─── Addresses ───────────────────────────────────────────────────────────────
+// All three are env-overridable so a delivery problem can be worked around
+// without a code change and redeploy.
+//
+// SENDER_ADDRESS must be on a domain verified in Resend, or Resend rejects
+// every send. If verification for carlsonproperties.co.nz is not finished,
+// setting EMAIL_FROM_ADDRESS to 'onboarding@resend.dev' (Resend's always-
+// available test sender) gets mail flowing again immediately.
+//
+// OWNER_EMAIL defaults to the same mailbox it is sent from. That is a
+// self-addressed message, which some receivers treat as suspicious, and it
+// only arrives if the domain actually has a mailbox behind it — so pointing
+// OWNER_NOTIFICATION_EMAIL at an inbox that is known to work is the quickest
+// way to confirm the sending half independently of the receiving half.
+const SENDER_ADDRESS = (Deno.env.get('EMAIL_FROM_ADDRESS') || 'bookings@carlsonproperties.co.nz').trim();
+const REPLY_TO_ADDRESS = (Deno.env.get('EMAIL_REPLY_TO') || SENDER_ADDRESS).trim();
+const OWNER_EMAIL = (Deno.env.get('OWNER_NOTIFICATION_EMAIL') || SENDER_ADDRESS).trim();
+
+/** `From` header with a display name, over whichever sender is configured. */
+const sender = (displayName: string) => `${displayName} <${SENDER_ADDRESS}>`;
+
+/** What happened to one email. Senders never throw; they report. */
+export type EmailOutcome = {
+  name: string;
+  ok: boolean;
+  /** True when nothing was attempted (no API key, or no address to send to). */
+  skipped?: boolean;
+  /** Resend's message id, on success. */
+  id?: string;
+  /** Why it failed, verbatim from Resend where available. */
+  error?: string;
+};
+
+/** Flattens a Resend error object, or a thrown value, into one line. */
+function describeError(err: any): string {
+  if (!err) return 'Unknown error';
+  if (typeof err === 'string') return err;
+  const name = err.name ? String(err.name) : '';
+  const message = err.message ? String(err.message) : '';
+  if (name && message) return `${name}: ${message}`;
+  return message || name || JSON.stringify(err);
+}
+
+/**
+ * Sends one email and reports the outcome.
+ *
+ * The Resend SDK does not throw when the API rejects a send — `emails.send()`
+ * resolves with `{ data: null, error }` (see its `fetchRequest`). Awaiting it
+ * without reading `error` therefore looks identical to success, which is why
+ * an unverified sending domain produced a log full of ✅ and an empty inbox.
+ * Every send goes through here so that cannot happen again.
+ *
+ * Callers are not expected to handle failure: a booking must still succeed
+ * when its email does not. Nothing here throws.
+ */
+async function deliver(name: string, payload: any): Promise<EmailOutcome> {
+  if (!resend) {
+    console.error(`❌ Skipped "${name}": RESEND_API_KEY is not configured.`);
+    return { name, ok: false, skipped: true, error: 'RESEND_API_KEY is not configured on this function' };
+  }
+
+  try {
+    const { data, error } = await resend.emails.send(payload);
+    if (error) {
+      const detail = describeError(error);
+      console.error(`❌ Resend refused "${name}" (from ${SENDER_ADDRESS}): ${detail}`);
+      return { name, ok: false, error: detail };
+    }
+    console.log(`✅ Sent "${name}" to ${[].concat(payload?.to ?? []).join(', ')} · id ${data?.id ?? 'unknown'}`);
+    return { name, ok: true, id: data?.id };
+  } catch (err) {
+    // Only reached when the request never completed — DNS, TLS, timeout.
+    const detail = describeError(err);
+    console.error(`❌ Could not reach Resend for "${name}": ${detail}`);
+    return { name, ok: false, error: detail };
+  }
+}
+
+/** Addresses and key state, for the email-health endpoint. Never exposes the key. */
+export function getEmailConfig() {
+  return {
+    resendConfigured: Boolean(resend),
+    sender: SENDER_ADDRESS,
+    replyTo: REPLY_TO_ADDRESS,
+    ownerNotificationTo: OWNER_EMAIL,
+    sendingDomain: SENDER_ADDRESS.split('@')[1] ?? null,
+    ownerIsSelfAddressed: OWNER_EMAIL.toLowerCase() === SENDER_ADDRESS.toLowerCase(),
+  };
+}
 
 // Images
 const LOGO_URL = 'https://hxprmevheigajzqehjgf.supabase.co/storage/v1/object/public/Website%20Media/Logo.png';
@@ -185,22 +280,19 @@ const calculateNights = (checkIn: string, checkOut: string) => {
 };
 
 // 1. Booking Confirmation Email
-export async function sendBookingConfirmation(booking: any) {
-  if (!resend) {
-    console.error('Resend not initialized - missing API key');
-    return;
-  }
-
+export async function sendBookingConfirmation(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
-  if (!b.email) { console.error('No guest email — skipping confirmation'); return; }
+  if (!b.email) {
+    console.error('❌ Skipped "booking confirmation": the booking has no guest email.');
+    return { name: 'booking confirmation', ok: false, skipped: true, error: 'Booking has no guest email address' };
+  }
 
   const firstName = b.guest.split(' ')[0];
   const nights = calculateNights(b.checkIn, b.checkOut);
 
-  try {
-    await resend.emails.send({
-      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'bookings@carlsonproperties.co.nz',
+  return deliver('booking confirmation', {
+      from: sender('One Eleven on the Mile'),
+      replyTo: REPLY_TO_ADDRESS,
       to: [b.email],
       subject: 'Your stay at One Eleven is confirmed',
       html: createEmailWrapper(`
@@ -282,26 +374,18 @@ export async function sendBookingConfirmation(booking: any) {
 
         ${footer()}
       `, 'We cannot wait to host you in Taupō.')
-    });
-
-    console.log(`✅ Booking confirmation sent to ${b.email}`);
-  } catch (err) {
-    console.error('❌ Error sending booking confirmation:', err);
-  }
+  });
 }
 
 // 2. Owner Notification Email
-export async function sendOwnerNotification(booking: any) {
-  if (!resend) return;
-
+export async function sendOwnerNotification(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
   const checkInShort = formatDateShort(b.checkIn);
   const bookingRef = (b.id || '').substring(0, 8).toUpperCase() || 'NEW';
 
-  try {
-    await resend.emails.send({
-      from: 'One Eleven Bookings <bookings@carlsonproperties.co.nz>',
-      replyTo: 'bookings@carlsonproperties.co.nz',
+  return deliver('owner notification', {
+      from: sender('One Eleven Bookings'),
+      replyTo: REPLY_TO_ADDRESS,
       to: [OWNER_EMAIL],
       subject: `New booking · ${b.guest} · ${checkInShort}`,
       html: createEmailWrapper(`
@@ -397,29 +481,23 @@ export async function sendOwnerNotification(booking: any) {
 
         ${footer()}
       `, `${b.guest} booked ${formatDateShort(b.checkIn)} – ${formatDateShort(b.checkOut)}`)
-    });
-
-    console.log(`✅ Owner notification sent to ${OWNER_EMAIL}`);
-  } catch (err) {
-    console.error('❌ Error sending owner notification:', err);
-  }
+  });
 }
 
 // 3. Pre-Arrival Email
-export async function sendPreArrivalEmail(booking: any) {
-  if (!resend) return;
-
+export async function sendPreArrivalEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
-  if (!b.email) return;
+  if (!b.email) {
+    return { name: 'pre-arrival email', ok: false, skipped: true, error: 'Booking has no guest email address' };
+  }
 
   const firstName = b.guest.split(' ')[0];
   const digits = (b.phone || '').replace(/\D/g, '');
   const doorCode = digits.length >= 4 ? digits.slice(-4) : 'last 4 digits of your phone';
 
-  try {
-    await resend.emails.send({
-      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'bookings@carlsonproperties.co.nz',
+  return deliver('pre-arrival email', {
+      from: sender('One Eleven on the Mile'),
+      replyTo: REPLY_TO_ADDRESS,
       to: [b.email],
       subject: 'Your arrival details for One Eleven',
       html: createEmailWrapper(`
@@ -490,27 +568,21 @@ export async function sendPreArrivalEmail(booking: any) {
 
         ${footer()}
       `, 'Door code, Wi-Fi, and everything you need.')
-    });
-
-    console.log(`✅ Pre-arrival email sent to ${b.email}`);
-  } catch (err) {
-    console.error('❌ Error sending pre-arrival email:', err);
-  }
+  });
 }
 
 // 4. Check-In Day Email
-export async function sendCheckInDayEmail(booking: any) {
-  if (!resend) return;
-
+export async function sendCheckInDayEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
-  if (!b.email) return;
+  if (!b.email) {
+    return { name: 'check-in day email', ok: false, skipped: true, error: 'Booking has no guest email address' };
+  }
 
   const firstName = b.guest.split(' ')[0];
 
-  try {
-    await resend.emails.send({
-      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'bookings@carlsonproperties.co.nz',
+  return deliver('check-in day email', {
+      from: sender('One Eleven on the Mile'),
+      replyTo: REPLY_TO_ADDRESS,
       to: [b.email],
       subject: 'Welcome to One Eleven',
       html: createEmailWrapper(`
@@ -553,27 +625,21 @@ export async function sendCheckInDayEmail(booking: any) {
 
         ${footer()}
       `, 'A few things to know on your first day.')
-    });
-
-    console.log(`✅ Check-in day email sent to ${b.email}`);
-  } catch (err) {
-    console.error('❌ Error sending check-in day email:', err);
-  }
+  });
 }
 
 // 5. Check-Out Day Email
-export async function sendCheckOutDayEmail(booking: any) {
-  if (!resend) return;
-
+export async function sendCheckOutDayEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
-  if (!b.email) return;
+  if (!b.email) {
+    return { name: 'check-out day email', ok: false, skipped: true, error: 'Booking has no guest email address' };
+  }
 
   const firstName = b.guest.split(' ')[0];
 
-  try {
-    await resend.emails.send({
-      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'bookings@carlsonproperties.co.nz',
+  return deliver('check-out day email', {
+      from: sender('One Eleven on the Mile'),
+      replyTo: REPLY_TO_ADDRESS,
       to: [b.email],
       subject: 'See you again — check-out today',
       html: createEmailWrapper(`
@@ -611,27 +677,21 @@ export async function sendCheckOutDayEmail(booking: any) {
 
         ${footer()}
       `, 'A few things before you head off.')
-    });
-
-    console.log(`✅ Check-out day email sent to ${b.email}`);
-  } catch (err) {
-    console.error('❌ Error sending check-out day email:', err);
-  }
+  });
 }
 
 // 6. Review Request Email
-export async function sendReviewRequestEmail(booking: any) {
-  if (!resend) return;
-
+export async function sendReviewRequestEmail(booking: any): Promise<EmailOutcome> {
   const b = norm(booking);
-  if (!b.email) return;
+  if (!b.email) {
+    return { name: 'review request email', ok: false, skipped: true, error: 'Booking has no guest email address' };
+  }
 
   const firstName = b.guest.split(' ')[0];
 
-  try {
-    await resend.emails.send({
-      from: 'One Eleven on the Mile <bookings@carlsonproperties.co.nz>',
-      replyTo: 'bookings@carlsonproperties.co.nz',
+  return deliver('review request email', {
+      from: sender('One Eleven on the Mile'),
+      replyTo: REPLY_TO_ADDRESS,
       to: [b.email],
       subject: 'How was your stay at One Eleven?',
       html: createEmailWrapper(`
@@ -659,16 +719,11 @@ export async function sendReviewRequestEmail(booking: any) {
 
         ${footer()}
       `, 'Two minutes that mean the world to us.')
-    });
-
-    console.log(`✅ Review request email sent to ${b.email}`);
-  } catch (err) {
-    console.error('❌ Error sending review request email:', err);
-  }
+  });
 }
 
 // Test all email templates
-export async function sendTestEmails(testEmail: string) {
+export async function sendTestEmails(testEmail: string): Promise<EmailOutcome[]> {
   const testBooking = {
     id: 'test-booking-' + crypto.randomUUID(),
     guest: 'Grant Ashleigh',
@@ -686,12 +741,23 @@ export async function sendTestEmails(testEmail: string) {
   // Resend's default rate limit is 2 req/sec — pace each call ~600ms apart so all 6 land.
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-  await sendBookingConfirmation(testBooking); await sleep(600);
-  await sendOwnerNotification(testBooking);   await sleep(600);
-  await sendPreArrivalEmail(testBooking);     await sleep(600);
-  await sendCheckInDayEmail(testBooking);     await sleep(600);
-  await sendCheckOutDayEmail(testBooking);    await sleep(600);
-  await sendReviewRequestEmail(testBooking);
+  const outcomes: EmailOutcome[] = [];
+  outcomes.push(await sendBookingConfirmation(testBooking)); await sleep(600);
+  outcomes.push(await sendOwnerNotification(testBooking));   await sleep(600);
+  outcomes.push(await sendPreArrivalEmail(testBooking));     await sleep(600);
+  outcomes.push(await sendCheckInDayEmail(testBooking));     await sleep(600);
+  outcomes.push(await sendCheckOutDayEmail(testBooking));    await sleep(600);
+  outcomes.push(await sendReviewRequestEmail(testBooking));
 
-  console.log(`✅ All test emails sent to ${testEmail}`);
+  const sent = outcomes.filter((o) => o.ok).length;
+  if (sent === outcomes.length) {
+    console.log(`✅ All ${sent} test emails accepted by Resend for ${testEmail}`);
+  } else {
+    console.error(
+      `❌ Only ${sent} of ${outcomes.length} test emails were accepted. Failures: ` +
+      outcomes.filter((o) => !o.ok).map((o) => `${o.name} — ${o.error}`).join(' | '),
+    );
+  }
+
+  return outcomes;
 }
