@@ -93,7 +93,11 @@ export function Book() {
             <MapPin size={16} />
             <span className="text-xs font-bold uppercase tracking-widest">Taupō, New Zealand</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight">Plan Your <br /><span className="italic text-[#203F3A]">Taupō Stay</span></h1>
+          {/* "Taupō" is deliberately not in this heading. Fraunces carries no
+              precomposed macron vowel, so the ō falls back to a system serif
+              and sits upright against the italic. The eyebrow directly above
+              still names the location, in Figtree, which renders it correctly. */}
+          <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight">Plan Your <br /><span className="italic text-[#203F3A]">Stay</span></h1>
           <p className="mt-5 max-w-xl text-base font-light leading-relaxed text-slate-500">
             Choose your dates below. The whole house is reserved exclusively for your group of up to ten guests.
           </p>
