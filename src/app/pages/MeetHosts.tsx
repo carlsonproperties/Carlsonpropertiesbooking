@@ -226,7 +226,9 @@ export function MeetHosts() {
                 <Target className="text-[#203F3A]" size={20} />
               </div>
               <div className="text-left">
-                <span className="text-white font-serif text-lg block">Plan your Taupō stay</span>
+                {/* Same reason as the /book heading: Fraunces has no
+                    precomposed ō, so it falls back mid-word. */}
+                <span className="text-white font-serif text-lg block">Plan your stay</span>
                 <span className="text-[#D7C8B4] text-[10px] uppercase tracking-[0.35em] font-bold">Check availability</span>
               </div>
             </Link>
