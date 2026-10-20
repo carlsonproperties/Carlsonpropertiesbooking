@@ -12,7 +12,8 @@ import {
   sendCheckOutDayEmail, 
   sendReviewRequestEmail,
   sendOwnerNotification,
-  sendTestEmails 
+  sendTestEmails,
+  getEmailConfig
 } from './email_templates.tsx'
 
 const app = new Hono()
@@ -174,25 +175,27 @@ async function sendAutomationEmails(booking: any) {
   try {
     // 1. Send immediate booking confirmation
     console.log(`📧 Sending booking confirmation to ${booking.email}...`);
-    await sendBookingConfirmation(booking);
-    
+    const confirmation = await sendBookingConfirmation(booking);
+
     // 2. Send owner notification
     console.log(`📧 Sending owner notification...`);
-    await sendOwnerNotification(booking);
+    const ownerNotice = await sendOwnerNotification(booking);
+
+    // 3–6. Arrival details, welcome, check-out and review emails are sent by
+    // the hourly /process-scheduled-emails job when each one falls due.
     
-    // 3. Schedule pre-arrival email (3 days before check-in)
-    const checkInDate = new Date(booking.checkIn);
-    const threeDaysBefore = new Date(checkInDate);
-    threeDaysBefore.setDate(threeDaysBefore.getDate() - 3);
-    threeDaysBefore.setHours(9, 0, 0, 0);
-    
-    if (threeDaysBefore > new Date()) {
-      console.log(`⏰ Pre-arrival email will be sent on ${threeDaysBefore.toISOString()}`);
-      // Note: This will need to be triggered by a cron job or scheduled task
-      // For now, we'll just log it. The email template is ready in email_templates.tsx
+    // Say which emails actually went out. The booking itself is already saved
+    // and must not fail over email, but a failure here needs to be findable in
+    // the log rather than reported as success.
+    const notSent = [confirmation, ownerNotice].filter((o) => !o.ok);
+    if (notSent.length === 0) {
+      console.log(`✅ Booking emails sent successfully for ${booking.guest}`);
+    } else {
+      console.error(
+        `❌ ${notSent.length} of 2 booking emails were NOT sent for ${booking.guest}: ` +
+        notSent.map((o) => `${o.name} — ${o.error}`).join(' | '),
+      );
     }
-    
-    console.log(`✅ Booking emails sent successfully for ${booking.guest}`);
   } catch (err) {
     console.error('❌ Email automation error:', err);
   }
@@ -1136,6 +1139,47 @@ registerRoute('post', '/create-booking', async (c: any) => {
   }
 });
 
+// Email configuration check. Sends nothing — reports whether this function is
+// capable of sending at all, and to where. This is the first thing to look at
+// when booking notifications are not arriving, because it separates "not
+// configured" from "configured but refused" from "sent but not delivered".
+registerRoute('get', '/email-health', async (c: any) => {
+  const auth = await requireOwner(c);
+  if (!auth.ok) return auth.response;
+
+  const config = getEmailConfig();
+  const problems: string[] = [];
+
+  if (!config.resendConfigured) {
+    problems.push(
+      'RESEND_API_KEY is not set on this function, so no email can be sent at all. ' +
+      'Add it under Edge Functions → Secrets, then redeploy.',
+    );
+  }
+  if (config.ownerIsSelfAddressed) {
+    problems.push(
+      `Owner notifications are sent from ${config.sender} to the same address. That only ` +
+      `arrives if ${config.sendingDomain} has a real mailbox behind it, and a self-addressed ` +
+      'message is more likely to be filtered. Set OWNER_NOTIFICATION_EMAIL to an inbox you ' +
+      'know works to test the sending half on its own.',
+    );
+  }
+
+  return new Response(JSON.stringify({
+    canSend: config.resendConfigured,
+    config,
+    problems,
+    // Deliberately not a pass/fail verdict: whether the sending domain is
+    // verified is only knowable by attempting a send, which /test-emails does.
+    nextStep: config.resendConfigured
+      ? 'Call /test-emails?email=<an inbox you can read> to see what Resend says about an actual send.'
+      : 'Set RESEND_API_KEY first — nothing else can be diagnosed until it is present.',
+  }, null, 2), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+  });
+});
+
 // NEW: Test all email templates endpoint
 registerRoute('get', '/test-emails', async (c: any) => {
   const auth = await requireOwner(c);
@@ -1144,40 +1188,25 @@ registerRoute('get', '/test-emails', async (c: any) => {
 
   try {
     console.log(`🧪 Testing all email templates, sending to: ${testEmail}`);
-    
-    // Send all test emails
-    const testBooking = {
-      id: 'test-' + crypto.randomUUID(),
-      guest: 'Grant Ashleigh',
-      email: testEmail,
-      phone: '0276977961',
-      checkIn: '2026-03-20',
-      checkOut: '2026-03-25',
-      guests: 4,
-      total: 6375,
-      notes: 'Test booking for email verification'
-    };
-    
-    await sendBookingConfirmation(testBooking);
-    await sendOwnerNotification(testBooking);
-    await sendPreArrivalEmail(testBooking);
-    await sendCheckInDayEmail(testBooking);
-    await sendCheckOutDayEmail(testBooking);
-    await sendReviewRequestEmail(testBooking);
-    
-    return new Response(JSON.stringify({ 
-      success: true, 
-      message: `All 6 test emails sent to ${testEmail}. Check your inbox!`,
-      emails: [
-        '1. Booking Confirmation ✅',
-        '2. Owner Notification ✅',
-        '3. Pre-Arrival Email ✅',
-        '4. Check-In Day Welcome ✅',
-        '5. Check-Out Day Instructions ✅',
-        '6. Review Request ✅'
-      ]
+
+    // sendTestEmails reports the outcome of each send. This route used to
+    // await the six senders and then return `success: true` with every email
+    // marked ✅ — but the senders never throw, so that was reported whether or
+    // not a single message left the building. Report what Resend actually said.
+    const outcomes = await sendTestEmails(testEmail);
+    const failed = outcomes.filter((o) => !o.ok);
+    const config = getEmailConfig();
+
+    return new Response(JSON.stringify({
+      success: failed.length === 0,
+      message: failed.length === 0
+        ? `All ${outcomes.length} test emails were accepted by Resend for ${testEmail}. Check that inbox.`
+        : `${failed.length} of ${outcomes.length} test emails were NOT sent. See "emails" for the reason Resend gave.`,
+      sentTo: testEmail,
+      config,
+      emails: outcomes,
     }), {
-      status: 200,
+      status: failed.length === 0 ? 200 : 502,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (err: any) {
@@ -1192,87 +1221,115 @@ registerRoute('get', '/test-emails', async (c: any) => {
   }
 });
 
-// NEW: Process scheduled emails (for cron job)
+// ─── Scheduled guest emails ──────────────────────────────────────────────────
+// Call this every hour (Supabase pg_cron, see RESEND_EMAILS.md). Each email
+// goes out on the first run after its New Zealand send time, through its Resend
+// Template. Working from today's New Zealand date means bookings that are
+// moved or deleted are always handled correctly, and a run that fails is
+// simply picked up by the next one.
+//
+// Resend can hold a scheduled email for at most 30 days, and its Automations
+// only wait a fixed time after an event, so neither can do "3 days before
+// check-in" for a booking made months ahead. This job is what does it.
+const NZ_TIME_ZONE = 'Pacific/Auckland';
+
+/** Today's date ("2026-03-20") and hour (0–23) in New Zealand. */
+function nowInNewZealand(): { date: string; hour: number } {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: NZ_TIME_ZONE, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23',
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  return { date: `${get('year')}-${get('month')}-${get('day')}`, hour: Number(get('hour')) };
+}
+
+/** Whole calendar days from `from` to `to` (both "YYYY-MM-DD…"). */
+function calendarDaysBetween(from: string, to: string): number {
+  const a = Date.parse(`${String(from).slice(0, 10)}T00:00:00Z`);
+  const b = Date.parse(`${String(to).slice(0, 10)}T00:00:00Z`);
+  return Math.round((b - a) / 86_400_000);
+}
+
+// New Zealand hour each email waits for when the cron job runs it.
+const SEND_HOUR = { preArrival: 9, checkInDay: 9, checkOutDay: 7, reviewRequest: 10 };
+
+// Guests who booked through these platforms get the platform's own messages.
+const OTA_CHANNEL = /airbnb|booking\.com|bookabach|vrbo|expedia/i;
+
 registerRoute('get', '/process-scheduled-emails', async (c: any) => {
   const auth = await requireOwnerOrCron(c);
   if (!auth.ok) return auth.response;
   try {
-    console.log('⏰ Processing scheduled emails...');
-    
+    // The cron job waits for each email's send hour. Pressing the dashboard
+    // button (no secret) sends anything due today straight away.
+    const fromCron = Boolean((c.req.query('secret') || '').trim());
+    const now = nowInNewZealand();
+    const due = (hour: number) => !fromCron || now.hour >= hour;
+    console.log(`⏰ Processing scheduled emails for ${now.date} (${now.hour}:00 NZ)…`);
+
     const bookings = await kv.get('bookings') || [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     let emailsSent = 0;
+    let changed = false;
     const results: any[] = [];
-    
+
     for (const booking of bookings) {
-      const checkInDate = new Date(booking.checkIn);
-      const checkOutDate = new Date(booking.checkOut);
-      
-      // Calculate days until/since check-in
-      const daysUntilCheckIn = Math.floor((checkInDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-      const daysSinceCheckOut = Math.floor((today.getTime() - checkOutDate.getTime()) / (1000 * 60 * 60 * 24));
-      
-      // Email 3: Pre-Arrival (3 days before check-in)
-      if (daysUntilCheckIn === 3 && !booking.preArrivalSent) {
-        console.log(`📧 Sending pre-arrival email to ${booking.email}...`);
-        await sendPreArrivalEmail(booking);
-        booking.preArrivalSent = true;
-        emailsSent++;
-        results.push({ type: 'Pre-Arrival', guest: booking.guest, email: booking.email });
-      }
-      
-      // Email 4: Check-In Day (on check-in date at 9am)
-      if (daysUntilCheckIn === 0 && !booking.checkInDaySent) {
-        console.log(`📧 Sending check-in day email to ${booking.email}...`);
-        await sendCheckInDayEmail(booking);
-        booking.checkInDaySent = true;
-        emailsSent++;
-        results.push({ type: 'Check-In Day', guest: booking.guest, email: booking.email });
-      }
-      
-      // Email 5: Check-Out Day (on check-out date at 9am)
-      if (checkOutDate.toDateString() === today.toDateString() && !booking.checkOutDaySent) {
-        console.log(`📧 Sending check-out day email to ${booking.email}...`);
-        await sendCheckOutDayEmail(booking);
-        booking.checkOutDaySent = true;
-        emailsSent++;
-        results.push({ type: 'Check-Out Day', guest: booking.guest, email: booking.email });
-      }
-      
-      // Email 6: Review Request (2 days after check-out)
-      if (daysSinceCheckOut === 2 && !booking.reviewRequestSent) {
-        console.log(`📧 Sending review request to ${booking.email}...`);
-        await sendReviewRequestEmail(booking);
-        booking.reviewRequestSent = true;
-        emailsSent++;
-        results.push({ type: 'Review Request', guest: booking.guest, email: booking.email });
+      const email = booking.email || booking.guestEmail;
+      const status = String(booking.status || '').toLowerCase();
+      if (!email || !booking.checkIn || !booking.checkOut) continue;
+      if (status === 'cancelled' || status === 'canceled' || status === 'pending_payment') continue;
+      if (OTA_CHANNEL.test(String(booking.channel || ''))) continue;
+
+      const daysUntilCheckIn = calendarDaysBetween(now.date, booking.checkIn);
+      const daysSinceCheckOut = calendarDaysBetween(booking.checkOut, now.date);
+
+      const jobs: { type: string; flag: string; when: boolean; send: (b: any) => Promise<any> }[] = [
+        // 3 days before check-in. Late bookings (inside 3 days) still get it.
+        { type: 'Pre-Arrival', flag: 'preArrivalSent', send: sendPreArrivalEmail,
+          when: daysUntilCheckIn >= 0 && daysUntilCheckIn <= 3 && due(SEND_HOUR.preArrival) },
+        { type: 'Check-In Day', flag: 'checkInDaySent', send: sendCheckInDayEmail,
+          when: daysUntilCheckIn === 0 && due(SEND_HOUR.checkInDay) },
+        { type: 'Check-Out Day', flag: 'checkOutDaySent', send: sendCheckOutDayEmail,
+          when: daysSinceCheckOut === 0 && due(SEND_HOUR.checkOutDay) },
+        // 2 days after check-out, with a short catch-up window if a run was missed.
+        { type: 'Review Request', flag: 'reviewRequestSent', send: sendReviewRequestEmail,
+          when: daysSinceCheckOut >= 2 && daysSinceCheckOut <= 4 && due(SEND_HOUR.reviewRequest) },
+      ];
+
+      for (const job of jobs) {
+        if (!job.when || booking[job.flag]) continue;
+        console.log(`📧 Sending ${job.type} to ${email}…`);
+        const outcome = await job.send(booking);
+        results.push({ type: job.type, guest: booking.guest, email, ok: outcome?.ok === true, error: outcome?.error });
+        if (outcome?.ok) {
+          // Only a delivered email is marked sent, so a failure is retried next run.
+          booking[job.flag] = true;
+          booking[`${job.flag}At`] = new Date().toISOString();
+          emailsSent++;
+          changed = true;
+        }
+        await sleep(600); // Resend allows 2 requests a second
       }
     }
-    
-    // Save updated bookings with email tracking flags
-    if (emailsSent > 0) {
-      await kv.set('bookings', bookings);
-    }
-    
-    console.log(`✅ Scheduled email processing complete. Sent ${emailsSent} emails.`);
-    
-    return new Response(JSON.stringify({ 
-      success: true,
+
+    if (changed) await kv.set('bookings', bookings);
+
+    const failed = results.filter((r) => !r.ok);
+    console.log(`✅ Scheduled emails: ${emailsSent} sent${failed.length ? `, ${failed.length} failed` : ''}.`);
+
+    return new Response(JSON.stringify({
+      success: failed.length === 0,
       emailsSent,
+      failed: failed.length,
       results,
-      message: `Processed ${bookings.length} bookings, sent ${emailsSent} scheduled emails`
+      message: `Checked ${bookings.length} bookings for ${now.date}: ${emailsSent} emails sent` +
+        (failed.length ? `, ${failed.length} failed (they will be retried on the next run)` : ''),
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (err: any) {
     console.error('❌ Scheduled email processing error:', err);
-    return new Response(JSON.stringify({ 
-      error: err.message,
-      stack: err.stack 
-    }), {
+    return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
@@ -1361,19 +1418,29 @@ registerRoute('post', '/resend-confirmation', async (c: any) => {
     }
 
     console.log(`📧 Manually resending confirmation to ${booking.email}...`);
-    await sendBookingConfirmation(booking);
-    await sendOwnerNotification(booking);
+    const outcomes = [
+      await sendBookingConfirmation(booking),
+      await sendOwnerNotification(booking),
+    ];
+
+    // Report what actually happened. These senders do not throw when Resend
+    // refuses a message, so a 200 here used to claim success unconditionally.
+    const failed = outcomes.filter((o) => !o.ok);
+    const config = getEmailConfig();
 
     return new Response(JSON.stringify({
-      success: true,
-      message: `Confirmation emails sent to ${booking.email} and bookings@carlsonproperties.co.nz`,
+      success: failed.length === 0,
+      message: failed.length === 0
+        ? `Confirmation emails accepted by Resend for ${booking.email} and ${config.ownerNotificationTo}`
+        : `${failed.length} of ${outcomes.length} emails were not sent`,
+      emails: outcomes,
       booking: {
         guest: booking.guest,
         email: booking.email,
         total: booking.total
       }
     }), {
-      status: 200,
+      status: failed.length === 0 ? 200 : 502,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (err: any) {
