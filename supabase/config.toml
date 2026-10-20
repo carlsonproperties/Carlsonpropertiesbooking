@@ -1,0 +1,20 @@
+# Supabase CLI configuration.
+#
+# The only setting here that matters today is verify_jwt on the server
+# function. Supabase requires a JWT on edge functions by default, and Airbnb
+# (or any other channel importing /calendar.ics) fetches that URL with no
+# credentials at all — with verification on it would simply receive a 401 and
+# silently keep showing the dates as available.
+#
+# Turning it off does not widen access in practice. The anon key was never a
+# security boundary: it ships inside the public client bundle, so anyone could
+# already call these routes. Everything sensitive is guarded inside the
+# function by requireOwner, which validates a real signed-in user session
+# against AUTHORIZED_EMAILS, and that is unaffected by this setting.
+#
+# If the function is deployed from the dashboard rather than the CLI, this
+# file is not read — switch "Verify JWT" off for the function there instead.
+project_id = "hxprmevheigajzqehjgf"
+
+[functions.make-server-edef7798]
+verify_jwt = false

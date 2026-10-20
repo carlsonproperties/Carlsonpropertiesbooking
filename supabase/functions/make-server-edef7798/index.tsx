@@ -488,6 +488,121 @@ const handleProperties = async (c: any) => {
   });
 }
 
+/**
+ * Bookings held in this project, minus the ones that should not block a date.
+ *
+ * Shared by /calendar-events (what the website greys out) and /calendar.ics
+ * (what Airbnb blocks), so the two can never disagree about availability —
+ * a disagreement between them is exactly how a double booking happens.
+ */
+async function loadLocalBookings(): Promise<any[]> {
+  const all = (await kv.get('bookings')) || [];
+  const DEAD = ['cancelled', 'canceled', 'declined', 'refunded', 'expired'];
+  return all.filter((b: any) => {
+    // Legacy test record.
+    if (b.checkIn === '2026-03-16' && b.checkOut === '2026-03-18') return false;
+    if (!b.checkIn || !b.checkOut) return false;
+    return !DEAD.includes(String(b.status || '').toLowerCase());
+  });
+}
+
+/** YYYY-MM-DD → YYYYMMDD, or null if it is not a plain date. */
+const toIcsDate = (value: string): string | null => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || '').trim());
+  return m ? `${m[1]}${m[2]}${m[3]}` : null;
+};
+
+/**
+ * Availability as an iCal feed, for Airbnb (and any other channel) to import.
+ *
+ * Direct bookings taken on this site are stored here and in Airtable — they
+ * never reach the Google calendar the site reads — so a channel importing that
+ * Google feed would not see them. This endpoint publishes everything this
+ * project treats as occupied instead.
+ *
+ * All-day VEVENTs use an exclusive DTEND, which is the check-out date itself.
+ * That matches how the booking calendar already treats turnover: the morning
+ * someone leaves is bookable by the next guest.
+ *
+ * The feed is deliberately anonymous. It is fetched by third parties over an
+ * unauthenticated URL, so it carries dates only — no guest names, contact
+ * details or amounts.
+ */
+const handleCalendarIcs = async (_c: any) => {
+  const lines: string[] = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Carlson Properties//One Eleven on the Mile//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:One Eleven on the Mile — booked',
+  ];
+
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  let emitted = 0;
+
+  const pushEvent = (start: string, end: string, uid: string) => {
+    lines.push(
+      'BEGIN:VEVENT',
+      `UID:${uid}`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${start}`,
+      `DTEND;VALUE=DATE:${end}`,
+      'SUMMARY:Booked',
+      'TRANSP:OPAQUE',
+      'END:VEVENT',
+    );
+    emitted++;
+  };
+
+  try {
+    for (const b of await loadLocalBookings()) {
+      const start = toIcsDate(b.checkIn);
+      const end = toIcsDate(b.checkOut);
+      if (!start || !end || end <= start) continue;
+      pushEvent(start, end, `direct-${b.id || `${start}-${end}`}@carlsonproperties.co.nz`);
+    }
+  } catch (err) {
+    console.error('❌ /calendar.ics could not read local bookings:', err);
+  }
+
+  // Also carry whatever the Google calendar holds, so one feed describes the
+  // whole picture. A channel re-importing its own reservations is harmless.
+  try {
+    const response = await fetchWithTimeout(ICAL_FEED_URL, {}, 10000);
+    if (response.ok) {
+      const events = ical.sync.parseICS(await response.text());
+      for (const k in events) {
+        const ev: any = events[k];
+        if (ev?.type !== 'VEVENT' || !ev.start || !ev.end) continue;
+        const start = toIcsDate(new Date(ev.start).toISOString().split('T')[0]);
+        const end = toIcsDate(new Date(ev.end).toISOString().split('T')[0]);
+        if (!start || !end || end <= start) continue;
+        pushEvent(start, end, `gcal-${String(ev.uid || k).replace(/[^\w.-]/g, '')}@carlsonproperties.co.nz`);
+      }
+    } else {
+      console.error(`❌ /calendar.ics: source calendar returned ${response.status}`);
+    }
+  } catch (err) {
+    // A feed that silently drops dates would cause the double bookings this
+    // endpoint exists to prevent, so make the gap loud.
+    console.error('❌ /calendar.ics could not read the source calendar:', err);
+  }
+
+  lines.push('END:VCALENDAR');
+  console.log(`📅 /calendar.ics served ${emitted} blocked periods`);
+
+  return new Response(lines.join('\r\n') + '\r\n', {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/calendar; charset=utf-8',
+      'Content-Disposition': 'inline; filename="one-eleven.ics"',
+      'Cache-Control': 'public, max-age=300',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+};
+
 const handleCalendarEvents = async (c: any) => {
   try {
     const response = await fetchWithTimeout(ICAL_FEED_URL, {}, 10000);
@@ -513,7 +628,7 @@ const handleCalendarEvents = async (c: any) => {
       }
     }
     
-    const localBookings = (await kv.get('bookings') || []).filter((b: any) => !(b.checkIn === '2026-03-16' && b.checkOut === '2026-03-18'));
+    const localBookings = await loadLocalBookings();
     localBookings.forEach((b: any) => {
       let current = new Date(b.checkIn);
       const end = new Date(b.checkOut);
@@ -1062,6 +1177,9 @@ const registerRoute = (method: 'get' | 'post', path: string, handler: any) => {
 registerRoute('get', '/health', handleHealth);
 registerRoute('get', '/properties', handleProperties);
 registerRoute('get', '/calendar-events', handleCalendarEvents);
+// Public by design: Airbnb and other channels fetch this with no credentials.
+// It exposes dates only. See handleCalendarIcs.
+registerRoute('get', '/calendar.ics', handleCalendarIcs);
 registerRoute('get', '/verify-checkout', handleVerifyCheckout);
 registerRoute('get', '/dashboard-stats', handleDashboardStats);
 registerRoute('post', '/signup', handleSignup);
