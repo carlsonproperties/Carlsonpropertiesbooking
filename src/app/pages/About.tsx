@@ -327,11 +327,19 @@ export function About() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
               {[
-                { img: bedroom1, ensuiteImg: ensuite1, title: "Bedroom 1", type: "Super King", desc: ["1 Super King Bed"] },
-                { img: bedroom2, ensuiteImg: ensuite2, title: "Bedroom 2", type: "Super King", desc: ["1 Super King Bed"] },
-                { img: bedroom3, ensuiteImg: ensuite3, title: "Bedroom 3", type: "King", desc: ["1 King Bed"] },
-                { img: bedroom4, ensuiteImg: ensuite4, title: "Bedroom 4", type: "King", desc: ["1 King Bed"] },
-                { img: bedroom5, ensuiteImg: ensuite5, title: "Bedroom 5", type: "Twin", desc: ["2 King Single Beds"] }
+                // Each room carries both sets of copy: the bathroom tab used to
+                // fall through to the bedroom's, so it read "1 Super King Bed"
+                // under a photo of a shower.
+                { img: bedroom1, ensuiteImg: ensuite1, title: "Bedroom 1", type: "Super King", desc: ["1 Super King Bed"],
+                  bathType: "Ensuite", bathDesc: ["Own ensuite", "Walk-in shower"] },
+                { img: bedroom2, ensuiteImg: ensuite2, title: "Bedroom 2", type: "Super King", desc: ["1 Super King Bed"],
+                  bathType: "Ensuite", bathDesc: ["Own ensuite", "Walk-in shower", "Opens out to the pool"] },
+                { img: bedroom3, ensuiteImg: ensuite3, title: "Bedroom 3", type: "King", desc: ["1 King Bed"],
+                  bathType: "Ensuite", bathDesc: ["Own ensuite"] },
+                { img: bedroom4, ensuiteImg: ensuite4, title: "Bedroom 4", type: "King", desc: ["1 King Bed"],
+                  bathType: "Main Bathroom", bathDesc: ["Main bathroom, next to the room"] },
+                { img: bedroom5, ensuiteImg: ensuite5, title: "Bedroom 5", type: "Twin", desc: ["2 King Single Beds"],
+                  bathType: "Main Bathroom", bathDesc: ["Shares the main bathroom"] }
               ].map((room, i) => (
                 <motion.div 
                   key={i}
@@ -373,12 +381,12 @@ export function About() {
                         {room.title}
                       </h4>
                       <span className="text-[9px] uppercase tracking-[0.2em] font-semibold text-[#D7C8B4] border border-[#D7C8B4]/30 px-2.5 py-0.5 rounded-full bg-white/5">
-                        {room.type}
+                        {showEnsuites ? room.bathType : room.type}
                       </span>
                     </div>
                     <div className="h-px w-8 bg-[#D7C8B4]/40 group-hover:w-full transition-all duration-700" />
                     <div className="space-y-2">
-                      {room.desc.map((line, idx) => (
+                      {(showEnsuites ? room.bathDesc : room.desc).map((line, idx) => (
                         <div key={idx} className="flex items-center gap-2.5">
                           <div className="w-1.5 h-1.5 rounded-full bg-[#D7C8B4]" />
                           <p className="text-[#F4F1EA]/85 text-[11px] tracking-wider leading-relaxed font-semibold uppercase">{line}</p>

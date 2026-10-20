@@ -195,23 +195,26 @@ export function MeetHosts() {
       </section>
 
       {/* Focus Section */}
-      <section className="relative h-[80vh] flex items-center overflow-hidden bg-[#16302B]">
+      {/* min-h, not h: a fixed 80vh clipped the heading and the button out of
+          the section on shorter viewports, because the content is taller than
+          the box. Padding lets it grow instead. */}
+      <section className="relative min-h-[80vh] py-28 md:py-36 flex items-center overflow-hidden bg-[#16302B]">
         <div className="absolute inset-0 opacity-40">
            <img src={familyFieldWalk} className="w-full h-full object-cover" alt="Open-plan kitchen and breakfast bar at One Eleven" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1c16] via-[#1a1c16]/80 to-transparent" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 w-full text-left">
-          <div className="max-w-3xl space-y-12">
+          <div className="max-w-3xl space-y-8 md:space-y-10">
             <div className="space-y-6">
               <span className="text-[#D7C8B4] text-[10px] font-bold uppercase tracking-[0.7em] block">Designed for Real Stays</span>
-              <h3 className="text-5xl md:text-8xl font-serif text-white leading-tight">
+              <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-[1.12]">
                 Everything you need, <br />
                 <span className="italic text-[#D7C8B4]">where you need it.</span>
               </h3>
             </div>
             
-            <p className="text-2xl text-white/90 font-light leading-relaxed">
+            <p className="text-lg md:text-xl text-white/90 font-light leading-relaxed">
               The kitchen opens directly to outdoor dining, the living spaces give groups room to spread out, and practical details are in place before you arrive. We keep refining the house through the feedback our guests share.
             </p>
 

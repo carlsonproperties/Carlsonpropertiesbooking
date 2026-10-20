@@ -83,3 +83,32 @@
 h1 { font-weight: 900; }
 h2 { font-weight: 700; }
 body { font-family: var(--font-sans); color: var(--lake); background: var(--cream); }
+
+/* ─── Māori macron vowels ──────────────────────────────────────────────────
+ * The Fraunces subsets do not carry the precomposed macron vowels (U+0100,
+ * U+0112, U+012A, U+014C, U+016A and their lowercase). Chromium therefore
+ * decomposes "ō" into o + U+0304 — Chrome reports 11 glyphs for the 10
+ * characters of "Taupō Stay" — and that combining macron carries its own
+ * advance width, so it lands beside the vowel instead of above it:
+ * "Taupo¯Stay".
+ *
+ * Until the subsets are regenerated with those glyphs, serve just this
+ * handful of characters from a system serif that has them precomposed.
+ * Everything else still renders in Fraunces. Taupō is the name of the place
+ * this business is in; rendering it correctly matters more than matching the
+ * display face on five characters.
+ * ───────────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 100 900;
+  src: local('Georgia'), local('Times New Roman'), local('Noto Serif'), local('DejaVu Serif');
+  unicode-range: U+0100-0101, U+0112-0113, U+012A-012B, U+014C-014D, U+016A-016B;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 100 900;
+  src: local('Georgia Italic'), local('Times New Roman Italic'), local('Noto Serif Italic'), local('DejaVu Serif Italic');
+  unicode-range: U+0100-0101, U+0112-0113, U+012A-012B, U+014C-014D, U+016A-016B;
+}
