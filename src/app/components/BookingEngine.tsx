@@ -312,6 +312,10 @@ export function BookingEngine({ pricePerNight = 1275 }: BookingEngineProps) {
             mode="range"
             selected={range}
             onSelect={handleRangeSelect}
+            // Weeks run Monday to Sunday, as they do in New Zealand. The
+            // default is Sunday-first, which splits the weekend across two
+            // rows and makes a Fri–Sun stay hard to read as one block.
+            weekStartsOn={1}
             modifiers={{
               // Enabled, but only as the last day of a stay: the night itself
               // belongs to the next booking.
