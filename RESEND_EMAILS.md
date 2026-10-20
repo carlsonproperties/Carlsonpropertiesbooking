@@ -15,7 +15,7 @@ All times are New Zealand time. Bookings marked as Airbnb (or another booking si
 
 ## 1. Put the templates in Resend
 
-The logos (the letterbox roundel and the Carlson Properties wordmark) load from `carlsonproperties.co.nz/brand/email/`, which this change adds. Merge it first so they're live before the templates go in. Merging first is safe: until a template is published, its email keeps the old design.
+Every image loads from Supabase Storage: `Website Media/email/` for the header logo, icons, letterbox and wordmark, and the root of `Website Media` for the three photos. The files the emails need are also kept in `public/brand/email/`, so a missing one can be re-uploaded from there with the same name: `header-logo.png`, `icon-clock.png`, `icon-pin.png`, `icon-wifi.png`, `icon-coffee.png`, `letterbox-mark-sand.png` and `one-eleven-wordmark-footer.png` (plus `letterbox-mark-lake.png` and `one-eleven-wordmark-lake.png` for the signature).
 
 **Option A, quickest.** From the repo folder, run:
 
@@ -92,4 +92,4 @@ The booking system fills these in. Values are HTML-escaped before they're sent.
 
 ## Email signature
 
-`emails/resend/signature-ashleigh.html` is the signature for the bookings@ mailbox: the letterbox roundel linked to the website, then Ashleigh Carlson, Owner/Operator, phone, email and website. Open it in Chrome, select all, copy, and paste it into Gmail under Settings → General → Signature. The same details sit in the footer of every guest email.
+`emails/resend/signature-ashleigh.html` is the signature for the bookings@ mailbox: the letterbox and the One Eleven wordmark from the website footer, then Ashleigh Carlson, Owner/Operator, phone, email and website. Open it in Chrome, select all, copy, and paste it into Gmail under Settings → General → Signature. It isn't part of the guest emails.
